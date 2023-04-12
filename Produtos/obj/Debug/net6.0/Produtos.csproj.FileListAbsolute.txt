@@ -1,0 +1,45 @@
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.csproj.AssemblyReference.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.AssemblyInfoInputs.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.AssemblyInfo.cs
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\bin\Debug\net6.0\Produtos.deps.json
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\bin\Debug\net6.0\Produtos.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\bin\Debug\net6.0\Produtos.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.csproj.CopyComplete
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\refint\Produtos.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\Produtos.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Produtos\obj\Debug\net6.0\ref\Produtos.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\bin\Debug\net6.0\Produtos.deps.json
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\bin\Debug\net6.0\Produtos.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\bin\Debug\net6.0\Produtos.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.csproj.AssemblyReference.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.AssemblyInfoInputs.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.AssemblyInfo.cs
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.csproj.CopyComplete
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\refint\Produtos.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\Produtos.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Produtos\obj\Debug\net6.0\ref\Produtos.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.csproj.AssemblyReference.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.AssemblyInfoInputs.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.AssemblyInfo.cs
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\refint\Produtos.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\bin\Debug\net6.0\Produtos.deps.json
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\bin\Debug\net6.0\Produtos.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\bin\Debug\net6.0\Produtos.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\Produtos.csproj.CopyComplete
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Produtos\obj\Debug\net6.0\ref\Produtos.dll

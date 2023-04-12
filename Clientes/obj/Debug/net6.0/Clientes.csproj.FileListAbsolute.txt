@@ -1,0 +1,45 @@
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\bin\Debug\net6.0\Clientes.deps.json
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\bin\Debug\net6.0\Clientes.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\bin\Debug\net6.0\Clientes.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.csproj.AssemblyReference.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.AssemblyInfoInputs.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.AssemblyInfo.cs
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.csproj.CopyComplete
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\refint\Clientes.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\Clientes.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Clientes\obj\Debug\net6.0\ref\Clientes.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\bin\Debug\net6.0\Clientes.deps.json
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\bin\Debug\net6.0\Clientes.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\bin\Debug\net6.0\Clientes.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.csproj.AssemblyReference.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.AssemblyInfoInputs.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.AssemblyInfo.cs
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.csproj.CopyComplete
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\refint\Clientes.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\Clientes.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Clientes\obj\Debug\net6.0\ref\Clientes.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\bin\Debug\net6.0\Clientes.deps.json
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\bin\Debug\net6.0\Clientes.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\bin\Debug\net6.0\Clientes.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.csproj.AssemblyReference.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.AssemblyInfoInputs.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.AssemblyInfo.cs
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.csproj.CopyComplete
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\refint\Clientes.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\Clientes.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Clientes\obj\Debug\net6.0\ref\Clientes.dll

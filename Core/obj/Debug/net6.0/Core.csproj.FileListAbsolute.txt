@@ -1,0 +1,36 @@
+D:\Programação\Repositories\ECommerce-BackEnd\Core\bin\Debug\net6.0\Core.deps.json
+D:\Programação\Repositories\ECommerce-BackEnd\Core\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Core\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\Core.csproj.AssemblyReference.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\Core.AssemblyInfoInputs.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\Core.AssemblyInfo.cs
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\Core.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\Core.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\refint\Core.dll
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\ECommerce-BackEnd\Core\obj\Debug\net6.0\ref\Core.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\bin\Debug\net6.0\Core.deps.json
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\Core.csproj.AssemblyReference.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\Core.AssemblyInfoInputs.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\Core.AssemblyInfo.cs
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\Core.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\Core.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\refint\Core.dll
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\Sistema de Gerenciamento de Loja - BackEnd\Core\obj\Debug\net6.0\ref\Core.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\Core.csproj.AssemblyReference.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\Core.AssemblyInfoInputs.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\Core.AssemblyInfo.cs
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\Core.csproj.CoreCompileInputs.cache
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\Core.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\refint\Core.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\bin\Debug\net6.0\Core.deps.json
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\bin\Debug\net6.0\Core.dll
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\bin\Debug\net6.0\Core.pdb
+D:\Programação\Repositories\SistemaDeGerenciamentoComercial\Core\obj\Debug\net6.0\ref\Core.dll
