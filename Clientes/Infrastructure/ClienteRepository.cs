@@ -15,7 +15,7 @@ namespace Clientes.Infrastructure
 
         public async Task<int> AtualizarCliente(Cliente cliente, CancellationToken token)
         {
-            var query = @"update Cliente set Nome = @Nome, Cpf = @Cpf, @EstaAtivo = @EstaAtivo  where Id = @Id";
+            var query = @"update Cliente set Nome = @Nome, Cpf = @Cpf, EstaAtivo = @EstaAtivo  where Id = @Id";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
