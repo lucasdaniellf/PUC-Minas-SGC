@@ -40,6 +40,7 @@ namespace Vendas.Infrastructure
                 string sql = @"
                     Create table Cliente(
                         Id varchar Primary key,
+                        Email Varchar(100) unique not null,
                         EstaAtivo INTEGER not null
                     );
                     

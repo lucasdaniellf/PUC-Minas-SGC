@@ -24,6 +24,7 @@ namespace Vendas.Infrastructure
                             v.FormaPagamento, 
                             v.Status, 
                             c.Id as ClienteId, 
+                            c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
@@ -56,6 +57,7 @@ namespace Vendas.Infrastructure
                             v.FormaPagamento, 
                             v.Status, 
                             c.Id as ClienteId, 
+                            c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
@@ -90,6 +92,7 @@ namespace Vendas.Infrastructure
                             v.FormaPagamento, 
                             v.Status, 
                             c.Id as ClienteId, 
+                            c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
@@ -125,6 +128,7 @@ namespace Vendas.Infrastructure
                             v.FormaPagamento, 
                             v.Status, 
                             c.Id as ClienteId, 
+                            c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
@@ -160,6 +164,7 @@ namespace Vendas.Infrastructure
                             v.FormaPagamento, 
                             v.Status, 
                             c.Id as ClienteId, 
+                            c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
@@ -338,9 +343,9 @@ namespace Vendas.Infrastructure
 
         public async Task<int> AtualizarCliente(ClienteVenda cliente, CancellationToken token)
         {
-            var query = @"update Cliente set EstaAtivo = @EstaAtivo where Id = @Id";
+            var query = @"update Cliente set EstaAtivo = @EstaAtivo, Email = @Email where Id = @Id";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                            parameters: new { Id = cliente.Id, EstaAtivo = cliente.Status },
+                                                                                            parameters: new { Id = cliente.Id, Email = cliente.Email, EstaAtivo = cliente.Status },
                                                                                             transaction: _context.Transaction,
                                                                                             commandType: System.Data.CommandType.Text,
                                                                                             cancellationToken: token));
@@ -349,11 +354,12 @@ namespace Vendas.Infrastructure
 
         public async Task<int> CadastrarCliente(ClienteVenda cliente, CancellationToken token)
         {
-            var query = @"insert into Cliente(Id, EstaAtivo) values (@Id, @EstaAtivo)";
+            var query = @"insert into Cliente(Id, Email, EstaAtivo) values (@Id, @Email, @EstaAtivo)";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
                                                                                                  Id = cliente.Id.ToString(),
+                                                                                                 Email = cliente.Email,
                                                                                                  EstaAtivo = cliente.Status
 
                                                                                              },

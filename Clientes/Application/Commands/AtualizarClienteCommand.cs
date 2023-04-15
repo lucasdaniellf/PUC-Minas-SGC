@@ -16,13 +16,13 @@ namespace Clientes.Application.Commands
         [RegularExpression(@"^\d{11}$")]
         public string Cpf { get; private set; }
 
-        public int Status { get; private set; }
+        public int EstaAtivo { get; private set; }
 
-        public AtualizarClienteCommand(string nome, string cpf, int status)
+        public AtualizarClienteCommand(string nome, string cpf, int estaAtivo)
         {
             Nome = nome;
             Cpf = cpf;
-            Status = status;
+            EstaAtivo = estaAtivo;
         }
 
         public void AdicionarId(string id)

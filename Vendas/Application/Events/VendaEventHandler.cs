@@ -25,7 +25,7 @@ namespace Vendas.Application.Events
             try
             {
                 _unitOfWork.Begin();
-                var cliente = new ClienteVenda(request.Id, request.EstaAtivo);
+                var cliente = new ClienteVenda(request.Id, request.Email, request.EstaAtivo);
 
                 var clientes = await _repository.BuscarClientePorId(request.Id, token);
                 if (clientes.Any())
