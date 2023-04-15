@@ -10,6 +10,9 @@ namespace Clientes.Application.Commands
 
         [RegularExpression(@"^\d{11}$")]
         public string Cpf { get; set; } = null!;
+
+        [EmailAddress]
+        public string Email { get; set; } = null!;
         public string Id { get; internal set; } = string.Empty;
     }
 }

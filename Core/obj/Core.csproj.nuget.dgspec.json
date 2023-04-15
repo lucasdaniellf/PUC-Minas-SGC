@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {}
+    "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {}
   },
   "projects": {
-    "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {
+    "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj",
+        "projectUniqueName": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj",
         "projectName": "Core",
-        "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj",
+        "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj",
         "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-        "outputPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\obj\\",
+        "outputPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",

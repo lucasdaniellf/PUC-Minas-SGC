@@ -64,6 +64,25 @@ namespace Clientes.Application.Query
             }
 
         }
+
+        public async Task<IEnumerable<ClienteQueryDto>> BuscarClientePorEmail(string email, CancellationToken token)
+        {
+            try
+            {
+                _unitOfWork.Begin();
+                var clientes = from c in await _repository.BuscarClientePorEmail(email, token) select MapQueryDto(c);
+
+                _unitOfWork.CloseConnection();
+                return clientes;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.CloseConnection();
+                throw;
+            }
+
+        }
+
         public async Task<IEnumerable<ClienteQueryDto>> BuscarClientePorId(string Id, CancellationToken token)
         {
             try
@@ -84,7 +103,7 @@ namespace Clientes.Application.Query
 
         private ClienteQueryDto MapQueryDto(Cliente cliente)
         {
-            return new ClienteQueryDto(cliente.Id, cliente.Cpf.Numero, cliente.Nome, cliente.EstaAtivo);
+            return new ClienteQueryDto(cliente.Id, cliente.Cpf.Numero, cliente.Nome, cliente.Email, cliente.EstaAtivo);
         }
     }
 }

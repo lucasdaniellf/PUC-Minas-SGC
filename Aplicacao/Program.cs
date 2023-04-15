@@ -61,7 +61,15 @@ builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IVendaRepository, VendaRepository>();
 
 
-builder.Services.AddScoped<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(builder.Configuration.GetSection("Redis")["RedisConnection"]));
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddScoped<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(builder.Configuration.GetSection("Redis")["RedisConnectionDev"]));
+}
+else
+{
+    builder.Services.AddScoped<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(builder.Configuration.GetSection("Redis")["RedisConnection"]));
+}
+
 builder.Services.AddScoped<IMessageBrokerPublisher, RedisPublisher>();
 builder.Services.AddScoped<IMessageBrokerSubscriber, RedisSubscriber>();
 

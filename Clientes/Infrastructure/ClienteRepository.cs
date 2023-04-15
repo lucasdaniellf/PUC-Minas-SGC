@@ -13,24 +13,16 @@ namespace Clientes.Infrastructure
             _context = context;
         }
 
-        public async Task<int> AtivarCliente(string id, CancellationToken token)
+        public async Task<int> AtualizarCliente(Cliente cliente, CancellationToken token)
         {
-            var query = @"update Cliente set EstaAtivo = 1 where Id = @Id";
-            return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                            parameters: new { Id = id },
-                                                                                            transaction: _context.Transaction,
-                                                                                            commandType: System.Data.CommandType.Text,
-                                                                                            cancellationToken: token));
-        }
-
-        public async Task<int> AtualizarCadastroCliente(Cliente cliente, CancellationToken token)
-        {
-            var query = @"update Cliente set Nome = @Nome where Cpf = @Cpf";
+            var query = @"update Cliente set Nome = @Nome, Cpf = @Cpf, @EstaAtivo = @EstaAtivo  where Id = @Id";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
+                                                                                                 cliente.Nome,
                                                                                                  Cpf = cliente.Cpf.Numero,
-                                                                                                 cliente.Nome
+                                                                                                 cliente.EstaAtivo,
+                                                                                                 cliente.Id
                                                                                              },
                                                                                              transaction: _context.Transaction,
                                                                                              commandType: System.Data.CommandType.Text,
@@ -42,6 +34,15 @@ namespace Clientes.Infrastructure
             var query = @"select * from Cliente where Cpf = @Cpf";
             return await _context.Connection.QueryAsync<Cliente>(new CommandDefinition(commandText: query,
                                                                                                     parameters: new { Cpf = cpf },
+                                                                                                    transaction: _context.Transaction,
+                                                                                                    commandType: System.Data.CommandType.Text,
+                                                                                                    cancellationToken: token));
+        }
+        public async Task<IEnumerable<Cliente>> BuscarClientePorEmail(string email, CancellationToken token)
+        {
+            var query = @"select * from Cliente where Email = @Email";
+            return await _context.Connection.QueryAsync<Cliente>(new CommandDefinition(commandText: query,
+                                                                                                    parameters: new { Email = email },
                                                                                                     transaction: _context.Transaction,
                                                                                                     commandType: System.Data.CommandType.Text,
                                                                                                     cancellationToken: token));
@@ -78,27 +79,18 @@ namespace Clientes.Infrastructure
 
         public async Task<int> CadastrarCliente(Cliente cliente, CancellationToken token)
         {
-            var query = @"insert into Cliente(Id, Nome, Cpf, EstaAtivo) values (@Id, @Nome, @Cpf, 1)";
+            var query = @"insert into Cliente(Id, Nome, Cpf, Email, EstaAtivo) values (@Id, @Nome, @Cpf, @Email, 1)";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
                                                                                                  Id = cliente.Id.ToString(),
                                                                                                  Cpf = cliente.Cpf.Numero,
+                                                                                                 cliente.Email,
                                                                                                  cliente.Nome
                                                                                              },
                                                                                              transaction: _context.Transaction,
                                                                                              commandType: System.Data.CommandType.Text,
                                                                                              cancellationToken: token));
-        }
-
-        public async Task<int> InativarCliente(string id, CancellationToken token)
-        {
-            var query = @"update Cliente set EstaAtivo = 0 where Id = @Id";
-            return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                            parameters: new { Id = id },
-                                                                                            transaction: _context.Transaction,
-                                                                                            commandType: System.Data.CommandType.Text,
-                                                                                            cancellationToken: token));
         }
     }
 }

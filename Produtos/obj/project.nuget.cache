@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GPiACdBrBLlJCC835cqz7B/jfKN0ABnL7RIZAdoYY+mDDvsT/F+uFDP9LR9CY3tnkrKm3J6wmxAbpsPXabVhmQ==",
+  "dgSpecHash": "3ArW6zjkzi3gRKDTXIud1HY4x6DqEO+PLOiHEz7xjMeQITN2m1MBw/+foYVUt/tkzkqCvEy6ka8klXZb3hoWJw==",
   "success": true,
-  "projectFilePath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Produtos\\Produtos.csproj",
+  "projectFilePath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Produtos\\Produtos.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lucas\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\lucas\\.nuget\\packages\\microsoft.data.sqlite.core\\7.0.1\\microsoft.data.sqlite.core.7.0.1.nupkg.sha512",

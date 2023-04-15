@@ -496,11 +496,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj",
+      "projectUniqueName": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj",
       "projectName": "Clientes",
-      "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj",
+      "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj",
       "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-      "outputPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Clientes\\obj\\",
+      "outputPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Clientes\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -517,8 +517,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {
-              "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj"
+            "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {
+              "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj"
             }
           }
         }

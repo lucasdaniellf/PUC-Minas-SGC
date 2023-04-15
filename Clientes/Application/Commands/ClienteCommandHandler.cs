@@ -10,10 +10,8 @@ using Microsoft.Extensions.Options;
 
 namespace Clientes.Application.Commands
 {
-    public class ClienteCommandHandler : ICommandHandler<AtivarClienteCommand, bool>,
-                                         ICommandHandler<InativarClienteCommand, bool>,
-                                         ICommandHandler<CadastrarClienteCommand, bool>,
-                                         ICommandHandler<AtualizarCadastroClienteCommand, bool>
+    public class ClienteCommandHandler : ICommandHandler<CadastrarClienteCommand, bool>,
+                                         ICommandHandler<AtualizarClienteCommand, bool>
     {
 
         private readonly IMessageBrokerPublisher _publisher;
@@ -31,15 +29,25 @@ namespace Clientes.Application.Commands
 
         public async Task<bool> Handle(CadastrarClienteCommand command, CancellationToken token)
         {
-            int row = 0;
-
             try
             {
                 _unitOfWork.Begin();
-                IEnumerable<Cliente> clientes = await _repository.BuscarClientePorCPF(command.Cpf, token);
-                if (!clientes.Any())
+                int row;
+
+                var cpfCadastrado = (await _repository.BuscarClientePorCPF(command.Cpf, token)).Any();
+                var emailCadastrado = (await _repository.BuscarClientePorEmail(command.Email, token)).Any();
+                
+                if (cpfCadastrado)
                 {
-                    var cliente = Cliente.CadastrarCliente(command.Nome, command.Cpf);
+                    throw new ClienteException("CPF já cadastrados no sistema para outro usuário");
+                }
+                else if (emailCadastrado)
+                {
+                    throw new ClienteException("Email já cadastrados no sistema para outro usuário");
+                }
+                else
+                {
+                    var cliente = Cliente.CadastrarCliente(command.Nome, command.Cpf, command.Email);
                     row = await _repository.CadastrarCliente(cliente, token);
                     command.Id = cliente.Id;
 
@@ -47,21 +55,20 @@ namespace Clientes.Application.Commands
                     {
                         EventRequest message = new ClienteMensagemEvent(cliente.Id, (int)cliente.EstaAtivo);
                         await Enqueue(_settings.FilaClienteCadastrado, message.Serialize());
-
                     }
+
                 }
                 _unitOfWork.CloseConnection();
+                return row > 0;
             }
             catch (Exception)
             {
                 _unitOfWork.CloseConnection();
                 throw;
             }
-
-            return row > 0;
         }
 
-        public async Task<bool> Handle(AtualizarCadastroClienteCommand command, CancellationToken token)
+        public async Task<bool> Handle(AtualizarClienteCommand command, CancellationToken token)
         {
             int row = 0;
             try
@@ -74,7 +81,9 @@ namespace Clientes.Application.Commands
                     Cliente cliente = clientes.First();
                     cliente.AtualizarCpf(command.Cpf);
                     cliente.AtualizarNome(command.Nome);
-                    row = await _repository.AtualizarCadastroCliente(cliente, token);
+                    cliente.AtualizarStatusCliente(command.Status);
+
+                    row = await _repository.AtualizarCliente(cliente, token);
 
                     if (row > 0)
                     {
@@ -90,54 +99,6 @@ namespace Clientes.Application.Commands
             }
             return row > 0;
         }
-
-        public async Task<bool> Handle(AtivarClienteCommand command, CancellationToken token)
-        {
-            int row = 0;
-            try
-            {
-
-                _unitOfWork.Begin();
-                row = await _repository.AtivarCliente(command.Id, token);
-                if (row > 0)
-                {
-                    var cliente = (await _repository.BuscarClientePorId(command.Id, token)).First();
-                    EventRequest message = new ClienteMensagemEvent(cliente.Id, (int)cliente.EstaAtivo);
-                    await Enqueue(_settings.FilaClienteStatusAlterado, message.Serialize());
-                }
-            }
-            catch (Exception)
-            {
-                _unitOfWork.CloseConnection();
-                throw;
-            }
-            return row > 0;
-        }
-
-        public async Task<bool> Handle(InativarClienteCommand command, CancellationToken token)
-        {
-            int row = 0;
-            try
-            {
-                _unitOfWork.Begin();
-                row = await _repository.InativarCliente(command.Id, token);
-
-                if (row > 0)
-                {
-                    var cliente = (await _repository.BuscarClientePorId(command.Id, token)).First();
-                    EventRequest message = new ClienteMensagemEvent(cliente.Id, (int)cliente.EstaAtivo);
-                    await Enqueue(_settings.FilaClienteStatusAlterado, message.Serialize());
-                }
-            }
-            catch (Exception)
-            {
-                _unitOfWork.CloseConnection();
-                throw;
-            }
-            return row > 0;
-        }
-
-        //Single Responsibility?
 
         private async Task Enqueue(string queue, string message)
         {

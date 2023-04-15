@@ -1,4 +1,5 @@
 ﻿using Core.Entity;
+using System.ComponentModel.DataAnnotations;
 using static Clientes.Domain.Model.Status;
 
 namespace Clientes.Domain.Model
@@ -7,24 +8,28 @@ namespace Clientes.Domain.Model
     {
         public string Id { get; private set; } = null!;
         public string Nome { get; private set; } = null!;
+        [EmailAddress]
+        public string Email { get; private set; } = null!;
         public CPF Cpf { get; private set; } = null!;
         public Status.ClienteStatus EstaAtivo { get; private set; } = Status.ClienteStatus.ATIVO;
 
-        private Cliente(string Id, string Cpf, string Nome, long EstaAtivo) : this(Nome, Cpf)
+        private Cliente(string Id, string Cpf, string Nome, string Email, long EstaAtivo) : this(Nome, Cpf, Email)
         {
             this.Id = Id;
             this.EstaAtivo = AplicarStatusEmCliente(EstaAtivo);
         }
 
-        private Cliente(string nome, string cpf)
+        private Cliente(string nome, string cpf, string Email)
         {
             AtualizarNome(nome);
             AtualizarCpf(cpf);
+
+            this.Email = Email;
         }
 
-        public static Cliente CadastrarCliente(string nome, string cpf)
+        public static Cliente CadastrarCliente(string nome, string cpf, string email)
         {
-            Cliente cliente = new(nome, cpf)
+            Cliente cliente = new(nome, cpf, email)
             {
                 Id = Guid.NewGuid().ToString()
             };
@@ -38,9 +43,14 @@ namespace Clientes.Domain.Model
             EstaAtivo = Status.ClienteStatus.INATIVO;
         }
 
-        public void AtivarCliente()
+        public void AtualizarStatusCliente(int status)
         {
-            EstaAtivo = Status.ClienteStatus.ATIVO;
+            if(status != 0 && status != 1)
+            {
+                throw new ClienteException("Status inválido, deve ser 0 (inativo) ou 1 (ativo)");
+
+            }
+            EstaAtivo = Status.AplicarStatusEmCliente(status);
         }
 
         public void AtualizarNome(string nome)

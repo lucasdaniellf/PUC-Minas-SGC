@@ -1212,11 +1212,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Aplicacao\\AplicacaoGerenciamentoLoja.csproj",
+      "projectUniqueName": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Aplicacao\\AplicacaoGerenciamentoLoja.csproj",
       "projectName": "AplicacaoGerenciamentoLoja",
-      "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Aplicacao\\AplicacaoGerenciamentoLoja.csproj",
+      "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Aplicacao\\AplicacaoGerenciamentoLoja.csproj",
       "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-      "outputPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Aplicacao\\obj\\",
+      "outputPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Aplicacao\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1233,17 +1233,17 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj": {
-              "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj"
+            "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj": {
+              "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Clientes\\Clientes.csproj"
             },
-            "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {
-              "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj"
+            "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj": {
+              "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj"
             },
-            "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Produtos\\Produtos.csproj": {
-              "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Produtos\\Produtos.csproj"
+            "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Produtos\\Produtos.csproj": {
+              "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Produtos\\Produtos.csproj"
             },
-            "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Vendas\\Vendas.csproj": {
-              "projectPath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Vendas\\Vendas.csproj"
+            "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Vendas\\Vendas.csproj": {
+              "projectPath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Vendas\\Vendas.csproj"
             }
           }
         }

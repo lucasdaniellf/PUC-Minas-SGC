@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4TRgTkWDL8OjuNMymPPmsKgJmwxzYrEhwOVz5o0oJh9ODGFbCPvdvToYJ6hw6MEwIxDa7mLflDGu/sgZ6+fGzA==",
+  "dgSpecHash": "eGGmhgjGd2xeK8qLDIlxTTLaNc4bHWKGyCvUCs95AjE77Na28XPZFw5yIqrS8rcWPOpQhe/lP/xG/2RrwC0MCw==",
   "success": true,
-  "projectFilePath": "D:\\Programação\\Repositories\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj",
+  "projectFilePath": "D:\\Programação\\Repositories\\SGC - PUC Minas\\SistemaDeGerenciamentoComercial\\Core\\Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lucas\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
     "C:\\Users\\lucas\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.2\\pipelines.sockets.unofficial.2.2.2.nupkg.sha512",
