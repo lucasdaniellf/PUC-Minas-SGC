@@ -1,29 +1,18 @@
 ﻿using Core.Messages.Commands;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static Clientes.Domain.Model.Status;
 
 namespace Clientes.Application.Commands
 {
     public class AtualizarClienteCommand : CommandRequest
     {
         public string Id { get; private set; } = string.Empty;
-        public string Nome { get; private set; }
-
+        public string Nome { get; set; } = null!;
         [RegularExpression(@"^\d{11}$")]
-        public string Cpf { get; private set; }
+        public string Cpf { get; set; } = null!;
+        public ClienteStatus EstaAtivo { get; set; }
 
-        public int EstaAtivo { get; private set; }
 
-        public AtualizarClienteCommand(string nome, string cpf, int estaAtivo)
-        {
-            Nome = nome;
-            Cpf = cpf;
-            EstaAtivo = estaAtivo;
-        }
 
         public void AdicionarId(string id)
         {

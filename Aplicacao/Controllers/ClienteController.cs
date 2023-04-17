@@ -1,9 +1,8 @@
-﻿using AplicacaoGerenciamentoLoja.CustomParameters;
+﻿using AplicacaoGerenciamentoLoja.CustomParameters.Cliente;
 using Clientes.Application.Commands;
 using Clientes.Application.Query;
 using Clientes.Application.Query.DTO;
 using Clientes.Domain;
-using Clientes.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AplicacaoGerenciamentoLoja.Controllers

@@ -5,7 +5,7 @@ namespace Clientes.Application.Events
 {
     public class ClienteMensagemEvent : EventRequest
     {
-        public ClienteMensagemEvent(string id, string email, int estaAtivo)
+        public ClienteMensagemEvent(string id, string email, ClienteStatus estaAtivo)
         {
             Id = id;
             Email = email;
@@ -14,6 +14,6 @@ namespace Clientes.Application.Events
 
         public string Id { get; }
         public string Email { get; }
-        public int EstaAtivo { get; }
+        public ClienteStatus EstaAtivo { get; }
     }
 }
