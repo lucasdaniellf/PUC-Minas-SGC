@@ -71,13 +71,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
-        public async Task<ActionResult> AtualizarCadastroProduto(AtualizarCadastroProdutoCommand command, CancellationToken token)
+        [HttpPut("{Id}")]
+        public async Task<ActionResult> AtualizarCadastroProduto(string Id, AtualizarCadastroProdutoCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    command.AdicionarId(Id);
                     bool success = await _handler.Handle(command, token);
                     if (!success)
                     {
@@ -93,43 +94,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-        [HttpPut("catalogo/adicionar")]
-        public async Task<ActionResult> AdicionarProdutoACatalogo(AdicionarProdutoEmCatalogoCommand command, CancellationToken token)
-        {
-            try
-            {
-                bool success = await _handler.Handle(command, token);
-                if (success)
-                {
-                    return NoContent();
-                }
-            }
-            catch (ProdutoException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return NotFound();
-        }
-
-        [HttpPut("catalogo/retirar")]
-        public async Task<ActionResult> RetirarProdutoACatalogo(RetirarProdutoDeCatalogoCommand command, CancellationToken token)
-        {
-            try
-            {
-                bool success = await _handler.Handle(command, token);
-                if (success)
-                {
-                    return NoContent();
-                }
-            }
-            catch (ProdutoException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return NotFound();
-        }
-
-        [HttpPut("estoque/repor")]
+        [HttpPatch("/estoque/reposicao")]
         public async Task<ActionResult> ReporEstoqueProduto(ReporEstoqueProdutoCommand command, CancellationToken token)
         {
             try
@@ -148,7 +113,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
 
-        [HttpPut("estoque/baixar")]
+        [HttpPatch("/estoque/baixa")]
         public async Task<ActionResult> BaixarEstoqueProduto(BaixarEstoqueProdutoCommand command, CancellationToken token)
         {
             try

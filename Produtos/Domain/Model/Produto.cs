@@ -11,14 +11,13 @@ namespace Produtos.Domain.Model
         public Estoque Estoque { get; private set; } = null!;
         public ProdutoStatus EstaAtivo { get; private set; } = ProdutoStatus.ATIVO;
 
-        public void AdicionarACatalogoDeVenda()
+        public void AtualizarStatusProduto(ProdutoStatus status)
         {
-            EstaAtivo = ProdutoStatus.ATIVO;
-        }
-
-        public void RetirarDeCatalogoDeVenda()
-        {
-            EstaAtivo = ProdutoStatus.INATIVO;
+            if(!Enum.IsDefined(typeof(ProdutoStatus), status))
+            {
+                throw new ProdutoException("Status de produto inválido, deve ser 0 (inativo) ou 1 (ativo)");
+            }
+            EstaAtivo = status;
         }
 
         public void AtualizarDescricao(string descricao)
