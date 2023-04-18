@@ -1,4 +1,4 @@
-﻿namespace AplicacaoGerenciamentoLoja.CustomParameters
+﻿namespace AplicacaoGerenciamentoLoja.CustomParameters.Cliente
 {
     public class CustomClientFilter
     {

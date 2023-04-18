@@ -10,7 +10,7 @@ namespace Produtos.Application.Events
 {
     public class ProdutoMensagemEvent : EventRequest
     {
-        public ProdutoMensagemEvent(string id, decimal preco, int quantidade, int estaAtivo)
+        public ProdutoMensagemEvent(string id, decimal preco, int quantidade, ProdutoStatus estaAtivo)
         {
             Id = id;
             Preco = preco;
@@ -21,6 +21,6 @@ namespace Produtos.Application.Events
         public string Id { get; private set; } = null!;
         public decimal Preco { get; private set; }
         public int Quantidade { get; private set; }
-        public int EstaAtivo { get; private set; }
+        public ProdutoStatus EstaAtivo { get; private set; }
     }
 }

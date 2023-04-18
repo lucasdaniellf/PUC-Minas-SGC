@@ -1,11 +1,9 @@
-﻿using AplicacaoGerenciamentoLoja.CustomParameters;
-using Microsoft.AspNetCore.Http;
+﻿using AplicacaoGerenciamentoLoja.CustomParameters.Venda;
 using Microsoft.AspNetCore.Mvc;
 using Vendas.Application.Commands;
 using Vendas.Application.Commands.Handlers;
 using Vendas.Application.Query;
 using Vendas.Domain;
-using Vendas.Domain.Model;
 
 namespace AplicacaoGerenciamentoLoja.Controllers
 {
@@ -37,7 +35,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpGet("Periodo/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> BuscarVendasPorPeriodo([FromQuery] CustomDate periodo, CancellationToken token)
+        public async Task<ActionResult<IEnumerable<VendaDto>>> BuscarVendasPorPeriodo([FromQuery] DataParametro periodo, CancellationToken token)
         {
             var vendas = await _service.BuscarVendasPorPeriodo(periodo.FormatarDataInicio(), periodo.FormatarDataFim(), token);
             return Ok(vendas);
@@ -100,13 +98,15 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
-        public async Task<ActionResult> AtualizarVenda(AtualizarVendaCommand venda, CancellationToken token)
+        [HttpPut("{Id}")]
+        public async Task<ActionResult> AtualizarVenda(string Id, AtualizarVendaCommand venda, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    venda.AdicionarId(Id);
+
                     var sucesso = await _handler.Handle(venda, token);
                     if (sucesso)
                     {
@@ -122,58 +122,15 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-
-        [HttpPut("Confirmar/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> ConfirmarVenda(ConfirmarVendaCommand venda, CancellationToken token)
+        [HttpPost("{VendaId}/Item/")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> AdicionarItemEmVenda(string VendaId, AdicionarItemVendaCommand item, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var sucesso = await _handler.Handle(venda, token);
-                    if (sucesso)
-                    {
-                        return NoContent();
-                    }
-                    return NotFound();
-                }
-                catch (VendaException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-            return BadRequest();
-        }
+                    item.AdicionarVendaId(VendaId);
 
-        [HttpPut("Cancelar/")]
-        public async Task<ActionResult> CancelarVenda(CancelarVendaCommand venda, CancellationToken token)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var sucesso = await _handler.Handle(venda, token);
-                    if (sucesso)
-                    {
-                        return NoContent();
-                    }
-                    return NotFound();
-                }
-                catch (VendaException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-            return BadRequest();
-        }
-
-        [HttpPost("Item/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> AdicionarItemEmVenda(AdicionarItemVendaCommand item, CancellationToken token)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
                     var sucesso = await _handler.Handle(item, token);
                     if (sucesso)
                     {
@@ -191,13 +148,15 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-        [HttpPut("Item/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> AtualizarItemEmVenda(AtualizarItemVendaCommand item, CancellationToken token)
+        [HttpPut("{VendaId}/Item/")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> AtualizarItemEmVenda(string VendaId, AtualizarItemVendaCommand item, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    item.AdicionarVendaId(VendaId);
+
                     var sucesso = await _handler.Handle(item, token);
                     if (sucesso)
                     {
@@ -213,13 +172,15 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("Item/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> RemoverItemDeVenda(RemoverItemVendaCommand item, CancellationToken token)
+        [HttpDelete("{VendaId}/Item/")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> RemoverItemDeVenda(string VendaId, RemoverItemVendaCommand item, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    item.AdicionarVendaId(VendaId);
+
                     var sucesso = await _handler.Handle(item, token);
                     if (sucesso)
                     {
@@ -233,6 +194,43 @@ namespace AplicacaoGerenciamentoLoja.Controllers
                 }
             }
             return BadRequest();
+        }
+
+        [HttpPatch("{Id}/Cancelamento")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> CancelarVenda(string Id, CancellationToken token)
+        {
+            try
+            {
+                var sucesso = await _handler.Handle(new CancelarVendaCommand(Id), token);
+                if (sucesso)
+                {
+                    return NoContent();
+                }
+                return NotFound();
+            }
+            catch (VendaException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("{Id}/Confirmacao")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> ConfirmarVenda(string Id, CancellationToken token)
+        {
+            try
+            {
+                var sucesso = await _handler.Handle(new ConfirmarVendaCommand(Id), token);
+
+                if (sucesso)
+                {
+                    return NoContent();
+                }
+                return NotFound();
+            }
+            catch (VendaException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

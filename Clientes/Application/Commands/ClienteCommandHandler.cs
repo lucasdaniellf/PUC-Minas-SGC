@@ -53,7 +53,7 @@ namespace Clientes.Application.Commands
 
                     if (row > 0)
                     {
-                        EventRequest message = new ClienteMensagemEvent(cliente.Id, (int)cliente.EstaAtivo);
+                        EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
                         await Enqueue(_settings.FilaClienteCadastrado, message.Serialize());
                     }
 
@@ -81,13 +81,13 @@ namespace Clientes.Application.Commands
                     Cliente cliente = clientes.First();
                     cliente.AtualizarCpf(command.Cpf);
                     cliente.AtualizarNome(command.Nome);
-                    cliente.AtualizarStatusCliente(command.Status);
+                    cliente.AtualizarStatusCliente(command.EstaAtivo) ;
 
                     row = await _repository.AtualizarCliente(cliente, token);
 
                     if (row > 0)
                     {
-                        EventRequest message = new ClienteMensagemEvent(cliente.Id, (int)cliente.EstaAtivo);
+                        EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
                         await Enqueue(_settings.FilaClienteAtualizado, message.Serialize());
                     }
                 }

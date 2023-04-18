@@ -178,7 +178,7 @@ namespace Vendas.Application.Query
 
         private ClienteDto MapCliente(ClienteVenda cliente)
         {
-            return new ClienteDto(cliente.Id, (int)cliente.Status);
+            return new ClienteDto(cliente.Id, cliente.Email, (int)cliente.Status);
         }
     }
 }

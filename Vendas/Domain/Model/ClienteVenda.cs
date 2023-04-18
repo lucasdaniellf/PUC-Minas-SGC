@@ -6,9 +6,12 @@ namespace Vendas.Domain.Model
     {
         internal string Id { get; private set; } = null!;
         internal ClienteStatus Status { get; private set; }
-        internal ClienteVenda(string id, long EstaAtivo)
+        internal string Email { get; private set; } = null!;
+
+        internal ClienteVenda(string id, string email, long EstaAtivo)
         {
             Id = id;
+            Email = email;
             AplicarStatusEmCliente(EstaAtivo);
         }
 

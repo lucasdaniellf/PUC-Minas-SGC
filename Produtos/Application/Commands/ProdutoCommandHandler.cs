@@ -11,12 +11,10 @@ using static Produtos.Domain.Model.LogEstoque;
 
 namespace Produtos.Application.Commands
 {
-    public class ProdutoCommandHandler : ICommandHandler<AdicionarProdutoEmCatalogoCommand, bool>,
-                                           ICommandHandler<AtualizarCadastroProdutoCommand, bool>,
+    public class ProdutoCommandHandler :   ICommandHandler<AtualizarCadastroProdutoCommand, bool>,
                                            ICommandHandler<CadastrarProdutoCommand, bool>,
                                            ICommandHandler<ReporEstoqueProdutoCommand, bool>,
-                                           ICommandHandler<BaixarEstoqueProdutoCommand, bool>,
-                                           ICommandHandler<RetirarProdutoDeCatalogoCommand, bool>
+                                           ICommandHandler<BaixarEstoqueProdutoCommand, bool>
     {
         private readonly IUnitOfWork<Produto> _unitOfWork;
         private readonly IProdutoRepository _repository;
@@ -42,7 +40,7 @@ namespace Produtos.Application.Commands
                 row = await _repository.CadastrarProduto(produto, token);
                 if (row > 0)
                 {
-                    var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, (int)produto.EstaAtivo);
+                    var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo);
                     await _publisher.Enqueue(_settings.FilaProdutoCadastrado, eventRequest.Serialize());
                     command.Id = produto.Id;
                 }
@@ -71,13 +69,14 @@ namespace Produtos.Application.Commands
                     var produto = produtos.First();
                     produto.AtualizarDescricao(command.Descricao);
                     produto.AtualizarPreco(command.Preco);
+                    produto.AtualizarStatusProduto(command.EstaAtivo);
                     produto.Estoque.AtualizarEstoqueMinimo(command.EstoqueMinimo);
 
                     row = await _repository.AtualizarCadastroProduto(produto, token);
                     if (row > 0)
                     {
                         await _repository.AtualizarEstoqueMinimoProduto(produto.Estoque, token);
-                        var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, (int)produto.EstaAtivo);
+                        var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo);
                         await _publisher.Enqueue(_settings.FilaProdutoAtualizado, eventRequest.Serialize());
                     }
                 }
@@ -87,63 +86,6 @@ namespace Produtos.Application.Commands
             catch (Exception)
             {
                 _unitOfWork.Rollback();
-                throw;
-            }
-            return row > 0;
-        }
-
-        public async Task<bool> Handle(AdicionarProdutoEmCatalogoCommand command, CancellationToken token)
-        {
-            int row = 0;
-            try
-            {
-                _unitOfWork.Begin();
-                var produtos = await _repository.BuscarProdutoPorId(command.Id, token);
-                if (produtos.Any())
-                {
-                    var produto = produtos.First();
-                    produto.AdicionarACatalogoDeVenda();
-
-                    row = await _repository.AdicionarProdutoACatalogo(command.Id, token);
-                    if (row > 0)
-                    {
-                        var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, (int)produto.EstaAtivo);
-                        await _publisher.Enqueue(_settings.FilaProdutoStatusAlterado, eventRequest.Serialize());
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                _unitOfWork.CloseConnection();
-                throw;
-            }
-            return row > 0;
-        }
-
-        public async Task<bool> Handle(RetirarProdutoDeCatalogoCommand command, CancellationToken token)
-        {
-
-            int row = 0;
-            try
-            {
-                _unitOfWork.Begin();
-                var produtos = await _repository.BuscarProdutoPorId(command.Id, token);
-                if (produtos.Any())
-                {
-                    var produto = produtos.First();
-                    produto.RetirarDeCatalogoDeVenda();
-
-                    row = await _repository.RetirarProdutoDeCatalogo(command.Id, token);
-                    if (row > 0)
-                    {
-                        var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, (int)produto.EstaAtivo);
-                        await _publisher.Enqueue(_settings.FilaProdutoStatusAlterado, eventRequest.Serialize());
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                _unitOfWork.CloseConnection();
                 throw;
             }
             return row > 0;
@@ -172,7 +114,7 @@ namespace Produtos.Application.Commands
                         if (rows > 0)
                         {
                             await GerarLogEstoque(produto.Estoque, token);
-                            eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, (int)produto.EstaAtivo));
+                            eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo));
                         }
                     }
                 }
@@ -215,7 +157,7 @@ namespace Produtos.Application.Commands
                         {
                             rows += row;
                             await GerarLogEstoque(produto.Estoque, token);
-                            eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, (int)produto.EstaAtivo));
+                            eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo));
                         }
                     }
                 }

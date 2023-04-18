@@ -23,7 +23,6 @@ namespace Clientes.Domain.Model
         {
             AtualizarNome(nome);
             AtualizarCpf(cpf);
-
             this.Email = Email;
         }
 
@@ -37,20 +36,13 @@ namespace Clientes.Domain.Model
             return cliente;
         }
 
-        //Em caso de necessidade de disparar algum evento relacionado à essa ação no futuro
-        public void InativarCliente()
+        public void AtualizarStatusCliente(ClienteStatus status)
         {
-            EstaAtivo = Status.ClienteStatus.INATIVO;
-        }
-
-        public void AtualizarStatusCliente(int status)
-        {
-            if(status != 0 && status != 1)
+            if(!Enum.IsDefined(typeof(ClienteStatus), status))
             {
                 throw new ClienteException("Status inválido, deve ser 0 (inativo) ou 1 (ativo)");
-
             }
-            EstaAtivo = Status.AplicarStatusEmCliente(status);
+            EstaAtivo = status;
         }
 
         public void AtualizarNome(string nome)
@@ -67,7 +59,5 @@ namespace Clientes.Domain.Model
             CPF newCpf = new(cpf);
             Cpf = newCpf;
         }
-
-        //public Cliente Apply(props...){...map...}
     }
 }
