@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Produtos.Application.Commands;
 using Produtos.Application.Commands.ProdutoEstoque;
@@ -50,6 +51,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
         //Check this
         [HttpPost]
+        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> CadastrarProduto(CadastrarProdutoCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
@@ -72,6 +74,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpPut("{Id}")]
+        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
         public async Task<ActionResult> AtualizarCadastroProduto(string Id, AtualizarCadastroProdutoCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
@@ -95,6 +98,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpPatch("/estoque/reposicao")]
+        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
         public async Task<ActionResult> ReporEstoqueProduto(ReporEstoqueProdutoCommand command, CancellationToken token)
         {
             try
@@ -114,6 +118,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
 
         [HttpPatch("/estoque/baixa")]
+        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
         public async Task<ActionResult> BaixarEstoqueProduto(BaixarEstoqueProdutoCommand command, CancellationToken token)
         {
             try

@@ -64,7 +64,7 @@ namespace Vendas.Application.Commands.Handlers
             if (vendas.Any())
             {
                 var venda = vendas.First();
-                venda.AtualizarDadosVenda(command.Desconto, command.FormaDePagamento);
+                venda.AtualizarDadosVenda(command.FormaDePagamento);
                 try
                 {
                     row = await _repository.AtualizarVenda(venda, token);

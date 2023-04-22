@@ -23,7 +23,7 @@ namespace Clientes.Domain.Model
         {
             AtualizarNome(nome);
             AtualizarCpf(cpf);
-            this.Email = Email;
+            AtualizarEmail(Email);
         }
 
         public static Cliente CadastrarCliente(string nome, string cpf, string email)
@@ -36,6 +36,16 @@ namespace Clientes.Domain.Model
             return cliente;
         }
 
+        public void AtualizarDadosCliente(string nome, string cpf)
+        {
+            if(this.EstaAtivo == ClienteStatus.INATIVO)
+            {
+                throw new ClienteException("Dados de usuário não podem ser atualizados pois seu status é INATIVO");
+            }
+            AtualizarNome(nome);
+            AtualizarCpf(cpf);
+        }
+
         public void AtualizarStatusCliente(ClienteStatus status)
         {
             if(!Enum.IsDefined(typeof(ClienteStatus), status))
@@ -45,19 +55,28 @@ namespace Clientes.Domain.Model
             EstaAtivo = status;
         }
 
-        public void AtualizarNome(string nome)
+        private void AtualizarNome(string nome)
         {
-            if (string.IsNullOrEmpty(nome))
+            if (string.IsNullOrWhiteSpace(nome))
             {
                 throw new ClienteException("Nome inválido, não deve ser vazio");
             }
             Nome = nome;
         }
 
-        public void AtualizarCpf(string cpf)
+        private void AtualizarCpf(string cpf)
         {
             CPF newCpf = new(cpf);
             Cpf = newCpf;
+        }
+
+        private void AtualizarEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ClienteException("Email inválido, não deve ser vazio");
+            }
+            Email = email;
         }
     }
 }

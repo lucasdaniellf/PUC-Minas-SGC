@@ -47,7 +47,7 @@ namespace Clientes.Infrastructure
                         Email varchar(100) not null unique,
                         EstaAtivo INTEGER not null,
                         check(EstaAtivo = 0 OR EstaAtivo = 1)
-                    )
+                    );                        
                 ";
                 conn.Execute(sql);
 

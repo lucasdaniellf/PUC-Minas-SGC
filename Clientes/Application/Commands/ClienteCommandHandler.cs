@@ -11,7 +11,8 @@ using Microsoft.Extensions.Options;
 namespace Clientes.Application.Commands
 {
     public class ClienteCommandHandler : ICommandHandler<CadastrarClienteCommand, bool>,
-                                         ICommandHandler<AtualizarClienteCommand, bool>
+                                         ICommandHandler<AtualizarClienteCommand, bool>,
+                                         ICommandHandler<AtualizarStatusClienteCommand, bool>
     {
 
         private readonly IMessageBrokerPublisher _publisher;
@@ -79,10 +80,39 @@ namespace Clientes.Application.Commands
                 if (clientes.Any())
                 {
                     Cliente cliente = clientes.First();
-                    cliente.AtualizarCpf(command.Cpf);
-                    cliente.AtualizarNome(command.Nome);
-                    cliente.AtualizarStatusCliente(command.EstaAtivo) ;
+                    cliente.AtualizarDadosCliente(command.Nome, command.Cpf);
+                    
+                    //cliente.AtualizarStatusCliente(command.EstaAtivo) ;
 
+                    row = await _repository.AtualizarCliente(cliente, token);
+
+                    if (row > 0)
+                    {
+                        EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
+                        await Enqueue(_settings.FilaClienteAtualizado, message.Serialize());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                _unitOfWork.CloseConnection();
+                throw;
+            }
+            return row > 0;
+        }
+
+        public async Task<bool> Handle(AtualizarStatusClienteCommand command, CancellationToken token)
+        {
+            int row = 0;
+            try
+            {
+                _unitOfWork.Begin();
+                IEnumerable<Cliente> clientes = await _repository.BuscarClientePorId(command.Id, token);
+
+                if (clientes.Any())
+                {
+                    Cliente cliente = clientes.First();
+                    cliente.AtualizarStatusCliente(command.EstaAtivo);
                     row = await _repository.AtualizarCliente(cliente, token);
 
                     if (row > 0)

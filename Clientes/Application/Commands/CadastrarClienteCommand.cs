@@ -9,8 +9,12 @@ namespace Clientes.Application.Commands
         public string Nome { get; set; } = null!;
         [RegularExpression(@"^\d{11}$")]
         public string Cpf { get; set; } = null!;
-        [EmailAddress]
-        public string Email { get; set; } = null!;
+        public string Email { get; private set; } = string.Empty;
         public string Id { get; internal set; } = string.Empty;
+
+        public void AdicionarEmail(string email)
+        {
+            Email = email;
+        }
     }
 }
