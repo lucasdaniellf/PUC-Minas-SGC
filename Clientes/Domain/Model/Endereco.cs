@@ -8,23 +8,23 @@ namespace Clientes.Domain.Model
 {
     public class Endereco
     {
-        public string Rua { get; set; } = null!;
-        public string NumeroCasa { get; set; } = null!;
-        public string Complemento { get; set; } = string.Empty;
-        public string CEP { get; set; } = null!;
-        public string Cidade { get; set; } = null!;
-        public string Bairro { get; set; } = null!;
-        public string Pais { get; set; } = null!;
+        public string Rua { get; private set; } = null!;
+        public string NumeroCasa { get; private set; } = null!;
+        public string Complemento { get; private set; } = string.Empty;
+        public string CEP { get; private set; } = null!;
+        public string Cidade { get; private set; } = null!;
+        public string Bairro { get; private set; } = null!;
+        public string Estado { get; private set; } = null!;
 
-        public Endereco(string rua, string numeroCasa, string complemento, string cEP, string cidade, string bairro, string pais)
+        public Endereco(string rua, string numeroCasa, string complemento, string cep, string cidade, string bairro, string estado)
         {
             Rua = rua;
             NumeroCasa = numeroCasa;
             Complemento = complemento;
-            CEP = cEP;
+            CEP = cep;
             Cidade = cidade;
             Bairro = bairro;
-            Pais = pais;
+            Estado = estado;
         }
     }
 }

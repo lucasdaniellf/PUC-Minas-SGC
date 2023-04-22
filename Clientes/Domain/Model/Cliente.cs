@@ -11,7 +11,8 @@ namespace Clientes.Domain.Model
         [EmailAddress]
         public string Email { get; private set; } = null!;
         public CPF Cpf { get; private set; } = null!;
-        public Status.ClienteStatus EstaAtivo { get; private set; } = Status.ClienteStatus.ATIVO;
+        public ClienteStatus EstaAtivo { get; private set; } = ClienteStatus.ATIVO;
+        public Endereco Endereco { get; private set; } = null!;
 
         private Cliente(string Id, string Cpf, string Nome, string Email, long EstaAtivo) : this(Nome, Cpf, Email)
         {
