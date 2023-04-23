@@ -139,6 +139,23 @@ namespace Vendas.Application.Query
             }
         }
 
+        public async Task<IEnumerable<ClienteDto>> BuscarClientesPorId(string clienteId, CancellationToken token)
+        {
+
+            try
+            {
+                _unitOfWork.Begin();
+                var cliente = from c in await _repository.BuscarClientePorId(clienteId, token) select MapCliente(c);
+                _unitOfWork.CloseConnection();
+                return cliente;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.CloseConnection();
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<ProdutoDto>> BuscarProdutos(CancellationToken token)
         {
 
@@ -163,7 +180,7 @@ namespace Vendas.Application.Query
             {
                 items.Add(MapItemVenda(item));
             }
-            return new VendaDto(venda.Id, venda.Cliente.Id, venda.DataVenda, venda.Desconto, venda.Status, venda.FormaDePagamento, items);
+            return new VendaDto(venda.Id, MapCliente(venda.Cliente), venda.DataVenda, venda.Desconto, venda.Status, venda.FormaDePagamento, items);
         }
 
         private VendaItemDto MapItemVenda(ItemVenda item)

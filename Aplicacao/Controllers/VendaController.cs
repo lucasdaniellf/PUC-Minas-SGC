@@ -1,9 +1,12 @@
 ﻿using AplicacaoGerenciamentoLoja.CustomParameters.Venda;
+using AplicacaoGerenciamentoLoja.SystemPolicies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vendas.Application.Commands;
 using Vendas.Application.Commands.Handlers;
 using Vendas.Application.Query;
 using Vendas.Domain;
+using Vendas.Domain.Model;
 
 namespace AplicacaoGerenciamentoLoja.Controllers
 {
@@ -14,42 +17,61 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
         private readonly VendaQueryService _service;
         private readonly VendaCommandHandler _handler;
+        private readonly IAuthorizationService _authorizationService;
 
-        public VendaController(VendaQueryService service, VendaCommandHandler handler)
+        public VendaController(VendaQueryService service, VendaCommandHandler handler, IAuthorizationService authorizationService)
         {
             _service = service;
             _handler = handler;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<VendaDto>>> BuscarVendas(string? clienteId, CancellationToken token)
         {
+            IEnumerable<VendaDto> vendas = new List<VendaDto>();
             if (!string.IsNullOrEmpty(clienteId))
             {
-                return Ok(await _service.BuscarVendasPorCliente(clienteId, token));
+                vendas =  await _service.BuscarVendasPorCliente(clienteId, token);
             }
             else
             {
-                return Ok(await _service.BuscarVendas(token));
+                vendas = await _service.BuscarVendas(token);
             }
+
+            var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoLerDadosVenda);
+
+            if (!resultado.Succeeded)
+            {
+                return Forbid();
+            }
+
+            return Ok(vendas);
+        }
+
+        [HttpGet("{id}", Name = "BuscarVendasPorId")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> BuscarVendasPorId(string id, CancellationToken token)
+        {
+            var vendas = await _service.BuscarVendasPorId(id, token);
+            var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoLerDadosVenda);
+
+            if (!resultado.Succeeded)
+            {
+                return Forbid();
+            }
+            return Ok(vendas);
         }
 
         [HttpGet("Periodo/")]
+        [Authorize(Policy = Policies.RequisitoApenasAcessoInterno)]
         public async Task<ActionResult<IEnumerable<VendaDto>>> BuscarVendasPorPeriodo([FromQuery] DataParametro periodo, CancellationToken token)
         {
             var vendas = await _service.BuscarVendasPorPeriodo(periodo.FormatarDataInicio(), periodo.FormatarDataFim(), token);
             return Ok(vendas);
         }
 
-
-        [HttpGet("{id}", Name = "BuscarVendasPorId")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> BuscarVendasPorId(string id, CancellationToken token)
-        {
-            var vendas = await _service.BuscarVendasPorId(id, token);
-            return Ok(vendas);
-        }
-
         [HttpGet("Clientes/")]
+        [Authorize(Policy = Policies.RequisitoApenasAcessoInterno)]
         public async Task<ActionResult<IEnumerable<ClienteDto>>> BuscarClientes(CancellationToken token)
         {
             var clientes = await _service.BuscarClientes(token);
@@ -57,6 +79,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpGet("Produtos/")]
+        [Authorize(Policy = Policies.RequisitoApenasAcessoInterno)]
         public async Task<ActionResult<IEnumerable<ProdutoDto>>> BuscarProdutos(CancellationToken token)
         {
             var produtos = await _service.BuscarProdutos(token);
@@ -82,6 +105,16 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             {
                 try
                 {
+                    
+                    var cliente = await _service.BuscarClientesPorId(venda.ClienteId, token);
+                    var resultado = await _authorizationService.AuthorizeAsync(User, cliente, Policies.RequisitoCadastrarVenda);
+                    if (!resultado.Succeeded)
+                    {
+                        return Forbid();
+                    }
+
+
+
                     var sucesso = await _handler.Handle(venda, token);
                     if (sucesso)
                     {
@@ -105,6 +138,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             {
                 try
                 {
+                    var vendas = await _service.BuscarVendasPorId(Id, token);
+                    var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoAtualizarVenda);
+
+                    if (!resultado.Succeeded)
+                    {
+                        return Forbid();
+                    }
+
                     venda.AdicionarId(Id);
 
                     var sucesso = await _handler.Handle(venda, token);
@@ -129,12 +170,20 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             {
                 try
                 {
+                    var vendas = await _service.BuscarVendasPorId(VendaId, token);
+                    var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoAtualizarVenda);
+
+                    if (!resultado.Succeeded)
+                    {
+                        return Forbid();
+                    }
+
                     item.AdicionarVendaId(VendaId);
 
                     var sucesso = await _handler.Handle(item, token);
                     if (sucesso)
                     {
-                        var vendas = await _service.BuscarVendasPorId(item.VendaId, token);
+                        vendas = await _service.BuscarVendasPorId(item.VendaId, token);
                         return CreatedAtAction("BuscarVendasPorId", new { Id = vendas.First().id }, vendas.First());
                     }
                     return NotFound();
@@ -155,6 +204,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             {
                 try
                 {
+                    var vendas = await _service.BuscarVendasPorId(VendaId, token);
+                    var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoAtualizarVenda);
+
+                    if (!resultado.Succeeded)
+                    {
+                        return Forbid();
+                    }
+
                     item.AdicionarVendaId(VendaId);
 
                     var sucesso = await _handler.Handle(item, token);
@@ -179,6 +236,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             {
                 try
                 {
+                    var vendas = await _service.BuscarVendasPorId(VendaId, token);
+                    var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoAtualizarVenda);
+
+                    if (!resultado.Succeeded)
+                    {
+                        return Forbid();
+                    }
+
                     item.AdicionarVendaId(VendaId);
 
                     var sucesso = await _handler.Handle(item, token);
@@ -201,6 +266,15 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         {
             try
             {
+                var vendas = await _service.BuscarVendasPorId(Id, token);
+                var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoAtualizarVenda);
+
+                if (!resultado.Succeeded)
+                {
+                    return Forbid();
+                }
+
+
                 var sucesso = await _handler.Handle(new CancelarVendaCommand(Id), token);
                 if (sucesso)
                 {
@@ -219,6 +293,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         {
             try
             {
+                var vendas = await _service.BuscarVendasPorId(Id, token);
+                var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.RequisitoAtualizarVenda);
+
+                if (!resultado.Succeeded)
+                {
+                    return Forbid();
+                }
+
                 var sucesso = await _handler.Handle(new ConfirmarVendaCommand(Id), token);
 
                 if (sucesso)

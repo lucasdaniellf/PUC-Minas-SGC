@@ -68,14 +68,13 @@ namespace Vendas.Domain.Model
             return item;
         }
 
-        internal void AtualizarDadosVenda(int desconto, FormaPagamento formaPagamento )
+        internal void AtualizarDadosVenda(FormaPagamento formaPagamento )
         {
             if (Status != Status.PENDENTE && Status != Status.REPROVADO)
             {
                 throw new VendaException("Venda não pode ser alterada. Status: " + Status);
             }
 
-            AplicarDesconto(desconto);
             AtualizarFormaDePagamento(formaPagamento);
         }
 
@@ -155,6 +154,14 @@ namespace Vendas.Domain.Model
             if (success)
             {
                 this.FormaDePagamento = formaPagamento;
+                if((int) formaPagamento == 0)
+                {
+                    AplicarDesconto(10);
+                } else
+                {
+                    AplicarDesconto(0);
+
+                }
             }
             else
             {

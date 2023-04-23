@@ -47,7 +47,20 @@ namespace Clientes.Infrastructure
                         Email varchar(100) not null unique,
                         EstaAtivo INTEGER not null,
                         check(EstaAtivo = 0 OR EstaAtivo = 1)
-                    )
+                    );
+
+                    Create table Endereco(
+                        Id integer primary key autoincrement,
+                        ClienteId varchar unique not null,
+                        Rua varchar(50) not null,
+                        NumeroCasa varchar(10) not null,
+                        Complemento varchar(100),
+                        CEP varchar(8) not null,
+                        Bairro varchar(50) not null,
+                        Cidade varchar(50) not null,
+                        Estado varchar(20) not null,
+                        Foreign Key(ClienteId) references Cliente(Id) ON DELETE CASCADE
+                    );
                 ";
                 conn.Execute(sql);
 

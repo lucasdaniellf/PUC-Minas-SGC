@@ -11,29 +11,42 @@ namespace Clientes.Domain.Model
         [EmailAddress]
         public string Email { get; private set; } = null!;
         public CPF Cpf { get; private set; } = null!;
-        public Status.ClienteStatus EstaAtivo { get; private set; } = Status.ClienteStatus.ATIVO;
+        public ClienteStatus EstaAtivo { get; private set; } = ClienteStatus.ATIVO;
+        public Endereco Endereco { get; private set; } = null!;
 
-        private Cliente(string Id, string Cpf, string Nome, string Email, long EstaAtivo) : this(Nome, Cpf, Email)
+        internal Cliente(string Id, string Cpf, string Nome, string Email, long EstaAtivo, Endereco endereco) : this(Nome, Cpf, Email, endereco)
         {
             this.Id = Id;
             this.EstaAtivo = AplicarStatusEmCliente(EstaAtivo);
         }
 
-        private Cliente(string nome, string cpf, string Email)
+        private Cliente(string nome, string cpf, string Email, Endereco endereco)
         {
             AtualizarNome(nome);
             AtualizarCpf(cpf);
-            this.Email = Email;
+            AtualizarEmail(Email);
+            Endereco = endereco;
         }
 
-        public static Cliente CadastrarCliente(string nome, string cpf, string email)
+        public static Cliente CadastrarCliente(string nome, string cpf, string email, Endereco endereco)
         {
-            Cliente cliente = new(nome, cpf, email)
+            Cliente cliente = new(nome, cpf, email, endereco)
             {
                 Id = Guid.NewGuid().ToString()
             };
 
             return cliente;
+        }
+
+        public void AtualizarDadosCliente(string nome, string cpf, Endereco endereco)
+        {
+            if(this.EstaAtivo == ClienteStatus.INATIVO)
+            {
+                throw new ClienteException("Dados de usuário não podem ser atualizados pois seu status é INATIVO");
+            }
+            AtualizarNome(nome);
+            AtualizarCpf(cpf);
+            Endereco = endereco;
         }
 
         public void AtualizarStatusCliente(ClienteStatus status)
@@ -45,19 +58,28 @@ namespace Clientes.Domain.Model
             EstaAtivo = status;
         }
 
-        public void AtualizarNome(string nome)
+        private void AtualizarNome(string nome)
         {
-            if (string.IsNullOrEmpty(nome))
+            if (string.IsNullOrWhiteSpace(nome))
             {
                 throw new ClienteException("Nome inválido, não deve ser vazio");
             }
             Nome = nome;
         }
 
-        public void AtualizarCpf(string cpf)
+        private void AtualizarCpf(string cpf)
         {
             CPF newCpf = new(cpf);
             Cpf = newCpf;
+        }
+
+        private void AtualizarEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ClienteException("Email inválido, não deve ser vazio");
+            }
+            Email = email;
         }
     }
 }
