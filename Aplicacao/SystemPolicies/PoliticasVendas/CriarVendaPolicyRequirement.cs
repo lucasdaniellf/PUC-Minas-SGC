@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Vendas.Application.Query;
 
-namespace AplicacaoGerenciamentoLoja.SystemPolicies.SalePolicies
+namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
 {
     public class CriarVendaPolicyRequirement : IAuthorizationRequirement
     {

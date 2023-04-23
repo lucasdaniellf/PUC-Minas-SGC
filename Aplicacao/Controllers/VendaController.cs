@@ -1,7 +1,5 @@
 ﻿using AplicacaoGerenciamentoLoja.CustomParameters.Venda;
 using AplicacaoGerenciamentoLoja.SystemPolicies;
-using AplicacaoGerenciamentoLoja.SystemPolicies.SalePolicies;
-using Clientes.Domain.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vendas.Application.Commands;

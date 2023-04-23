@@ -1,7 +1,8 @@
 ﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
-using AplicacaoGerenciamentoLoja.SystemPolicies.ClientPolicies;
-using AplicacaoGerenciamentoLoja.SystemPolicies.SalePolicies;
+using AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasClientes;
+using AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace AplicacaoGerenciamentoLoja.Extensions
 {
@@ -27,7 +28,7 @@ namespace AplicacaoGerenciamentoLoja.Extensions
                 opt.AddPolicy(Policies.RequisitoAtualizarCliente, policy => policy.AddClienteUpdatePolicyRequirement());
                 opt.AddPolicy(Policies.RequisitoCadastroCliente, policy => policy.AddClienteInsertPolicyRequirement());
 
-                opt.AddPolicy(Policies.RequisitoApenasAcessoInterno, policy => { policy.RequireAssertion(context => !context.User.IsInRole(Roles.Cliente)); }); ;
+                opt.AddPolicy(Policies.RequisitoApenasAcessoInterno, policy => policy.RequireAssertion(context => context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente)));
 
                 opt.AddPolicy(Policies.RequisitoLerDadosVenda, policy => policy.AddLerVendaPolicyRequirement());
                 opt.AddPolicy(Policies.RequisitoCadastrarVenda, policy => policy.AddCriarVendaPolicyRequirement());

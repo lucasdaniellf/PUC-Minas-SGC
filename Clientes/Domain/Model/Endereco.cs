@@ -16,11 +16,11 @@ namespace Clientes.Domain.Model
         public string Bairro { get; private set; } = null!;
         public string Estado { get; private set; } = null!;
 
-        public Endereco(string rua, string numeroCasa, string complemento, string cep, string cidade, string bairro, string estado)
+        public Endereco(string rua, string numeroCasa, string? complemento, string cep, string cidade, string bairro, string estado)
         {
             Rua = rua;
             NumeroCasa = numeroCasa;
-            Complemento = complemento;
+            Complemento = complemento ?? string.Empty;
             CEP = cep;
             Cidade = cidade;
             Bairro = bairro;

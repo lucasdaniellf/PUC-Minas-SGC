@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
-namespace AplicacaoGerenciamentoLoja.SystemPolicies.ClientPolicies
+namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasClientes
 {
 
     public class LerDadosClientePolicyRequirement : IAuthorizationRequirement

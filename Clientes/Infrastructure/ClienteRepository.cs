@@ -2,6 +2,8 @@
 using Clientes.Domain.Repository;
 using Core.Infrastructure;
 using Dapper;
+using System.Collections.Generic;
+using static Clientes.Infrastructure.ClienteDataObject;
 
 namespace Clientes.Infrastructure
 {
@@ -42,15 +44,17 @@ namespace Clientes.Infrastructure
                         from Cliente c 
                              Join Endereco e on e.ClienteId = c.Id
                         where Cpf = @Cpf";
-            return await _context.Connection.QueryAsync<Cliente>(new CommandDefinition(commandText: query,
+            var list = await _context.Connection.QueryAsync<ClienteTO>(new CommandDefinition(commandText: query,
                                                                                                     parameters: new { Cpf = cpf },
                                                                                                     transaction: _context.Transaction,
                                                                                                     commandType: System.Data.CommandType.Text,
                                                                                                     cancellationToken: token));
+            
+            return from cliente in list select ClienteRepositoryMapping.MapearClienteEndereco(cliente);
         }
         public async Task<IEnumerable<Cliente>> BuscarClientePorEmail(string email, CancellationToken token)
         {
-            var query = @"select *
+            var query = @"select c.*
                              Rua, 
                              NumeroCasa,
                              Complemento,
@@ -61,40 +65,74 @@ namespace Clientes.Infrastructure
                         from Cliente c 
                              Join Endereco e on e.ClienteId = c.Id
                             from Cliente where Email = @Email";
-            return await _context.Connection.QueryAsync<Cliente>(new CommandDefinition(commandText: query,
+            var list = await _context.Connection.QueryAsync<ClienteTO>(new CommandDefinition(commandText: query,
                                                                                                     parameters: new { Email = email },
                                                                                                     transaction: _context.Transaction,
                                                                                                     commandType: System.Data.CommandType.Text,
                                                                                                     cancellationToken: token));
+            return from cliente in list select ClienteRepositoryMapping.MapearClienteEndereco(cliente);
         }
 
         public async Task<IEnumerable<Cliente>> BuscarClientePorId(string id, CancellationToken token)
         {
-            var query = @"select * from Cliente where Id = @Id";
-            return await _context.Connection.QueryAsync<Cliente>(new CommandDefinition(commandText: query,
+            var query = @"select c.*,
+                             Rua, 
+                             NumeroCasa,
+                             Complemento,
+                             CEP, 
+                             Bairro,
+                             Cidade,
+                             Estado
+                        from Cliente c 
+                             Join Endereco e on e.ClienteId = c.Id 
+                        from Cliente where Id = @Id";
+            var list = await _context.Connection.QueryAsync<ClienteTO>(new CommandDefinition(commandText: query,
                                                                                                     parameters: new { Id = id },
                                                                                                     transaction: _context.Transaction,
                                                                                                     commandType: System.Data.CommandType.Text,
                                                                                                     cancellationToken: token));
+
+            return from cliente in list select ClienteRepositoryMapping.MapearClienteEndereco(cliente);
         }
 
         public async Task<IEnumerable<Cliente>> BuscarClientePorNome(string nome, CancellationToken token)
         {
-            var query = @"select * from Cliente where UPPER(Nome) like @Nome";
-            return await _context.Connection.QueryAsync<Cliente>(new CommandDefinition(commandText: query,
+            var query = @"select select c.*,
+                             Rua, 
+                             NumeroCasa,
+                             Complemento,
+                             CEP, 
+                             Bairro,
+                             Cidade,
+                             Estado
+                        from Cliente c 
+                             Join Endereco e on e.ClienteId = c.Id
+                        where UPPER(Nome) like @Nome";
+            var list = await _context.Connection.QueryAsync<ClienteTO>(new CommandDefinition(commandText: query,
                                                                                                     parameters: new { Nome = string.Concat("%", nome.ToUpper(), "%") },
                                                                                                     transaction: _context.Transaction,
                                                                                                     commandType: System.Data.CommandType.Text,
                                                                                                     cancellationToken: token));
+            return from cliente in list select ClienteRepositoryMapping.MapearClienteEndereco(cliente);
         }
 
         public async Task<IEnumerable<Cliente>> BuscarClientes(CancellationToken token)
         {
-            var query = @"select c.* from Cliente c";
-            return await _context.Connection.QueryAsync<Cliente>(new CommandDefinition(commandText: query,
+            var query = @"select c.*,
+                             Rua, 
+                             NumeroCasa,
+                             Complemento,
+                             CEP, 
+                             Bairro,
+                             Cidade,
+                             Estado
+                        from Cliente c 
+                        Join Endereco e on e.ClienteId = c.Id";
+            var  list = await _context.Connection.QueryAsync<ClienteTO>(new CommandDefinition(commandText: query,
                                                                                                     transaction: _context.Transaction,
                                                                                                     commandType: System.Data.CommandType.Text,
                                                                                                     cancellationToken: token));
+            return from cliente in list select ClienteRepositoryMapping.MapearClienteEndereco(cliente);
         }
 
         public async Task<int> CadastrarCliente(Cliente cliente, CancellationToken token)
@@ -114,7 +152,7 @@ namespace Clientes.Infrastructure
         }
 
         //==========Endereco=========================================================================================//
-        public async Task<int> CadastrarEndereco(Cliente cliente, CancellationToken token)
+        public async Task<int> CadastrarEnderecoCliente(Cliente cliente, CancellationToken token)
         {
             var query = @"insert into Endereco(ClienteId, Rua, NumeroCasa, Complemento, CEP, Bairro, Cidade, Estado) 
                             values (@ClienteId, @Rua, @NumeroCasa, @Complemento, @CEP, @Bairro, @Cidade, @Estado)";
@@ -136,7 +174,7 @@ namespace Clientes.Infrastructure
                                                                                 cancellationToken: token));
         }
 
-        public async Task<int> AtualizarEndereco(Cliente cliente, CancellationToken token)
+        public async Task<int> AtualizarEnderecoCliente(Cliente cliente, CancellationToken token)
         {
             var query = @"uptade Endereco set Rua = @Rua, 
                                                 NumeroCasa = @NumeroCasa, 

@@ -30,11 +30,13 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         [Authorize(Policy = Policies.RequisitoApenasAcessoInterno)]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientes(string? nome, CancellationToken token)
         {
-            IEnumerable<ClienteQueryDto> clientes = Enumerable.Empty<ClienteQueryDto>();
+            IEnumerable<ClienteQueryDto> clientes;
+
             if (string.IsNullOrWhiteSpace(nome))
             {
                 clientes = await _service.BuscarClientes(token);
-            }else
+            }
+            else
             {
                 clientes = await _service.BuscarClientePorNome(nome, token);
             }

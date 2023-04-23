@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
-namespace AplicacaoGerenciamentoLoja.SystemPolicies.ClientPolicies
+namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasClientes
 {
     public class CadastrarClientePolicyRequirement : IAuthorizationRequirement
     {
@@ -18,7 +18,8 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.ClientPolicies
             if (string.IsNullOrEmpty(email) || !context.User.IsInRole("Cliente"))
             {
                 context.Fail();
-            } else
+            }
+            else
             {
                 context.Succeed(requirement);
             }

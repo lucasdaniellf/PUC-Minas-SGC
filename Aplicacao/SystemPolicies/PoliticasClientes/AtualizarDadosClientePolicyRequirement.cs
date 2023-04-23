@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
-namespace AplicacaoGerenciamentoLoja.SystemPolicies.ClientPolicies
+namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasClientes
 {
     public class AtualizarDadosClientePolicyRequirement : IAuthorizationRequirement
     {

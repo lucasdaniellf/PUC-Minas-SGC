@@ -48,12 +48,13 @@ namespace Clientes.Application.Commands
                 }
                 else
                 {
-                    var cliente = Cliente.CadastrarCliente(command.Nome, command.Cpf, command.Email);
+                    var cliente = Cliente.CadastrarCliente(command.Nome, command.Cpf, command.Email, command.Endereco);
                     row = await _repository.CadastrarCliente(cliente, token);
                     command.Id = cliente.Id;
 
                     if (row > 0)
                     {
+                        await _repository.CadastrarEnderecoCliente(cliente, token);
                         EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
                         await Enqueue(_settings.FilaClienteCadastrado, message.Serialize());
                     }
@@ -80,7 +81,7 @@ namespace Clientes.Application.Commands
                 if (clientes.Any())
                 {
                     Cliente cliente = clientes.First();
-                    cliente.AtualizarDadosCliente(command.Nome, command.Cpf);
+                    cliente.AtualizarDadosCliente(command.Nome, command.Cpf, command.Endereco);
                     
                     //cliente.AtualizarStatusCliente(command.EstaAtivo) ;
 
@@ -88,6 +89,7 @@ namespace Clientes.Application.Commands
 
                     if (row > 0)
                     {
+                        await _repository.AtualizarEnderecoCliente(cliente, token);
                         EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
                         await Enqueue(_settings.FilaClienteAtualizado, message.Serialize());
                     }

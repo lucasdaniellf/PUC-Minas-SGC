@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace AplicacaoGerenciamentoLoja.SystemPolicies.ClientPolicies
+namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasClientes
 {
 
     public static class PoliticasClientesAuthorizationPolicyBuilder

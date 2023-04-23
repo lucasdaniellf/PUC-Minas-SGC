@@ -14,22 +14,23 @@ namespace Clientes.Domain.Model
         public ClienteStatus EstaAtivo { get; private set; } = ClienteStatus.ATIVO;
         public Endereco Endereco { get; private set; } = null!;
 
-        private Cliente(string Id, string Cpf, string Nome, string Email, long EstaAtivo) : this(Nome, Cpf, Email)
+        internal Cliente(string Id, string Cpf, string Nome, string Email, long EstaAtivo, Endereco endereco) : this(Nome, Cpf, Email, endereco)
         {
             this.Id = Id;
             this.EstaAtivo = AplicarStatusEmCliente(EstaAtivo);
         }
 
-        private Cliente(string nome, string cpf, string Email)
+        private Cliente(string nome, string cpf, string Email, Endereco endereco)
         {
             AtualizarNome(nome);
             AtualizarCpf(cpf);
             AtualizarEmail(Email);
+            Endereco = endereco;
         }
 
-        public static Cliente CadastrarCliente(string nome, string cpf, string email)
+        public static Cliente CadastrarCliente(string nome, string cpf, string email, Endereco endereco)
         {
-            Cliente cliente = new(nome, cpf, email)
+            Cliente cliente = new(nome, cpf, email, endereco)
             {
                 Id = Guid.NewGuid().ToString()
             };
@@ -37,7 +38,7 @@ namespace Clientes.Domain.Model
             return cliente;
         }
 
-        public void AtualizarDadosCliente(string nome, string cpf)
+        public void AtualizarDadosCliente(string nome, string cpf, Endereco endereco)
         {
             if(this.EstaAtivo == ClienteStatus.INATIVO)
             {
@@ -45,6 +46,7 @@ namespace Clientes.Domain.Model
             }
             AtualizarNome(nome);
             AtualizarCpf(cpf);
+            Endereco = endereco;
         }
 
         public void AtualizarStatusCliente(ClienteStatus status)
