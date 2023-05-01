@@ -1,16 +1,18 @@
 ﻿namespace AplicacaoGerenciamentoLoja.SystemPolicies
 {
-    public class Policies
+    public static class Policies
     {
-        public const string RequisitoCadastrarVenda = nameof(RequisitoCadastrarVenda);
-        public const string RequisitoAtualizarVenda = nameof(RequisitoAtualizarVenda);
-        public const string RequisitoLerDadosVenda = nameof(RequisitoLerDadosVenda);
+        public const string PoliticaCriarCadastroCliente = nameof(PoliticaCriarCadastroCliente);
+        public const string PoliticaAtualizarCadastroCliente = nameof(PoliticaAtualizarCadastroCliente);
+        public const string PoliticaLerCadastroCliente = nameof(PoliticaLerCadastroCliente);
 
-        public const string RequisitoGerenciamentoProduto = nameof(RequisitoGerenciamentoProduto);
+        public const string PoliticaGerenciamentoProduto = nameof(PoliticaGerenciamentoProduto);
 
-        public const string RequisitoCadastroCliente = nameof(RequisitoCadastroCliente);
-        public const string RequisitoAtualizarCliente = nameof(RequisitoAtualizarCliente);
-        public const string RequisitoLerDadosCliente = nameof(RequisitoLerDadosCliente);
-        public const string RequisitoApenasAcessoInterno = nameof(RequisitoApenasAcessoInterno);
+        public const string PoliticaCriarVenda = nameof(PoliticaCriarVenda);
+        public const string PoliticaAtualizarVenda = nameof(PoliticaAtualizarVenda);
+        public const string PoliticaLerVenda = nameof(PoliticaLerVenda);
+
+        public const string PoliticaAcessoInterno = nameof(PoliticaAcessoInterno);
+        public const string PoliticaValidacaoEmailUsuario = nameof(PoliticaValidacaoEmailUsuario);
     }
 }

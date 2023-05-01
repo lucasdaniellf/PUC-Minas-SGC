@@ -7,7 +7,7 @@ namespace Vendas.Application.Commands
 {
     public class AtualizarVendaCommand : CommandRequest
     {
-        public string Id { get; private set; } = null!;
+        public string Id { get; private set; } = string.Empty;
         public FormaPagamento FormaDePagamento { get; set; }
         //public Status StatusVenda { get; set; }
 

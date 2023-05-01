@@ -1,7 +1,6 @@
 ﻿using Clientes.Domain.Model;
 using Core.Messages.Commands;
 using System.ComponentModel.DataAnnotations;
-using static Clientes.Domain.Model.Status;
 
 namespace Clientes.Application.Commands
 {
@@ -12,9 +11,10 @@ namespace Clientes.Application.Commands
 
         [RegularExpression(@"^\d{11}$")]
         public string Cpf { get; set; } = null!;
-
-        [RegularExpression(@"^\d{8}$")]
         public Endereco Endereco { get; set; } = null!;
+        [EmailAddress]
+        public string Email { get; set; } = null!;
+
         //-----------------------------------------------------//
         //public ClienteStatus EstaAtivo { get; set; }
 

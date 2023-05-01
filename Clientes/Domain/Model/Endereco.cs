@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Clientes.Domain.Model
         public string Rua { get; private set; } = null!;
         public string NumeroCasa { get; private set; } = null!;
         public string Complemento { get; private set; } = string.Empty;
+        [RegularExpression(@"^\d{8}$")]
         public string CEP { get; private set; } = null!;
         public string Cidade { get; private set; } = null!;
         public string Bairro { get; private set; } = null!;

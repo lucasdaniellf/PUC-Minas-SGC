@@ -81,7 +81,7 @@ namespace Clientes.Application.Commands
                 if (clientes.Any())
                 {
                     Cliente cliente = clientes.First();
-                    cliente.AtualizarDadosCliente(command.Nome, command.Cpf, command.Endereco);
+                    cliente.AtualizarDadosCliente(command.Nome, command.Cpf, command.Email, command.Endereco);
                     
                     //cliente.AtualizarStatusCliente(command.EstaAtivo) ;
 

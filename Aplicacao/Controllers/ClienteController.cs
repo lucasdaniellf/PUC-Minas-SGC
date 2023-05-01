@@ -6,12 +6,12 @@ using Clientes.Application.Query.DTO;
 using Clientes.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AplicacaoGerenciamentoLoja.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = Policies.PoliticaValidacaoEmailUsuario)]
     public class ClienteController : ControllerBase
     {
         private readonly ClienteCommandHandler _handler;
@@ -27,7 +27,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = Policies.RequisitoApenasAcessoInterno)]
+        [Authorize(Policy = Policies.PoliticaAcessoInterno)]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientes(string? nome, CancellationToken token)
         {
             IEnumerable<ClienteQueryDto> clientes;
@@ -63,7 +63,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
                 }
             }
 
-            var resultado = await _authorizationService.AuthorizeAsync(User, clientes, Policies.RequisitoLerDadosCliente);
+            var resultado = await _authorizationService.AuthorizeAsync(User, clientes, Policies.PoliticaLerCadastroCliente);
             if(!resultado.Succeeded)
             {
                 return Forbid();
@@ -77,7 +77,8 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         {
 
             IEnumerable<ClienteQueryDto> clientes = await _service.BuscarClientePorId(Id, token);
-            var resultado = await _authorizationService.AuthorizeAsync(User, clientes, Policies.RequisitoLerDadosCliente);
+            
+            var resultado = await _authorizationService.AuthorizeAsync(User, clientes, Policies.PoliticaLerCadastroCliente);
             if (!resultado.Succeeded)
             {
                 return Forbid();
@@ -93,18 +94,16 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
         //Check this
         [HttpPost]
-        [Authorize(Policy = Policies.RequisitoCadastroCliente)]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> CadastrarCliente(CadastrarClienteCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var email = User.FindFirst(ClaimTypes.Email)?.Value;
-                    
-                    if(email != null)
+                    var resultado = await _authorizationService.AuthorizeAsync(User, command.Email, Policies.PoliticaCriarCadastroCliente);
+                    if (!resultado.Succeeded)
                     {
-                        command.AdicionarEmail(email);
+                        return Forbid();
                     }
 
                     var success = await _handler.Handle(command, token);
@@ -130,14 +129,19 @@ namespace AplicacaoGerenciamentoLoja.Controllers
                 try
                 {
                     IEnumerable<ClienteQueryDto> clientes = await _service.BuscarClientePorId(Id, token);
-                    var resultado = await _authorizationService.AuthorizeAsync(User, clientes, Policies.RequisitoAtualizarCliente);
-                    if (!resultado.Succeeded)
+                    
+                    var AtualizarClienteResultado = await _authorizationService.AuthorizeAsync(User, clientes, Policies.PoliticaAtualizarCadastroCliente);
+                    var AtualizarClienteEmailResultado = await _authorizationService.AuthorizeAsync(User, command.Email, Policies.PoliticaCriarCadastroCliente);
+
+                    if (!AtualizarClienteResultado.Succeeded || !AtualizarClienteEmailResultado.Succeeded)
                     {
                         return Forbid();
                     }
 
                     command.AdicionarId(Id);
+                    
                     bool success = await _handler.Handle(command, token);
+                    
                     if (!success)
                     {
                         return NotFound();

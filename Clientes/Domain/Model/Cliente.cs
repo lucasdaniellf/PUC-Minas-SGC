@@ -38,7 +38,7 @@ namespace Clientes.Domain.Model
             return cliente;
         }
 
-        public void AtualizarDadosCliente(string nome, string cpf, Endereco endereco)
+        public void AtualizarDadosCliente(string nome, string cpf, string email, Endereco endereco)
         {
             if(this.EstaAtivo == ClienteStatus.INATIVO)
             {
@@ -46,6 +46,7 @@ namespace Clientes.Domain.Model
             }
             AtualizarNome(nome);
             AtualizarCpf(cpf);
+            AtualizarEmail(email);
             Endereco = endereco;
         }
 

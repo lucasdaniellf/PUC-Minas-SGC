@@ -10,11 +10,11 @@ namespace Vendas.Domain.Model
         internal DateTime DataVenda { get; private set; } = DateTime.Now;
         internal int Desconto { get; private set; }
         internal Status Status { get; private set; } = Status.PENDENTE;
-        internal FormaPagamento FormaDePagamento { get; private set; } = FormaPagamento.A_VISTA;
+        internal FormaPagamento FormaDePagamento { get; private set; } = FormaPagamento.CARTAO_CREDITO;
         internal ClienteVenda Cliente { get; private set; } = null!;
         internal IList<ItemVenda> Items { get; private set; }
-
-        internal Venda(string Id, ClienteVenda cliente, DateTime DataVenda, int Desconto, int FormaPagamento, int Status) : this(cliente)
+        internal string CriadoPor { get; init; } = null!;
+        internal Venda(string Id, ClienteVenda cliente, DateTime DataVenda, int Desconto, int FormaPagamento, int Status, string CriadoPor) : this(CriadoPor, cliente)
         {
             this.Id = Id;
             this.DataVenda = DataVenda;
@@ -23,19 +23,20 @@ namespace Vendas.Domain.Model
             this.FormaDePagamento = SelecionarFormaDePagamento(FormaPagamento);
         }
 
-        private Venda(ClienteVenda cliente)
+        private Venda(string criadoPor, ClienteVenda cliente)
         {
             this.Cliente = cliente;
+            this.CriadoPor = criadoPor;
             Items = new List<ItemVenda>();
         }
-        internal static Venda CriarVenda(ClienteVenda cliente)
+        internal static Venda CriarVenda(string criadoPor, ClienteVenda cliente)
         {
             if (cliente.Status == ClienteVenda.ClienteStatus.INATIVO)
             {
                 throw new VendaException("Cliente com status inativo");
             }
 
-            var venda = new Venda(cliente)
+            var venda = new Venda(criadoPor, cliente)
             {
                 Id = Guid.NewGuid().ToString()
             };
@@ -157,7 +158,8 @@ namespace Vendas.Domain.Model
                 if((int) formaPagamento == 0)
                 {
                     AplicarDesconto(10);
-                } else
+                } 
+                else
                 {
                     AplicarDesconto(0);
 

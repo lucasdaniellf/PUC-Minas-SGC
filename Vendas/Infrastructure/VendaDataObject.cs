@@ -12,6 +12,7 @@ namespace Vendas.Infrastructure
                             long Desconto,
                             long FormaPagamento,
                             long Status,
+                            string CriadoPor,
                             string ClienteId,
                             string ClienteEmail,
                             long ClienteStatus
@@ -33,7 +34,7 @@ namespace Vendas.Infrastructure
         internal static Venda MapearVendaDO(VendaTO TO)
         {
             
-            var venda = new Venda(TO.Id, new ClienteVenda(TO.ClienteId, TO.ClienteEmail, (int) TO.ClienteStatus), Convert.ToDateTime(TO.DataVenda), (int)TO.Desconto, (int)TO.FormaPagamento, (int)TO.Status);
+            var venda = new Venda(TO.Id, new ClienteVenda(TO.ClienteId, TO.ClienteEmail, (int) TO.ClienteStatus), Convert.ToDateTime(TO.DataVenda), (int)TO.Desconto, (int)TO.FormaPagamento, (int)TO.Status, TO.CriadoPor);
             foreach(var item in TO.itens)
             {
                 venda.Items.Add(MapearItemVendaTO(venda, item));
