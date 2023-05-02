@@ -156,6 +156,23 @@ namespace Vendas.Application.Query
             }
         }
 
+        public async Task<IEnumerable<ClienteDto>> BuscarClientesPorEmail(string email, CancellationToken token)
+        {
+
+            try
+            {
+                _unitOfWork.Begin();
+                var cliente = from c in await _repository.BuscarClientePorId(email, token) select MapCliente(c);
+                _unitOfWork.CloseConnection();
+                return cliente;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.CloseConnection();
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<ProdutoDto>> BuscarProdutos(CancellationToken token)
         {
 

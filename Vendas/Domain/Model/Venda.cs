@@ -69,14 +69,31 @@ namespace Vendas.Domain.Model
             return item;
         }
 
-        internal void AtualizarDadosVenda(FormaPagamento formaPagamento )
+        internal void AtualizarFormaDePagamentoVenda(FormaPagamento formaPagamento )
         {
             if (Status != Status.PENDENTE && Status != Status.REPROVADO)
             {
                 throw new VendaException("Venda não pode ser alterada. Status: " + Status);
             }
 
-            AtualizarFormaDePagamento(formaPagamento);
+            var success = Enum.IsDefined(typeof(FormaPagamento), formaPagamento);
+            if (success)
+            {
+                this.FormaDePagamento = formaPagamento;
+                if ((int)formaPagamento == 0)
+                {
+                    AplicarDesconto(10);
+                }
+                else
+                {
+                    AplicarDesconto(0);
+
+                }
+            }
+            else
+            {
+                throw new VendaException("Forma de Pagamento Inválida");
+            }
         }
 
         internal void ProcessarVenda()
@@ -149,30 +166,13 @@ namespace Vendas.Domain.Model
             Status = Status.AGUARDANDO_PAGAMENTO;
         }
 
-        private void AtualizarFormaDePagamento(FormaPagamento formaPagamento)
+        public void AplicarDesconto(int desconto)
         {
-            var success = Enum.IsDefined(typeof(FormaPagamento), formaPagamento);
-            if (success)
+            if (Status != Status.PENDENTE && Status != Status.REPROVADO)
             {
-                this.FormaDePagamento = formaPagamento;
-                if((int) formaPagamento == 0)
-                {
-                    AplicarDesconto(10);
-                } 
-                else
-                {
-                    AplicarDesconto(0);
-
-                }
+                throw new VendaException("Venda não pode ser alterada. Status: " + Status);
             }
-            else
-            {
-                throw new VendaException("Forma de Pagamento Inválida");
-            }
-        }
 
-        private void AplicarDesconto(int desconto)
-        {
             if (desconto < 0 || desconto > 100)
             {
                 throw new VendaException("Desconto deve estar entre 0% e 100%.");

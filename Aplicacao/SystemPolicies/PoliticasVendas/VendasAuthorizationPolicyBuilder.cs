@@ -4,11 +4,6 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
 {
     public static class VendasAuthorizationPolicyBuilder
     {
-        public static AuthorizationPolicyBuilder AddCriarVendaAuthorizationRequirement(this AuthorizationPolicyBuilder builder)
-        {
-            builder.AddRequirements(new CriarVendaAuthorizationRequirement());
-            return builder;
-        }
         public static AuthorizationPolicyBuilder AddLerVendaAuthorizationRequirement(this AuthorizationPolicyBuilder builder)
         {
             builder.AddRequirements(new LerVendaAuthorizationRequirement());
