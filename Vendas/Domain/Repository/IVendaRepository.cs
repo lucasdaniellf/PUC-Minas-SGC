@@ -25,6 +25,8 @@ namespace Vendas.Domain.Repository
         //=================Cliente====================//
          Task<IEnumerable<ClienteVenda>> BuscarClientes(CancellationToken token);
          Task<IEnumerable<ClienteVenda>> BuscarClientePorId(string id, CancellationToken token);
+         Task<IEnumerable<ClienteVenda>> BuscarClientePorEmail(string email, CancellationToken token);
+
          Task<int> AtualizarCliente(ClienteVenda cliente, CancellationToken token);
          Task<int> CadastrarCliente(ClienteVenda cliente, CancellationToken token);
     }

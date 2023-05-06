@@ -14,10 +14,6 @@ namespace Clientes.Application.Commands
         public Endereco Endereco { get; set; } = null!;
         [EmailAddress]
         public string Email { get; set; } = null!;
-
-        //-----------------------------------------------------//
-        //public ClienteStatus EstaAtivo { get; set; }
-
         public void AdicionarId(string id)
         {
             Id = id;

@@ -15,12 +15,22 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AtualizarVendaAuthorizationRequirement requirement, IEnumerable<VendaDto> resource)
         {
             var email = context.User.FindFirstValue(ClaimTypes.Email);
-            //Possivel ponto de melhoria de performance, seria importante verificar outra lógica em vez de utilizar o All//
             var validacao = resource.All(venda => string.Equals(venda.criadoPor, email, StringComparison.OrdinalIgnoreCase));
-
-            if(context.User.IsInRole(Roles.Gerente) && validacao)  
+            
+            if (context.User.Claims.Where(c => c.Value == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
             {
-                context.Succeed(requirement);
+                if (context.User.IsInRole(Roles.Gerente) && validacao)
+                {
+                    context.Succeed(requirement);
+                }
+                else if (context.User.IsInRole(Roles.Administracao))
+                {
+                    context.Succeed(requirement);
+                }
+                else
+                {
+                    context.Fail();
+                }
             }
             else if (context.User.IsInRole(Roles.Cliente))
             {
@@ -37,7 +47,6 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
             {
                 context.Fail();
             }
-
             return Task.CompletedTask;
         }
     }

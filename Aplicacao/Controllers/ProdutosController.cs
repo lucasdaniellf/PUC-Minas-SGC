@@ -9,7 +9,7 @@ using Produtos.Domain;
 
 namespace AplicacaoGerenciamentoLoja.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/produtos")]
     [ApiController]
     public class ProdutosController : ControllerBase
     {
@@ -99,7 +99,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-        [HttpPatch("/estoque/reposicao")]
+        [HttpPatch("estoque/reposicao")]
         [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
         public async Task<ActionResult> ReporEstoqueProduto(ReporEstoqueProdutoCommand command, CancellationToken token)
         {
@@ -119,7 +119,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
 
-        [HttpPatch("/estoque/baixa")]
+        [HttpPatch("estoque/baixa")]
         [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
         public async Task<ActionResult> BaixarEstoqueProduto(BaixarEstoqueProdutoCommand command, CancellationToken token)
         {

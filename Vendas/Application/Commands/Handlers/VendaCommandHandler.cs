@@ -10,7 +10,8 @@ using Vendas.Domain.Repository;
 namespace Vendas.Application.Commands.Handlers
 {
     public partial class VendaCommandHandler : ICommandHandler<CriarVendaCommand, bool>,
-                                         ICommandHandler<AtualizarVendaCommand, bool>,
+                                         ICommandHandler<AtualizarFormaPagamentoVendaCommand, bool>,
+                                         ICommandHandler<AplicarDescontoVendaCommand, bool>,
                                          ICommandHandler<CancelarVendaCommand, bool>,
                                          ICommandHandler<ConfirmarVendaCommand, bool>,
                                          ICommandHandler<AdicionarItemVendaCommand, bool>,
@@ -56,7 +57,7 @@ namespace Vendas.Application.Commands.Handlers
             return row > 0;
         }
 
-        public async Task<bool> Handle(AtualizarVendaCommand command, CancellationToken token)
+        public async Task<bool> Handle(AtualizarFormaPagamentoVendaCommand command, CancellationToken token)
         {
             int row = 0;
             _unitOfWork.Begin();
@@ -64,7 +65,30 @@ namespace Vendas.Application.Commands.Handlers
             if (vendas.Any())
             {
                 var venda = vendas.First();
-                venda.AtualizarDadosVenda(command.FormaDePagamento);
+                venda.AtualizarFormaDePagamentoVenda(command.FormaDePagamento);
+                try
+                {
+                    row = await _repository.AtualizarVenda(venda, token);
+                }
+                catch (Exception)
+                {
+                    _unitOfWork.CloseConnection();
+                    throw;
+                }
+            }
+            _unitOfWork.CloseConnection();
+            return row > 0;
+        }
+
+        public async Task<bool> Handle(AplicarDescontoVendaCommand command, CancellationToken token)
+        {
+            int row = 0;
+            _unitOfWork.Begin();
+            var vendas = await _repository.BuscarVendaPorId(command.Id, token);
+            if (vendas.Any())
+            {
+                var venda = vendas.First();
+                venda.AplicarDesconto(command.Desconto);
                 try
                 {
                     row = await _repository.AtualizarVenda(venda, token);

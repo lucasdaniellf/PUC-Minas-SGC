@@ -3,12 +3,15 @@ using AplicacaoGerenciamentoLoja.Middlewares;
 using Core.MessageBroker;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+           options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 if (builder.Environment.IsDevelopment())
 {

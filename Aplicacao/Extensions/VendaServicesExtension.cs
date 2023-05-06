@@ -2,10 +2,10 @@
 using Vendas.Application.Commands.Handlers;
 using Vendas.Application.Events;
 using Vendas.Application.Query;
-using Vendas.Domain.Model;
 using Vendas.Domain.Repository;
 using Vendas.Domain;
 using Vendas.Infrastructure;
+using Vendas.Domain.Model;
 
 namespace AplicacaoGerenciamentoLoja.Extensions
 {

@@ -346,6 +346,17 @@ namespace Vendas.Infrastructure
                                                                                                     cancellationToken: token));
         }
 
+
+        public async Task<IEnumerable<ClienteVenda>> BuscarClientePorEmail(string email, CancellationToken token)
+        {
+            var query = @"select * from Cliente where Email = @Email";
+            return await _context.Connection.QueryAsync<ClienteVenda>(new CommandDefinition(commandText: query,
+                                                                                                    parameters: new { Email = email },
+                                                                                                    transaction: _context.Transaction,
+                                                                                                    commandType: System.Data.CommandType.Text,
+                                                                                                    cancellationToken: token));
+        }
+
         public async Task<int> AtualizarCliente(ClienteVenda cliente, CancellationToken token)
         {
             var query = @"update Cliente set EstaAtivo = @EstaAtivo, Email = @Email where Id = @Id";
