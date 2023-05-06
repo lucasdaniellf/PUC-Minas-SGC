@@ -23,6 +23,7 @@ namespace Vendas.Infrastructure
                             v.Desconto, 
                             v.FormaPagamento, 
                             v.Status, 
+                            v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
@@ -56,6 +57,7 @@ namespace Vendas.Infrastructure
                             v.Desconto, 
                             v.FormaPagamento, 
                             v.Status, 
+                            v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
@@ -91,6 +93,7 @@ namespace Vendas.Infrastructure
                             v.Desconto, 
                             v.FormaPagamento, 
                             v.Status, 
+                            v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
@@ -127,6 +130,7 @@ namespace Vendas.Infrastructure
                             v.Desconto, 
                             v.FormaPagamento, 
                             v.Status, 
+                            v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
@@ -163,6 +167,7 @@ namespace Vendas.Infrastructure
                             v.Desconto, 
                             v.FormaPagamento, 
                             v.Status, 
+                            v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
                             c.EstaAtivo as ClienteStatus,
@@ -193,11 +198,11 @@ namespace Vendas.Infrastructure
 
         public async Task<int> CadastrarVenda(Venda venda, CancellationToken token)
         {
-            var query = @"insert into venda(id, clienteId, dataVenda, desconto, status, formaPagamento) values
-                            (@id, @clienteId, @dataVenda, 0, 0, 0)";
+            var query = @"insert into venda(id, clienteId, dataVenda, criadoPor, desconto, status, formaPagamento) values
+                            (@id, @clienteId, @dataVenda, @criadoPor, 0, 0, 0)";
 
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                    parameters: new {id = venda.Id, clienteId = venda.Cliente.Id, dataVenda = venda.DataVenda},
+                                                                                    parameters: new {id = venda.Id, clienteId = venda.Cliente.Id, dataVenda = venda.DataVenda, criadoPor = venda.CriadoPor},
                                                                                     transaction: _context.Transaction,
                                                                                     commandType: System.Data.CommandType.Text,
                                                                                     cancellationToken: token));

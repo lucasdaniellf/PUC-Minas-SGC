@@ -17,13 +17,14 @@ namespace Clientes.Infrastructure
 
         public async Task<int> AtualizarCliente(Cliente cliente, CancellationToken token)
         {
-            var query = @"update Cliente set Nome = @Nome, Cpf = @Cpf, EstaAtivo = @EstaAtivo  where Id = @Id";
+            var query = @"update Cliente set Nome = @Nome, Cpf = @Cpf, EstaAtivo = @EstaAtivo, Email = @Email  where Id = @Id";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
                                                                                                  cliente.Nome,
                                                                                                  Cpf = cliente.Cpf.Numero,
                                                                                                  cliente.EstaAtivo,
+                                                                                                 Email = cliente.Email,
                                                                                                  cliente.Id
                                                                                              },
                                                                                              transaction: _context.Transaction,
@@ -54,7 +55,7 @@ namespace Clientes.Infrastructure
         }
         public async Task<IEnumerable<Cliente>> BuscarClientePorEmail(string email, CancellationToken token)
         {
-            var query = @"select c.*
+            var query = @"select c.*,
                              Rua, 
                              NumeroCasa,
                              Complemento,
@@ -64,7 +65,7 @@ namespace Clientes.Infrastructure
                              Estado
                         from Cliente c 
                              Join Endereco e on e.ClienteId = c.Id
-                            from Cliente where Email = @Email";
+                        where Email = @Email";
             var list = await _context.Connection.QueryAsync<ClienteTO>(new CommandDefinition(commandText: query,
                                                                                                     parameters: new { Email = email },
                                                                                                     transaction: _context.Transaction,
@@ -85,7 +86,7 @@ namespace Clientes.Infrastructure
                              Estado
                         from Cliente c 
                              Join Endereco e on e.ClienteId = c.Id 
-                        from Cliente where Id = @Id";
+                        where c.Id = @Id";
             var list = await _context.Connection.QueryAsync<ClienteTO>(new CommandDefinition(commandText: query,
                                                                                                     parameters: new { Id = id },
                                                                                                     transaction: _context.Transaction,
@@ -97,7 +98,7 @@ namespace Clientes.Infrastructure
 
         public async Task<IEnumerable<Cliente>> BuscarClientePorNome(string nome, CancellationToken token)
         {
-            var query = @"select select c.*,
+            var query = @"select c.*,
                              Rua, 
                              NumeroCasa,
                              Complemento,
@@ -176,7 +177,7 @@ namespace Clientes.Infrastructure
 
         public async Task<int> AtualizarEnderecoCliente(Cliente cliente, CancellationToken token)
         {
-            var query = @"uptade Endereco set Rua = @Rua, 
+            var query = @"update Endereco set Rua = @Rua, 
                                                 NumeroCasa = @NumeroCasa, 
                                                 Complemento = @Complemento, 
                                                 CEP = @CEP,

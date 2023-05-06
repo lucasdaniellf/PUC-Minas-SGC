@@ -38,7 +38,7 @@ namespace Vendas.Application.Commands.Handlers
             if (clientes.Any())
             {
                 var cliente = clientes.First();
-                var venda = Venda.CriarVenda(cliente);
+                var venda = Venda.CriarVenda(command.CriadoPor, cliente);
                 command.Id = venda.Id;
 
                 try

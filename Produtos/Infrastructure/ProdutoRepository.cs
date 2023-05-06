@@ -82,9 +82,9 @@ namespace Produtos.Infrastructure
 
         public async Task<int> AtualizarCadastroProduto(Produto produto, CancellationToken token)
         {
-            string sql = @"update Produto set Descricao = @Descricao, Preco = @Preco where Id = @Id";
+            string sql = @"update Produto set Descricao = @Descricao, Preco = @Preco, EstaAtivo = @EstaAtivo where Id = @Id";
             var row = await _dbContext.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
-                                                                               parameters: new { produto.Id, produto.Descricao, produto.Preco },
+                                                                               parameters: new { produto.Id, produto.Descricao, produto.Preco, produto.EstaAtivo },
                                                                                transaction: _dbContext.Transaction,
                                                                                commandType: System.Data.CommandType.Text,
                                                                                cancellationToken: token));

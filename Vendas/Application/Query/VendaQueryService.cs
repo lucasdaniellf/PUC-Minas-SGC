@@ -180,7 +180,7 @@ namespace Vendas.Application.Query
             {
                 items.Add(MapItemVenda(item));
             }
-            return new VendaDto(venda.Id, MapCliente(venda.Cliente), venda.DataVenda, venda.Desconto, venda.Status, venda.FormaDePagamento, items);
+            return new VendaDto(venda.Id, MapCliente(venda.Cliente), venda.DataVenda, venda.Desconto, venda.Status, venda.FormaDePagamento, venda.CriadoPor, items);
         }
 
         private VendaItemDto MapItemVenda(ItemVenda item)

@@ -23,6 +23,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> BuscarProdutos(string? descricao, CancellationToken token)
         {
             IEnumerable<ProdutoQueryDto> Produtos;
@@ -38,6 +39,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpGet("{Id}", Name = "BuscarProdutoPorId")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> BuscarProdutoPorId(string Id, CancellationToken token)
         {
             IEnumerable<ProdutoQueryDto> Produtos = await _service.BuscarProdutoPorId(Id, token);
@@ -51,7 +53,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
         //Check this
         [HttpPost]
-        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
+        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> CadastrarProduto(CadastrarProdutoCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
@@ -74,7 +76,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpPut("{Id}")]
-        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
+        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
         public async Task<ActionResult> AtualizarCadastroProduto(string Id, AtualizarCadastroProdutoCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
@@ -98,7 +100,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpPatch("/estoque/reposicao")]
-        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
+        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
         public async Task<ActionResult> ReporEstoqueProduto(ReporEstoqueProdutoCommand command, CancellationToken token)
         {
             try
@@ -118,7 +120,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
 
         [HttpPatch("/estoque/baixa")]
-        [Authorize(Policy = Policies.RequisitoGerenciamentoProduto)]
+        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
         public async Task<ActionResult> BaixarEstoqueProduto(BaixarEstoqueProdutoCommand command, CancellationToken token)
         {
             try

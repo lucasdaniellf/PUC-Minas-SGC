@@ -51,6 +51,7 @@ namespace Vendas.Infrastructure
                         Desconto INTEGER not null,
                         FormaPagamento INTEGER not null,
                         Status INTEGER not null,
+                        CriadoPor varchar not null,
                         check((FormaPagamento = 0 OR FormaPagamento = 1) AND (Status in (0,1,2,3,4,99))),
                         FOREIGN KEY(ClienteId) References Cliente(Id) ON DELETE SET NULL
                     );
