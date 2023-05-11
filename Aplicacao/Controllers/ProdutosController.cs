@@ -53,7 +53,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
         //Check this
         [HttpPost]
-        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
+        [Authorize(Roles = Roles.GerenteProdutos)]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> CadastrarProduto(CadastrarProdutoCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
@@ -76,7 +76,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpPut("{Id}")]
-        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
+        [Authorize(Roles = Roles.GerenteProdutos)]
         public async Task<ActionResult> AtualizarCadastroProduto(string Id, AtualizarCadastroProdutoCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
@@ -100,7 +100,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpPatch("estoque/reposicao")]
-        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
+        [Authorize(Roles = Roles.GerenteProdutos)]
         public async Task<ActionResult> ReporEstoqueProduto(ReporEstoqueProdutoCommand command, CancellationToken token)
         {
             try
@@ -120,7 +120,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
 
         [HttpPatch("estoque/baixa")]
-        [Authorize(Policy = Policies.PoliticaGerenciamentoProduto)]
+        [Authorize(Roles = Roles.GerenteProdutos)]
         public async Task<ActionResult> BaixarEstoqueProduto(BaixarEstoqueProdutoCommand command, CancellationToken token)
         {
             try

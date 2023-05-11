@@ -55,7 +55,7 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
 
 
         [HttpPost("/api/int/vendas/")]
-        [Authorize(Roles = Roles.Gerente)]
+        [Authorize(Roles = Roles.GerenteVendas)]
         public async Task<ActionResult<IEnumerable<VendaDto>>> CriarVenda(CriarVendaCommand venda, CancellationToken token)
         {
             if (ModelState.IsValid)

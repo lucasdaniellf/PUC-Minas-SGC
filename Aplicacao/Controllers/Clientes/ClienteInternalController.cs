@@ -68,7 +68,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 
         //=====================================================================================================================================================================//
         [HttpPost("/api/int/clientes")]
-        [Authorize(Roles = Roles.Gerente)]
+        [Authorize(Roles = Roles.GerenteVendas)]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> CadastrarCliente(CadastrarClienteCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
@@ -90,7 +90,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
         }
 
         [HttpPut("/api/int/clientes/{Id}")]
-        [Authorize(Roles = Roles.Gerente)]
+        [Authorize(Roles = Roles.GerenteVendas)]
         public async Task<ActionResult> AtualizarCliente(string Id, AtualizarClienteCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
