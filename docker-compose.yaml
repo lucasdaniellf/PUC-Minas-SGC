@@ -10,6 +10,21 @@ services:
       - "6379:6379"
     networks:
       - app-compose-network
+
+  auth:
+    image: quay.io/keycloak/keycloak
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin 
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: 
+      - start-dev
+      - --import-realm
+    volumes:
+      - ./MySGCApp-realm.json:/opt/keycloak/data/import/MySGCApp-realm.json  
+    networks:
+      - app-compose-network
   
   SGCApp:
     build: 
@@ -20,6 +35,7 @@ services:
     restart: always
     volumes:
       - database:/app/Aplicacao/db
+      - ./Aplicacao/db:/app/Aplicacao/db
     ports:
       - 7006:443
       - 5006:80
@@ -27,6 +43,7 @@ services:
       - app-compose-network
     depends_on:
       - pubsub
+      - auth
       
 networks:
   app-compose-network:

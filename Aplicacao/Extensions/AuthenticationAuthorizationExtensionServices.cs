@@ -33,7 +33,7 @@ namespace AplicacaoGerenciamentoLoja.Extensions
                 opt.AddPolicy(Policies.PoliticaAtualizarVenda, policy => policy.AddAtualizarVendaAuthorizationRequirement());
                 opt.AddPolicy(Policies.PoliticaLerVenda, policy => policy.AddLerVendaAuthorizationRequirement());
 
-                opt.AddPolicy(Policies.PoliticaGerenciamentoProduto, policy => policy.RequireRole(Roles.Gerente));
+                opt.AddPolicy(Policies.PoliticaGerenciamentoProduto, policy => policy.RequireRole(Roles.GerenteProdutos));
                 
                 opt.AddPolicy(Policies.PoliticaAcessoInterno, policy => policy.RequireAssertion(context => context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente)));
                 opt.AddPolicy(Policies.PoliticaAcessoExterno, policy => policy.RequireAssertion(context => !context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente)));
