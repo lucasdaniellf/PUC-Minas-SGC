@@ -1,5 +1,6 @@
 ﻿using Core.MessageBroker;
 using Newtonsoft.Json;
+using Polly;
 using Vendas.Application.Commands.Messages.Enviadas;
 using Vendas.Application.Commands.Messages.Recebidas;
 
@@ -21,20 +22,24 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Faturamento
                 IMessageBrokerPublisher publisher = scope.ServiceProvider.GetRequiredService<IMessageBrokerPublisher>();
                 foreach(var mensagem in mensagens)
                 {
-                    var mensagemDesserializada = JsonConvert.DeserializeObject<GerarFaturaCommandMessage>(mensagem);
-                    if (mensagemDesserializada != null)
-                    {
-                        Random rndm = new();
-                        int value = rndm.Next(0, 9);
-                        bool success = false;
-                        if (value > 5)
+                    await _wrapPolicy.ExecuteAsync(async (context) => {
+                        var mensagemDesserializada = JsonConvert.DeserializeObject<GerarFaturaCommandMessage>(mensagem);
+                        if (mensagemDesserializada != null)
                         {
-                            success = true;
+                            Random rndm = new();
+                            int value = rndm.Next(0, 9);
+                            bool success = false;
+                            if (value > 5)
+                            {
+                                success = true;
+                            }
+                            Console.WriteLine($"Venda: {mensagemDesserializada.VendaId}; Pagamento: {success}");
+                            var mensagemConfirmacao = new FaturarVendaCallback(mensagemDesserializada.VendaId, success).Serialize();
+                            await publisher.Enqueue(FilaFaturarVendaCallback, mensagemConfirmacao);
                         }
-                        Console.WriteLine($"Venda: {mensagemDesserializada.VendaId}; Pagamento: {success}");
-                        var mensagemConfirmacao = new FaturarVendaCallback(mensagemDesserializada.VendaId, success ).Serialize();
-                        await publisher.Enqueue(FilaFaturarVendaCallback, mensagemConfirmacao);
-                    }
+                    }, new Context() { 
+                        ["mensagem"] = mensagem 
+                    });
                 }
             }
         }

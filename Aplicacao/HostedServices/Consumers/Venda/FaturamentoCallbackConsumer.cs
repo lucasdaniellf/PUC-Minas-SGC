@@ -1,5 +1,6 @@
 ﻿using Core.MessageBroker;
 using Newtonsoft.Json;
+using Polly;
 using Vendas.Application.Commands.AutomacaoVendaCommands;
 using Vendas.Application.Commands.Handlers;
 using Vendas.Application.Commands.Messages.Recebidas;
@@ -28,14 +29,21 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Venda
 
                     if (eventoDesserializado != null)
                     {
-                        if (eventoDesserializado.Sucesso)
+                        await _wrapPolicy.ExecuteAsync(async (context) =>
                         {
-                            await handler.Handle(new AprovarVendaCommand(eventoDesserializado.VendaId), token);
-                        }
-                        else
+                            if (eventoDesserializado.Sucesso)
+                            {
+                                await handler.Handle(new AprovarVendaCommand(eventoDesserializado.VendaId), token);
+                            }
+                            else
+                            {
+                                await handler.Handle(new ReprovarVendaCommand(eventoDesserializado.VendaId), token);
+                            }
+                        }, new Context()
                         {
-                            await handler.Handle(new ReprovarVendaCommand(eventoDesserializado.VendaId), token);
-                        }
+                            ["mensagem"] = mensagem
+                        });
+                        
                     }
                 }
             }

@@ -4,6 +4,10 @@ using Produtos.Application.Commands;
 using Produtos.Application.Commands.AutomacaoVendaCommands.Messages.Recebidas;
 using Vendas.Application.Commands.Handlers;
 using Vendas.Application.Commands.AutomacaoVendaCommands;
+using Polly.Fallback;
+using Polly;
+using Polly.Retry;
+using Polly.Wrap;
 
 namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
 {
@@ -21,24 +25,59 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
             {
                 ProdutoCommandHandler handler = scope.ServiceProvider.GetRequiredService<ProdutoCommandHandler>();
                 VendaCommandHandler vHandler = scope.ServiceProvider.GetRequiredService<VendaCommandHandler>();
-
+                
                 foreach (var mensagem in mensagens)
                 {
-                    Console.WriteLine("ReservarProdutoVenda: " + mensagem);
-                    var eventoDesserializado = JsonConvert.DeserializeObject<ReservarProdutoCommandMessage>(mensagem);
+                    var sucessoReservaProduto = false;
 
-                    if (eventoDesserializado != null)
+                    await _wrapPolicy.ExecuteAsync( async (context) => {
+                        Console.WriteLine("ReservarProdutoVenda: " + mensagem);
+                        var eventoDesserializado = JsonConvert.DeserializeObject<ReservarProdutoCommandMessage>(mensagem);
+
+                        if (eventoDesserializado != null)
+                        {
+                            var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
+                            
+
+                            await _wrapPolicy.ExecuteAsync(async (context) => {
+                                sucessoReservaProduto = await handler.Handle(comando, token);
+                            }, new Context()
+                            {
+                                ["mensagem"] = mensagem,
+                                ["reservaProduto"] = sucessoReservaProduto
+                            });
+
+                            if (sucessoReservaProduto)
+                            {
+                                await vHandler.Handle(new FaturarVendaCommand(eventoDesserializado.VendaId), token);
+                            }
+                            else
+                            {
+                                await vHandler.Handle(new ReprovarVendaCommand(eventoDesserializado.VendaId), token);
+                            }
+                        }
+
+                    }, new Context()
                     {
-                        var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
-                        if(await handler.Handle(comando, token))
-                        {
-                            await vHandler.Handle(new FaturarVendaCommand(eventoDesserializado.VendaId), token);
-                        }
-                        else
-                        {
-                            await vHandler.Handle(new ReprovarVendaCommand(eventoDesserializado.VendaId), token);
-                        }
-                    }
+                        ["mensagem"] = mensagem,
+                        ["reservaProduto"] = sucessoReservaProduto
+                    });
+
+                    //Console.WriteLine("ReservarProdutoVenda: " + mensagem);
+                    //var eventoDesserializado = JsonConvert.DeserializeObject<ReservarProdutoCommandMessage>(mensagem);
+
+                    //if (eventoDesserializado != null)
+                    //{
+                    //    var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
+                    //    if(await handler.Handle(comando, token))
+                    //    {
+                    //        await vHandler.Handle(new FaturarVendaCommand(eventoDesserializado.VendaId), token);
+                    //    }
+                    //    else
+                    //    {
+                    //        await vHandler.Handle(new ReprovarVendaCommand(eventoDesserializado.VendaId), token);
+                    //    }
+                    //}
                 }
             }
         }
@@ -61,6 +100,17 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
             {
                 Produtos = produtos,
             };
+        }
+
+        protected override Task QueueConsumerFallbackMethod(Context context, CancellationToken token)
+        {
+
+            if(context.TryGetValue("reservaProduto", out var sucessoReservaProduto))
+            {
+                Console.WriteLine($"Reserva de produto: {(bool) sucessoReservaProduto}");
+            }
+
+            return base.QueueConsumerFallbackMethod(context, token);
         }
     }
 }

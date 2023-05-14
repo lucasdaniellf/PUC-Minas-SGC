@@ -3,6 +3,7 @@ using Core.MessageBroker;
 using Produtos.Application.Commands.ProdutoEstoque;
 using Produtos.Application.Commands;
 using Produtos.Application.Commands.AutomacaoVendaCommands.Messages.Recebidas;
+using Polly;
 
 namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
 {
@@ -23,14 +24,20 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
 
                 foreach (var mensagem in mensagens)
                 {
-                    Console.WriteLine("ReporProdutoVenda: " + mensagem);
-                    var eventoDesserializado = JsonConvert.DeserializeObject<ReporProdutoCommandMessage>(mensagem);
-
-                    if (eventoDesserializado != null)
+                    await _wrapPolicy.ExecuteAsync(async (context) =>
                     {
-                        var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
-                        await handler.Handle(comando, token);
-                    }
+                        Console.WriteLine("ReporProdutoVenda: " + mensagem);
+                        var eventoDesserializado = JsonConvert.DeserializeObject<ReporProdutoCommandMessage>(mensagem);
+
+                        if (eventoDesserializado != null)
+                        {
+                            var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
+                            await handler.Handle(comando, token);
+                        }
+                    }, new Context()
+                    {
+                        ["mensagem"] = mensagem
+                    });
                 }
             }
         }

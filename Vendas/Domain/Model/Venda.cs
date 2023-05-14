@@ -98,19 +98,20 @@ namespace Vendas.Domain.Model
 
         internal void ProcessarVenda()
         {
+
             if (Status != Status.PENDENTE && Status != Status.REPROVADO)
             {
                 throw new VendaException("Venda não pode ser processada. Status: " + Status);
             }
-            if (!Items.Any()) 
+            if (!Items.Any())
             {
                 throw new VendaException("Venda não pode ser processada sem items");
             }
             if (Cliente.Status == ClienteVenda.ClienteStatus.INATIVO)
             {
-                throw new VendaException("Venda não pode ser processada para cliente com status inativo. Cliente: "+ Cliente.Id);
+                throw new VendaException("Venda não pode ser processada para cliente com status inativo. Cliente: " + Cliente.Id);
             }
-            foreach(var item in Items)
+            foreach (var item in Items)
             {
                 if (!item.ValidarProdutoItemVenda())
                 {
@@ -127,8 +128,6 @@ namespace Vendas.Domain.Model
             //    throw new VendaException("Venda não pode ser cancelada. Status: " + Status);
             //}
             //Status = Status.CANCELADO;
-
-
             if (Status == Status.PROCESSANDO || Status == Status.CANCELADO)
             {
                 throw new VendaException("Venda não pode ser cancelada. Status: " + Status);
@@ -138,6 +137,7 @@ namespace Vendas.Domain.Model
                 throw new VendaException($"Venda não pode ser cancelada, prazo para cancelamento extrapolado: {(DataVenda - DateTime.Now).Days}");
             }
             Status = Status.CANCELADO;
+
         }
         internal void FinalizarVenda()
         {

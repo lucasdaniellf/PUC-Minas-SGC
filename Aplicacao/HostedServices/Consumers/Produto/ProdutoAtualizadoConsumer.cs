@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Polly;
 using Vendas.Application.Events;
 using Vendas.Application.Events.Produto;
 
@@ -19,12 +20,18 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
                 VendaEventHandler handler = scope.ServiceProvider.GetRequiredService<VendaEventHandler>();
                 foreach (var mensagem in mensagens)
                 {
-                    Console.WriteLine("EventoProdutoAtualizado: " + mensagem);
-                    var deserialized = JsonConvert.DeserializeObject<ProdutoVendaAtualizadoEvent>(mensagem);
-                    if (deserialized != null)
+                    await _wrapPolicy.ExecuteAsync(async (context) =>
                     {
-                        await handler.Handle(deserialized, token);
-                    }
+                        Console.WriteLine("EventoProdutoAtualizado: " + mensagem);
+                        var deserialized = JsonConvert.DeserializeObject<ProdutoVendaAtualizadoEvent>(mensagem);
+                        if (deserialized != null)
+                        {
+                            await handler.Handle(deserialized, token);
+                        }
+                    }, new Context()
+                    {
+                        ["mensagem"] = mensagem
+                    });
                 }
             }
         }
