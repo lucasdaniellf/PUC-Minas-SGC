@@ -4,10 +4,10 @@ namespace Vendas.Domain.Model
 {
     public class ProdutoVenda : IEntity
     {
-        internal string Id { get; private set; } = null!;
-        internal decimal Preco { get; private set; }
-        internal int QuantidadeEstoque { get; private set; }
-        internal ProdutoStatus EstaAtivo { get; private set; }
+        public string Id { get; private set; } = null!;
+        public decimal Preco { get; private set; }
+        public int QuantidadeEstoque { get; private set; }
+        public ProdutoStatus EstaAtivo { get; private set; }
 
         private ProdutoVenda() { }
 
@@ -20,7 +20,7 @@ namespace Vendas.Domain.Model
         }
 
 
-        internal enum ProdutoStatus
+        public enum ProdutoStatus
         {
             INATIVO = 0,
             ATIVO = 1

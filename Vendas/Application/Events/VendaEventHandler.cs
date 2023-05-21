@@ -1,5 +1,9 @@
-﻿using Core.Infrastructure;
+﻿using Core.Extensions;
+using Core.Infrastructure;
 using Core.Messages.Event;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Vendas.Application.Events.Cliente;
 using Vendas.Application.Events.Produto;
 using Vendas.Domain.Model;
@@ -13,11 +17,12 @@ namespace Vendas.Application.Events
     {
         private readonly IUnitOfWork<Venda> _unitOfWork;
         private readonly IVendaRepository _repository;
-
-        public VendaEventHandler(IUnitOfWork<Venda> unitOfWork, IVendaRepository repository)
+        private readonly ILogger<VendaEventHandler> _logger;
+        public VendaEventHandler(IUnitOfWork<Venda> unitOfWork, IVendaRepository repository, ILogger<VendaEventHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task Handle(ClienteVendaAtualizadoEvent request, CancellationToken token)
@@ -31,16 +36,18 @@ namespace Vendas.Application.Events
                 if (clientes.Any())
                 {
                     await _repository.AtualizarCliente(cliente, token);
+                    _logger.LogInformation("EventMessageId: {messageId} - Cliente Atualizado: {cliente}", request.MessageId, cliente.SerializedObjectString());
                 }
                 else
                 {
                     await _repository.CadastrarCliente(cliente, token);
+                    _logger.LogInformation("EventMessageId: {messageId} - Cliente Cadastrado: {cliente}", request.MessageId, cliente.SerializedObjectString());
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(string.Concat(ex.Message, " - ", ex.StackTrace));
                 _unitOfWork.CloseConnection();
+                throw;
             }
         }
 
@@ -61,17 +68,19 @@ namespace Vendas.Application.Events
                     {
                         await AtualizarPrecoProdutosEmVendas(produto, token);
                     }
+                    _logger.LogInformation("EventMessageId: {messageId} - Produto atualizado: {produto}", request.MessageId, produto.SerializedObjectString());
                 }
                 else
                 {
                     await _repository.CadastrarProduto(produto, token);
+                    _logger.LogInformation("EventMessageId: {messageId} - Produto cadastrado: {produto}", request.MessageId, produto.SerializedObjectString());
                 }
                 _unitOfWork.Commit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(string.Concat(ex.Message, " - ", ex.StackTrace));
                 _unitOfWork.Rollback();
+                throw;
             }
         }
 

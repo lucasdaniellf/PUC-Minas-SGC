@@ -15,7 +15,6 @@ namespace AplicacaoGerenciamentoLoja.Controllers
     {
         private readonly ProdutoCommandHandler _handler;
         private readonly ProdutoQueryService _service;
-
         public ProdutosController(ProdutoQueryService service, ProdutoCommandHandler handler)
         {
             _service = service;
@@ -26,6 +25,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> BuscarProdutos(string? descricao, CancellationToken token)
         {
+
             IEnumerable<ProdutoQueryDto> Produtos;
             if (string.IsNullOrEmpty(descricao))
             {
@@ -42,6 +42,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> BuscarProdutoPorId(string Id, CancellationToken token)
         {
+
             IEnumerable<ProdutoQueryDto> Produtos = await _service.BuscarProdutoPorId(Id, token);
             if (Produtos.Any())
             {

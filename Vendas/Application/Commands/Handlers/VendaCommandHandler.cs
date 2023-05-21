@@ -1,7 +1,11 @@
-﻿using Core.Infrastructure;
+﻿using Core.Extensions;
+using Core.Infrastructure;
 using Core.MessageBroker;
 using Core.Messages.Commands;
+using Core.Messages.Event;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Vendas.Application.Commands.Messages.Enviadas;
 using Vendas.Domain;
 using Vendas.Domain.Model;
@@ -23,12 +27,14 @@ namespace Vendas.Application.Commands.Handlers
         private readonly IVendaRepository _repository;
         private readonly IMessageBrokerPublisher _publisher;
         private readonly VendaDomainSettings _settings;
-        public VendaCommandHandler(IUnitOfWork<Venda> unitOfWork, IVendaRepository repository, IMessageBrokerPublisher publisher, IOptions<VendaDomainSettings> settings)
+        private readonly ILogger<VendaCommandHandler> _logger;
+        public VendaCommandHandler(IUnitOfWork<Venda> unitOfWork, IVendaRepository repository, IMessageBrokerPublisher publisher, IOptions<VendaDomainSettings> settings, ILogger<VendaCommandHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _repository = repository;
             _publisher = publisher;
             _settings = settings.Value;
+            _logger = logger;
         }
 
         public async Task<bool> Handle(CriarVendaCommand command, CancellationToken token)
@@ -45,6 +51,10 @@ namespace Vendas.Application.Commands.Handlers
                 try
                 {
                     row = await _repository.CadastrarVenda(venda, token);
+                    if(row > 0)
+                    {
+                        _logger.LogInformation("CommandId: {MessageId} - Venda cadastrada: {venda}", command.MessageId, venda.SerializedObjectString());
+                    }
                 }
                 catch (Exception)
                 {
@@ -69,6 +79,10 @@ namespace Vendas.Application.Commands.Handlers
                 try
                 {
                     row = await _repository.AtualizarVenda(venda, token);
+                    if (row > 0)
+                    {
+                        _logger.LogInformation("CommandId: {MessageId} - Venda atualizada: {venda}", command.MessageId, venda.SerializedObjectString());
+                    }
                 }
                 catch (Exception)
                 {
@@ -92,6 +106,10 @@ namespace Vendas.Application.Commands.Handlers
                 try
                 {
                     row = await _repository.AtualizarVenda(venda, token);
+                    if (row > 0)
+                    {
+                        _logger.LogInformation("CommandId: {MessageId} - Venda atualizada: {venda}", command.MessageId, venda.SerializedObjectString());
+                    }
                 }
                 catch (Exception)
                 {
@@ -118,7 +136,10 @@ namespace Vendas.Application.Commands.Handlers
                     row = await _repository.AtualizarVenda(venda, token);
                     if (row > 0)
                     {
+                        _logger.LogInformation("CommandId: {MessageId} - Venda cancelada: {venda}", command.MessageId, venda.Id);
                         var mensagem = GerarMensagemReposicaoProdutod(venda.Items);
+
+                        _logger.LogInformation("Queue: {FilaReporProduto} - Enqueue: {mensagem}", _settings.FilaReporProduto, mensagem);
                         await _publisher.Enqueue(_settings.FilaReporProduto, mensagem);
                     }
                 }
@@ -146,6 +167,11 @@ namespace Vendas.Application.Commands.Handlers
                 try
                 {
                     row = await _repository.AdicionarProdutoEmVenda(item, token);
+                    if(row > 0)
+                    {
+                        _logger.LogInformation("CommandId: {MessageId} - Produto Adicionado em Venda: {item}", command.MessageId, item.SerializedObjectString());
+                        _logger.LogInformation("CommandId: {MessageId} - Venda atualizada: {venda}", command.MessageId, venda.SerializedObjectString());
+                    }
                 }
                 catch (Exception)
                 {
@@ -175,6 +201,11 @@ namespace Vendas.Application.Commands.Handlers
                     {
                         var item = itens.First();
                         row = await _repository.RemoverProdutoEmVenda(item, token);
+                        if(row > 0)
+                        {
+                            _logger.LogInformation("CommandId: {MessageId} - Produto Removido de Venda: {item}", command.MessageId, item.SerializedObjectString());
+                            _logger.LogInformation("CommandId: {MessageId} - Venda atualizada: {venda}", command.MessageId, venda.SerializedObjectString());
+                        }
                     }
                     catch (Exception)
                     {
@@ -204,6 +235,11 @@ namespace Vendas.Application.Commands.Handlers
                     try
                     {
                         row = await _repository.AtualizarProdutoEmVenda(itens.First(), token);
+                        if(row > 0)
+                        {
+                            _logger.LogInformation("CommandId: {MessageId} - Produto Atualizado em Venda: {item}", command.MessageId, itens.First().SerializedObjectString());
+                            _logger.LogInformation("CommandId: {MessageId} - Venda atualizada: {venda}", command.MessageId, venda.SerializedObjectString());
+                        }                    
                     }
                     catch (Exception)
                     {
@@ -232,13 +268,17 @@ namespace Vendas.Application.Commands.Handlers
 
                     if (row > 0)
                     {
+                        _logger.LogInformation("CommandId: {MessageId} - Venda Confirmada: {venda}", command.MessageId, venda.SerializedObjectString());
+
                         var produtos = new List<ProdutoVendaCommandMessage>();
                         foreach (var item in venda.Items)
                         {
                             produtos.Add(new ProdutoVendaCommandMessage(item.Produto.Id, item.Quantidade));
                         }
-                        var mensagem = new ReservarProdutoCommandMessage(venda.Id, produtos);
-                        await _publisher.Enqueue(_settings.FilaReservarProduto, mensagem.Serialize());
+                        var mensagem = new ReservarProdutoCommandMessage(venda.Id, produtos).Serialize();
+                        await _publisher.Enqueue(_settings.FilaReservarProduto, mensagem);
+                        _logger.LogInformation("Queue: {FilaReservarProduto} - Enqueue: {mensagem}", _settings.FilaReporProduto, mensagem);
+
                     }
 
                 }

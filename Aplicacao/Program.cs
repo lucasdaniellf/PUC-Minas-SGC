@@ -2,6 +2,7 @@ using AplicacaoGerenciamentoLoja.Extensions;
 using AplicacaoGerenciamentoLoja.Middlewares;
 using Core.MessageBroker;
 using Microsoft.OpenApi.Models;
+
 using StackExchange.Redis;
 using System.Text.Json.Serialization;
 
@@ -9,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//builder.Services.AddControllers();
+//Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+//builder.Host.UseSerilog();
+
+builder.Host.UseApplicationLogging();
+
 builder.Services.AddControllers().AddJsonOptions(options =>
            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -30,6 +35,7 @@ builder.Services.AddVendasServicesExtension(builder.Configuration);
 builder.Services.AddProdutosServicesExtension(builder.Configuration);
 builder.Services.AddHostedServicesExtension();
 builder.Services.AddAuthenticationAuthorization(builder.Configuration);
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -77,11 +83,13 @@ app.useExceptionHandler();
 //==================//
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
-app.UseAuthorization();
 
+
+app.UseLoggingRequest();
+//app.UseClaimsMiddlewareHandler();
+
+app.UseAuthorization();
 app.MapControllers();
-app.UseClaimsMiddlewareHandler();
 
 app.Run();

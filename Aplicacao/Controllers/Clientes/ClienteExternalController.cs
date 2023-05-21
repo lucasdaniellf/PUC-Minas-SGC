@@ -1,5 +1,4 @@
-﻿using AplicacaoGerenciamentoLoja.Controllers.Clientes;
-using AplicacaoGerenciamentoLoja.SystemPolicies;
+﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Clientes.Application.Commands;
 using Clientes.Application.Query.DTO;
 using Clientes.Domain;
@@ -48,7 +47,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
                     var success = await _handler.Handle(command, token);
                     if (success)
                     {
-                        return CreatedAtAction(nameof(BuscarCliente), await _service.BuscarClientePorEmail(command.Email, token));
+                        return CreatedAtAction(nameof(BuscarCliente), await _service.BuscarClientePorId(command.Id, token));
                     }
                 }
                 catch (ClienteException ex)

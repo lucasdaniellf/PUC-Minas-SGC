@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace AplicacaoGerenciamentoLoja.CustomParameters.Venda
+namespace AplicacaoGerenciamentoLoja.Controllers.Vendas.CustomParameters
 {
     public class DataParametro
     {

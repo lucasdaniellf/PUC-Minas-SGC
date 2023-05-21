@@ -8,7 +8,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Faturamento
 {
     public class FaturarVendaConsumer : BaseConsumer
     {
-        public FaturarVendaConsumer(IServiceProvider provider, IConfiguration configuration) : base(provider, configuration)
+        public FaturarVendaConsumer(IServiceProvider provider, IConfiguration configuration,ILogger<BaseConsumer> logger) : base(provider, configuration, logger)
         {
         }
 
@@ -26,6 +26,10 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Faturamento
                         var mensagemDesserializada = JsonConvert.DeserializeObject<GerarFaturaCommandMessage>(mensagem);
                         if (mensagemDesserializada != null)
                         {
+                            //Doing this way becaus when a new command/event is created/desserialized, a new correlationId is created.
+                            //this approach logs the new command, with the new command Id, which in turn can be used to track the command in commandHandler
+                            _logger.LogInformation("Dequeue: {mensagem}", mensagemDesserializada.Serialize());
+
                             Random rndm = new();
                             int value = rndm.Next(0, 9);
                             bool success = false;
@@ -33,7 +37,9 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Faturamento
                             {
                                 success = true;
                             }
-                            Console.WriteLine($"Venda: {mensagemDesserializada.VendaId}; Pagamento: {success}");
+
+                            _logger.LogInformation("Venda {VendaId}  pagamento aprovado: {success}", mensagemDesserializada.VendaId, success);
+
                             var mensagemConfirmacao = new FaturarVendaCallback(mensagemDesserializada.VendaId, success).Serialize();
                             await publisher.Enqueue(FilaFaturarVendaCallback, mensagemConfirmacao);
                         }

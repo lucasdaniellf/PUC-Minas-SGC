@@ -1,4 +1,4 @@
-﻿using AplicacaoGerenciamentoLoja.CustomParameters.Venda;
+﻿using AplicacaoGerenciamentoLoja.Controllers.Vendas.CustomParameters;
 using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using Vendas.Application.Query;
 using Vendas.Domain;
 using static Vendas.Domain.Model.FormaPagamentoEnum;
 
-namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
+namespace AplicacaoGerenciamentoLoja.Controllers.Vendas
 {
     public partial class VendaController : ControllerBase
     {
@@ -80,7 +80,7 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
         }
 
         [HttpPatch("/api/int/vendas/{Id}/desconto")]
-        public async Task<ActionResult> ApicarDescontoVenda(string Id, int valor, CancellationToken token)
+        public async Task<ActionResult> ApicarDescontoVenda(string Id, AplicarDescontoVendaCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
@@ -94,11 +94,7 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
                         return Forbid();
                     }
 
-                    var command = new AplicarDescontoVendaCommand()
-                    {
-                        Id = Id,
-                        Desconto = valor,
-                    };
+                    command.InformarId(Id);
 
                     var sucesso = await _handler.Handle(command, token);
 

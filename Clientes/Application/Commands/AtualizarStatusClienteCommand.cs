@@ -5,12 +5,8 @@ namespace Clientes.Application.Commands
 {
     public class AtualizarStatusClienteCommand : CommandRequest
     {
-        public string Id { get; private set; } = string.Empty;
+        public string Id { get; set; } = null!;
         public ClienteStatus EstaAtivo { get; set; }
 
-        public void AdicionarId(string id)
-        {
-            Id = id;
-        }
     }
 }

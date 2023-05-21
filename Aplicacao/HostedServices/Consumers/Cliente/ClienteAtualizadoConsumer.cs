@@ -8,7 +8,8 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Cliente
     public class ClienteAtualizadoConsumer : BaseConsumer
     {
         public ClienteAtualizadoConsumer(IServiceProvider provider,
-                                         IConfiguration configuration) : base(provider, configuration) { }
+                                         IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger) {
+        }
 
 
         protected override string QueueName
@@ -27,10 +28,10 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Cliente
                 {
                     await _wrapPolicy.ExecuteAsync( async (context) =>
                     {
-                        Console.WriteLine("EventoClienteAtualizado: " + mensagem);
                         var deserialized = JsonConvert.DeserializeObject<ClienteVendaAtualizadoEvent>(mensagem);
                         if (deserialized != null)
                         {
+                            _logger.LogInformation("Dequeue: {mensagem}", deserialized.Serialize());
                             await handler.Handle(deserialized, token);
                         }
                     },

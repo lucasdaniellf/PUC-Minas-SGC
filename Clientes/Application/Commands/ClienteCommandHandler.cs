@@ -6,6 +6,7 @@ using Core.Infrastructure;
 using Core.MessageBroker;
 using Core.Messages.Commands;
 using Core.Messages.Event;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Clientes.Application.Commands
@@ -19,13 +20,15 @@ namespace Clientes.Application.Commands
         private readonly ClienteDomainSettings _settings;
         private readonly IClienteRepository _repository;
         private readonly IUnitOfWork<Cliente> _unitOfWork;
+        private readonly ILogger<ClienteCommandHandler> _logger;
 
-        public ClienteCommandHandler(IClienteRepository repository, IUnitOfWork<Cliente> unitOfWork, IMessageBrokerPublisher publisher, IOptions<ClienteDomainSettings> options)
+        public ClienteCommandHandler(IClienteRepository repository, IUnitOfWork<Cliente> unitOfWork, IMessageBrokerPublisher publisher, IOptions<ClienteDomainSettings> options, ILogger<ClienteCommandHandler> logger)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
             _publisher = publisher;
             _settings = options.Value;
+            _logger = logger;
         }
 
         public async Task<bool> Handle(CadastrarClienteCommand command, CancellationToken token)
@@ -56,7 +59,10 @@ namespace Clientes.Application.Commands
                     {
                         await _repository.CadastrarEnderecoCliente(cliente, token);
                         EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
-                        await Enqueue(_settings.FilaClienteCadastrado, message.Serialize());
+                       
+                        string messageSerialized = message.Serialize();
+                        _logger.LogInformation("Queue: {FilaClienteCadastrado} - Enqueue: {message}", _settings.FilaClienteCadastrado, messageSerialized);
+                        await Enqueue(_settings.FilaClienteCadastrado, messageSerialized);
                     }
 
                 }
@@ -91,7 +97,10 @@ namespace Clientes.Application.Commands
                     {
                         await _repository.AtualizarEnderecoCliente(cliente, token);
                         EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
-                        await Enqueue(_settings.FilaClienteAtualizado, message.Serialize());
+
+                        string messageSerialized = message.Serialize();
+                        _logger.LogInformation("Queue: {FilaClienteAtualizado} - Enqueue: {message}", _settings.FilaClienteAtualizado, messageSerialized);
+                        await Enqueue(_settings.FilaClienteAtualizado, messageSerialized);
                     }
                 }
             }
@@ -120,7 +129,10 @@ namespace Clientes.Application.Commands
                     if (row > 0)
                     {
                         EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
-                        await Enqueue(_settings.FilaClienteAtualizado, message.Serialize());
+                        string messageSerialized = message.Serialize();
+                        _logger.LogInformation("Queue: {StatusClienteAtualizado} - Enqueue: {message}", _settings.FilaClienteAtualizado, messageSerialized);
+
+                        await Enqueue(_settings.FilaClienteAtualizado, messageSerialized);
                     }
                 }
             }

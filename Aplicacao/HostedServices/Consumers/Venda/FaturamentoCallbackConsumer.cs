@@ -9,7 +9,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Venda
 {
     public class FaturamentoCallbackConsumer : BaseConsumer
     {
-        public FaturamentoCallbackConsumer(IServiceProvider provider, IConfiguration configuration) : base(provider, configuration)
+        public FaturamentoCallbackConsumer(IServiceProvider provider, IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger)
         {
         }
 
@@ -24,11 +24,11 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Venda
 
                 foreach (var mensagem in mensagens)
                 {
-                    Console.WriteLine("FaturarVendaCallback: " + mensagem);
                     var eventoDesserializado = JsonConvert.DeserializeObject<FaturarVendaCallback>(mensagem);
-
                     if (eventoDesserializado != null)
                     {
+                        _logger.LogInformation("Dequeue: {mensagem}", mensagem);
+
                         await _wrapPolicy.ExecuteAsync(async (context) =>
                         {
                             if (eventoDesserializado.Sucesso)

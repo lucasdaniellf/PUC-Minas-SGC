@@ -14,7 +14,8 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
         {
             var email = context.User.FindFirstValue(ClaimTypes.Email);
 
-            if (context.User.Claims.Where(c => c.Value == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
+
+            if (context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
             {
                 context.Succeed(requirement);
             }

@@ -9,7 +9,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
     {
 
         public ProdutoAtualizadoConsumer(IServiceProvider provider,
-                                        IConfiguration configuration) : base(provider, configuration) { }
+                                        IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger) { }
 
         protected override string QueueName => "produto-*";
 
@@ -22,10 +22,10 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
                 {
                     await _wrapPolicy.ExecuteAsync(async (context) =>
                     {
-                        Console.WriteLine("EventoProdutoAtualizado: " + mensagem);
                         var deserialized = JsonConvert.DeserializeObject<ProdutoVendaAtualizadoEvent>(mensagem);
                         if (deserialized != null)
                         {
+                            _logger.LogInformation("Dequeue: {mensagem}", deserialized.Serialize());
                             await handler.Handle(deserialized, token);
                         }
                     }, new Context()

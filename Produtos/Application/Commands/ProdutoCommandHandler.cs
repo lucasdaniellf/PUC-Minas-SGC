@@ -1,6 +1,8 @@
 ﻿using Core.Infrastructure;
 using Core.MessageBroker;
 using Core.Messages.Commands;
+using Core.Messages.Event;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Produtos.Application.Commands.ProdutoEstoque;
 using Produtos.Application.Events;
@@ -20,13 +22,14 @@ namespace Produtos.Application.Commands
         private readonly IProdutoRepository _repository;
         private readonly IMessageBrokerPublisher _publisher;
         private readonly ProdutoDomainSettings _settings;
-
-        public ProdutoCommandHandler(IUnitOfWork<Produto> unitOfWork, IProdutoRepository repository, IMessageBrokerPublisher publisher, IOptions<ProdutoDomainSettings> settings)
+        private readonly ILogger<ProdutoCommandHandler> _logger;
+        public ProdutoCommandHandler(IUnitOfWork<Produto> unitOfWork, IProdutoRepository repository, IMessageBrokerPublisher publisher, IOptions<ProdutoDomainSettings> settings, ILogger<ProdutoCommandHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _repository = repository;
             _publisher = publisher;
             _settings = settings.Value;
+            _logger = logger;
         }
 
         public async Task<bool> Handle(CadastrarProdutoCommand command, CancellationToken token)
@@ -41,7 +44,10 @@ namespace Produtos.Application.Commands
                 if (row > 0)
                 {
                     var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo);
-                    await _publisher.Enqueue(_settings.FilaProdutoCadastrado, eventRequest.Serialize());
+                    
+                    string eventSerialized = eventRequest.Serialize();
+                    _logger.LogInformation("Queue: {FilaProdutoCadastrado} - Enqueue: {eventRequest}", _settings.FilaProdutoCadastrado, eventSerialized);
+                    await _publisher.Enqueue(_settings.FilaProdutoCadastrado, eventSerialized);
                     command.Id = produto.Id;
                 }
                 _unitOfWork.Commit();
@@ -77,7 +83,10 @@ namespace Produtos.Application.Commands
                     {
                         await _repository.AtualizarEstoqueMinimoProduto(produto.Estoque, token);
                         var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo);
-                        await _publisher.Enqueue(_settings.FilaProdutoAtualizado, eventRequest.Serialize());
+
+                        string eventSerialized = eventRequest.Serialize();
+                        _logger.LogInformation("Queue: {FilaProdutoAtualizado} - Enqueue: {eventRequest}", _settings.FilaProdutoAtualizado, eventSerialized);
+                        await _publisher.Enqueue(_settings.FilaProdutoAtualizado, eventSerialized);
                     }
                 }
 
@@ -100,29 +109,35 @@ namespace Produtos.Application.Commands
             var eventRequests = new List<ProdutoMensagemEvent>();
             try
             {
+                _logger.LogInformation("CommandId: {MessageId} - Inicio reposição de estoque", command.MessageId);
+
                 foreach (var c in command.Produtos)
                 {
-
+                    _logger.LogInformation("CommandId: {MessageId} - reposição de estoque para produto: {ProdutoId}", command.MessageId, c.ProdutoId);
                     var produtos = await _repository.BuscarProdutoPorIdBloquearRegistro(c.ProdutoId, token);
                     if (produtos.Any())
                     {
                         var produto = produtos.First();
-                        produto.Estoque.AtualizarEstoque(produto.Estoque.Quantidade + c.Quantidade);
+                        produto.ReporEstoque(c.Quantidade);
 
                         rows = await _repository.AtualizarQuantidadeEstoqueProduto(produto.Estoque, token);
 
                         if (rows > 0)
                         {
+                            _logger.LogInformation("CommandId: {MessageId} - Processo de reposição de estoque: {ProdutoId} - Nova Quantidade: {NovaQuantidade}",command.MessageId, c.ProdutoId, produto.Estoque.Quantidade);
                             await GerarLogEstoque(produto.Estoque, token);
                             eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo));
                         }
                     }
                 }
 
+                _logger.LogInformation("CommandId: {MessageId} - Fim reposição de estoque", command.MessageId);
                 _unitOfWork.Commit();
                 foreach (var evento in eventRequests)
                 {
-                    await _publisher.Enqueue(_settings.FilaProdutoEstoqueAlterado, evento.Serialize());
+                    string eventSerialized = evento.Serialize();
+                    _logger.LogInformation("Queue: {FilaProdutoEstoqueAlterado} - Enqueue: {eventSerialized}", _settings.FilaProdutoAtualizado, eventSerialized);
+                    await _publisher.Enqueue(_settings.FilaProdutoEstoqueAlterado, eventSerialized);
                 }
             }
             catch (Exception)
@@ -144,28 +159,33 @@ namespace Produtos.Application.Commands
             var eventRequests = new List<ProdutoMensagemEvent>();
             try
             {
+                _logger.LogInformation("CommandId: {MessageId} - Inicio baixa de estoque", command.MessageId);
                 foreach (var c in command.Produtos)
                 {
+                    _logger.LogInformation("CommandId: {MessageId} - baixa de estoque para produto: {ProdutoId}", command.MessageId, c.ProdutoId);
                     var produtos = await _repository.BuscarProdutoPorIdBloquearRegistro(c.ProdutoId, token);
                     if (produtos.Any())
                     {
                         var produto = produtos.First();
-                        produto.Estoque.AtualizarEstoque(produto.Estoque.Quantidade - c.Quantidade);
+                        produto.BaixarEstoque(c.Quantidade);
 
                         var row = await _repository.AtualizarQuantidadeEstoqueProduto(produto.Estoque, token);
                         if (row > 0)
                         {
+                            _logger.LogInformation("CommandId: {MessageId} - Processo de baixa de estoque: {ProdutoId} - Nova Quantidade: {NovaQuantidade}", command.MessageId, c.ProdutoId, produto.Estoque.Quantidade);
                             rows += row;
                             await GerarLogEstoque(produto.Estoque, token);
                             eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo));
                         }
                     }
                 }
-
+                _logger.LogInformation("CommandId: {MessageId} - Fim baixa de estoque", command.MessageId);
                 _unitOfWork.Commit();
                 foreach (var evento in eventRequests)
                 {
-                    await _publisher.Enqueue(_settings.FilaProdutoEstoqueAlterado, evento.Serialize());
+                    string eventSerialized = evento.Serialize();
+                    _logger.LogInformation("Queue: {FilaProdutoEstoqueAlterado} - Enqueue: {eventRequests}", _settings.FilaProdutoAtualizado, eventSerialized);
+                    await _publisher.Enqueue(_settings.FilaProdutoEstoqueAlterado, eventSerialized);
                 }
             }
             catch (Exception)

@@ -1,5 +1,4 @@
 ﻿using Core.Entity;
-using static Produtos.Domain.Model.LogEstoque;
 
 namespace Produtos.Domain.Model
 {

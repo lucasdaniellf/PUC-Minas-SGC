@@ -1,10 +1,10 @@
-﻿using AplicacaoGerenciamentoLoja.CustomParameters.Cliente;
-using AplicacaoGerenciamentoLoja.SystemPolicies;
+﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Clientes.Application.Commands;
 using Clientes.Application.Query.DTO;
 using Clientes.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Clientes.Domain.Model.Status;
 
 namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 {
@@ -30,25 +30,19 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
         }
 
         [Authorize(Policy = Policies.PoliticaAcessoInterno)]
-        [HttpGet("/api/int/clientes/busca")]
-        public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientePorFiltro([FromQuery] CustomClientFilter filter, CancellationToken token)
+        [HttpGet("/api/int/clientes/email")]
+        public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientePorEmail(string email, CancellationToken token)
         {
-            IEnumerable<ClienteQueryDto> clientes = Enumerable.Empty<ClienteQueryDto>();
+            var clientes = await _service.BuscarClientePorEmail(email, token);
+            return Ok(clientes);
+        }
 
-            switch ((int)filter.Filtro)
-            {
-                case 0:
-                    {
-                        clientes = await _service.BuscarClientePorCPF(filter.Valor, token);
-                        break;
-                    }
-                case 1:
-                    {
-                        clientes = await _service.BuscarClientePorEmail(filter.Valor, token);
-                        break;
-                    }
-            }
+        [Authorize(Policy = Policies.PoliticaAcessoInterno)]
+        [HttpGet("/api/int/clientes/cpf")]
+        public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientePorCPF(string cpf, CancellationToken token)
+        {
 
+            var clientes = await _service.BuscarClientePorCPF(cpf, token);
             return Ok(clientes);
         }
 
@@ -91,7 +85,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 
         [HttpPut("/api/int/clientes/{Id}")]
         [Authorize(Roles = Roles.GerenteVendas)]
-        public async Task<ActionResult> AtualizarCliente(string Id, AtualizarClienteCommand command, CancellationToken token)
+        public async Task<ActionResult> AtualizarDadosCliente(string Id, AtualizarClienteCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
@@ -114,29 +108,56 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
             return BadRequest();
         }
 
-        [HttpPatch("/api/int/clientes/{Id}/status")]
+        [HttpPatch("/api/int/clientes/{Id}/ativar")]
         [Authorize(Roles = Roles.Administracao)]
-        public async Task<ActionResult> AlterarStatusCliente(string Id, AtualizarStatusClienteCommand command, CancellationToken token)
+        public async Task<ActionResult> AtivarContaCliente(string Id, CancellationToken token)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
+                AtualizarStatusClienteCommand command = new ()
                 {
-                    command.AdicionarId(Id);
-                    bool success = await _handler.Handle(command, token);
-                    if (!success)
-                    {
-                        return NotFound();
-                    }
-                    return NoContent();
-                }
-                catch (ClienteException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                    Id = Id,
+                    EstaAtivo = ClienteStatus.ATIVO
+                };
 
+                bool success = await _handler.Handle(command, token);
+                if (!success)
+                {
+                    return NotFound();
+                }
+                return NoContent();
             }
-            return BadRequest();
+            catch (ClienteException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+        [HttpPatch("/api/int/clientes/{Id}/desativar")]
+        [Authorize(Roles = Roles.Administracao)]
+        public async Task<ActionResult> DesativarContaCliente(string Id, CancellationToken token)
+        {
+            try
+            {
+                AtualizarStatusClienteCommand command = new()
+                {
+                    Id = Id,
+                    EstaAtivo = ClienteStatus.INATIVO
+                };
+
+                bool success = await _handler.Handle(command, token);
+                if (!success)
+                {
+                    return NotFound();
+                }
+                return NoContent();
+            }
+            catch (ClienteException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Core.Entity;
+using Produtos.Infrastructure;
 using static Produtos.Domain.Model.Status;
 
 namespace Produtos.Domain.Model
@@ -38,6 +39,19 @@ namespace Produtos.Domain.Model
             Preco = preco;
         }
 
+        public void BaixarEstoque(int quantidade)
+        {
+            if(EstaAtivo == ProdutoStatus.INATIVO)
+            {
+                throw new ProdutoException("Produto se encontra inativo");
+            }
+            this.Estoque.AtualizarEstoque(this.Estoque.Quantidade  - quantidade);
+        }
+
+        public void ReporEstoque(int quantidade)
+        {
+            this.Estoque.AtualizarEstoque(this.Estoque.Quantidade + quantidade);
+        }
 
         public static Produto CadastrarProduto(string descricao, decimal preco)
         {

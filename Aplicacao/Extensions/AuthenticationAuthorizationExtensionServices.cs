@@ -36,7 +36,7 @@ namespace AplicacaoGerenciamentoLoja.Extensions
                 opt.AddPolicy(Policies.PoliticaGerenciamentoProduto, policy => policy.RequireRole(Roles.GerenteProdutos));
                 
                 opt.AddPolicy(Policies.PoliticaAcessoInterno, policy => policy.RequireAssertion(context => context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente)));
-                opt.AddPolicy(Policies.PoliticaAcessoExterno, policy => policy.RequireAssertion(context => !context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente)));
+                opt.AddPolicy(Policies.PoliticaAcessoExterno, policy => policy.RequireAssertion(context => !context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente) && !string.IsNullOrWhiteSpace(context.User.FindFirstValue(ClaimTypes.Email))));
             });
 
             return services;

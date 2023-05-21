@@ -11,11 +11,12 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
     {
         private readonly ClienteCommandHandler _handler;
         private readonly ClienteQueryService _service;
-
-        public ClientesController(ClienteCommandHandler handler, ClienteQueryService service)
+        private readonly ILogger<ClientesController> _logger;
+        public ClientesController(ClienteCommandHandler handler, ClienteQueryService service, ILogger<ClientesController> logger)
         {
             _handler = handler;
             _service = service;
+            _logger = logger;
         }
     }
 }

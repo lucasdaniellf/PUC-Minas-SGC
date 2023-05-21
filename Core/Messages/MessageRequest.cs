@@ -6,6 +6,7 @@ namespace Core.Messages
 {
     public abstract class MessageRequest
     {
+        public string MessageId { get; } = Guid.NewGuid().ToString();
         public string Serialize()
         {
             return JsonConvert.SerializeObject(this);

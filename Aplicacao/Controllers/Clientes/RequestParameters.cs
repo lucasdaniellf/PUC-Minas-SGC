@@ -5,7 +5,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 {
     public record CriarClienteRequest
     {
-        public string Nome = null!;
+        public string Nome { get; set; } = null!;
         [RegularExpression(@"^\d{11}$")]
         public string Cpf { get; set; } = null!;
         public Endereco Endereco { get; set; } = null!;

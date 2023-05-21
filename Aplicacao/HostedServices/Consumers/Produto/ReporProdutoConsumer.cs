@@ -9,7 +9,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
 {
     public class ReporProdutoConsumer : BaseConsumer
     {
-        public ReporProdutoConsumer(IServiceProvider provider, IConfiguration configuration) : base(provider, configuration)
+        public ReporProdutoConsumer(IServiceProvider provider, IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger)
         {
         }
 
@@ -26,11 +26,10 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
                 {
                     await _wrapPolicy.ExecuteAsync(async (context) =>
                     {
-                        Console.WriteLine("ReporProdutoVenda: " + mensagem);
                         var eventoDesserializado = JsonConvert.DeserializeObject<ReporProdutoCommandMessage>(mensagem);
-
                         if (eventoDesserializado != null)
                         {
+                            _logger.LogInformation("Dequeue: {mensagem}", eventoDesserializado.Serialize());
                             var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
                             await handler.Handle(comando, token);
                         }

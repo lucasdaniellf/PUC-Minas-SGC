@@ -5,9 +5,9 @@ namespace Vendas.Domain.Model
     public class ItemVenda : IEntity
     {
         internal Venda Venda { get; private set; } = null!;
-        internal ProdutoVenda Produto { get; private set; } = null!;
-        internal int Quantidade { get; private set; } = 0;
-        internal decimal ValorPago { get; private set; } = 0;
+        public ProdutoVenda Produto { get; private set; } = null!;
+        public int Quantidade { get; private set; } = 0;
+        public decimal ValorPago { get; private set; } = 0;
 
         internal ItemVenda(Venda venda, ProdutoVenda produto, int quantidade, decimal preco)
         {

@@ -1,5 +1,4 @@
-﻿using AplicacaoGerenciamentoLoja.CustomParameters.Venda;
-using AplicacaoGerenciamentoLoja.SystemPolicies;
+﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -7,7 +6,7 @@ using Vendas.Application.Commands;
 using Vendas.Application.Query;
 using Vendas.Domain;
 
-namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
+namespace AplicacaoGerenciamentoLoja.Controllers.Vendas
 {
     public partial class VendaController : ControllerBase
     {
@@ -31,7 +30,6 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
 
         [HttpPost("/api/ext/vendas")]
         [Authorize(Policy = Policies.PoliticaAcessoExterno)]
-
         public async Task<ActionResult<IEnumerable<VendaDto>>> CriarVendaCliente(CancellationToken token)
         {
             try

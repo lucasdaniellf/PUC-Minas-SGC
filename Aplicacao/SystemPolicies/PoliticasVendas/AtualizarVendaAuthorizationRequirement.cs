@@ -17,7 +17,7 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
             var email = context.User.FindFirstValue(ClaimTypes.Email);
             var validacao = resource.All(venda => string.Equals(venda.criadoPor, email, StringComparison.OrdinalIgnoreCase));
             
-            if (context.User.Claims.Where(c => c.Value == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
+            if (context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
             {
                 if (context.User.IsInRole(Roles.GerenteVendas) && validacao)
                 {

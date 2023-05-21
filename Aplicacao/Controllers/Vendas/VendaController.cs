@@ -1,14 +1,12 @@
-﻿using AplicacaoGerenciamentoLoja.CustomParameters.Venda;
-using AplicacaoGerenciamentoLoja.SystemPolicies;
+﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vendas.Application.Commands;
 using Vendas.Application.Commands.Handlers;
 using Vendas.Application.Query;
 using Vendas.Domain;
-using Vendas.Domain.Model;
 
-namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
+namespace AplicacaoGerenciamentoLoja.Controllers.Vendas
 {
     [Route("api/vendas")]
     [ApiController]
@@ -58,7 +56,7 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
         //---------------------------------------Updates-----------------------------------------------------------------------------------------//
 
         [HttpPatch("{Id}/formapagamento")]
-        public async Task<ActionResult> AtualizarFormaPagamentoVenda(string Id, [FromQuery] FormaPagamentoParametro formaPagamento, CancellationToken token)
+        public async Task<ActionResult> AtualizarFormaPagamentoVenda(string Id, AtualizarFormaPagamentoVendaCommand command, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
@@ -72,25 +70,13 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
                         return Forbid();
                     }
 
-                    if(formaPagamento.Modalidade is not null)
+                    command.AdicionarId(Id);
+                    var sucesso = await _handler.Handle(command, token);
+                    if (sucesso)
                     {
-                        var command = new AtualizarFormaPagamentoVendaCommand()
-                        {
-                            FormaDePagamento = formaPagamento.Modalidade.Value
-                        };
-                        command.AdicionarId(Id);
-
-                        var sucesso = await _handler.Handle(command, token);
-                        if (sucesso)
-                        {
-                            return NoContent();
-                        }
-                        return NotFound();
+                        return NoContent();
                     }
-                    else
-                    {
-                        return BadRequest("Parâmetro de forma de pagamento com um valor inválido");
-                    }
+                    return NotFound();
                 }
                 catch (VendaException ex)
                 {
@@ -100,8 +86,8 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
             return BadRequest();
         }
 
-        [HttpPatch("{Id}/statusvenda")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> ProcessarStatusVenda(string Id, [FromQuery] StatusParametro StatusVenda, CancellationToken token)
+        [HttpPatch("{Id}/status/confirmar")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> ConfirmarVenda(string Id, CancellationToken token)
         {
             try
             {
@@ -114,25 +100,8 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
                 {
                     return Forbid();
                 }
+                sucesso = await _handler.Handle(new ConfirmarVendaCommand(Id), token);
 
-                switch (StatusVenda.Status)
-                {
-                    case StatusVendaEnum.Confirmacao:
-                    {
-                        sucesso = await _handler.Handle(new ConfirmarVendaCommand(Id), token);
-                        break;
-                    }
-                    case StatusVendaEnum.Cancelamento:
-                    {
-                        sucesso = await _handler.Handle(new CancelarVendaCommand(Id), token);
-                        break;
-                    }
-                    default:
-                    {
-                        return BadRequest("Parametro de status inválido");
-                    }
-                }
-                
                 if (sucesso)
                 {
                     return NoContent();
@@ -145,104 +114,32 @@ namespace AplicacaoGerenciamentoLoja.Vendas.Controllers
             }
         }
 
-
-        //------------------------ Item Venda --------------------------------//
-        [HttpPost("{VendaId}/item/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> AdicionarItemEmVenda(string VendaId, AdicionarItemVendaCommand item, CancellationToken token)
+        [HttpPatch("{Id}/status/cancelar")]
+        public async Task<ActionResult<IEnumerable<VendaDto>>> CancelarVenda(string Id, CancellationToken token)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
+
+                var vendas = await _service.BuscarVendasPorId(Id, token);
+                var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.PoliticaAtualizarVenda);
+                var sucesso = false;
+
+                if (!resultado.Succeeded)
                 {
-                    var vendas = await _service.BuscarVendasPorId(VendaId, token);
-                    var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.PoliticaAtualizarVenda);
-
-                    if (!resultado.Succeeded)
-                    {
-                        return Forbid();
-                    }
-
-                    item.AdicionarVendaId(VendaId);
-
-                    var sucesso = await _handler.Handle(item, token);
-                    if (sucesso)
-                    {
-                        vendas = await _service.BuscarVendasPorId(item.VendaId, token);
-                        return CreatedAtAction("BuscarVendasPorId", new { Id = vendas.First().id }, vendas.First());
-                    }
-                    return NotFound();
+                    return Forbid();
                 }
-                catch (VendaException ex)
+                sucesso = await _handler.Handle(new CancelarVendaCommand(Id), token);
+
+                if (sucesso)
                 {
-                    return BadRequest(ex.Message);
+                    return NoContent();
                 }
-
+                return NotFound();
             }
-            return BadRequest();
-        }
-
-        [HttpPut("{VendaId}/item/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> AtualizarItemEmVenda(string VendaId, AtualizarItemVendaCommand item, CancellationToken token)
-        {
-            if (ModelState.IsValid)
+            catch (VendaException ex)
             {
-                try
-                {
-                    var vendas = await _service.BuscarVendasPorId(VendaId, token);
-                    var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.PoliticaAtualizarVenda);
-
-                    if (!resultado.Succeeded)
-                    {
-                        return Forbid();
-                    }
-
-                    item.AdicionarVendaId(VendaId);
-
-                    var sucesso = await _handler.Handle(item, token);
-                    if (sucesso)
-                    {
-                        return NoContent();
-                    }
-                    return NotFound();
-                }
-                catch (VendaException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return BadRequest(ex.Message);
             }
-            return BadRequest();
-        }
-
-        [HttpDelete("{VendaId}/item/")]
-        public async Task<ActionResult<IEnumerable<VendaDto>>> RemoverItemDeVenda(string VendaId, RemoverItemVendaCommand item, CancellationToken token)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var vendas = await _service.BuscarVendasPorId(VendaId, token);
-                    var resultado = await _authorizationService.AuthorizeAsync(User, vendas, Policies.PoliticaAtualizarVenda);
-
-                    if (!resultado.Succeeded)
-                    {
-                        return Forbid();
-                    }
-
-                    item.AdicionarVendaId(VendaId);
-
-                    var sucesso = await _handler.Handle(item, token);
-                    if (sucesso)
-                    {
-                        return NoContent();
-                    }
-                    return NotFound();
-                }
-                catch (VendaException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-            return BadRequest();
         }
     }
 }

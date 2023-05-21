@@ -13,7 +13,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
 {
     public class ReservarProdutoConsumer : BaseConsumer
     {
-        public ReservarProdutoConsumer(IServiceProvider provider, IConfiguration configuration) : base(provider, configuration)
+        public ReservarProdutoConsumer(IServiceProvider provider, IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger)
         {
         }
 
@@ -31,11 +31,10 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
                     var sucessoReservaProduto = false;
 
                     await _wrapPolicy.ExecuteAsync( async (context) => {
-                        Console.WriteLine("ReservarProdutoVenda: " + mensagem);
                         var eventoDesserializado = JsonConvert.DeserializeObject<ReservarProdutoCommandMessage>(mensagem);
-
                         if (eventoDesserializado != null)
                         {
+                            _logger.LogInformation("Dequeue: {mensagem}", eventoDesserializado.Serialize());
                             var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
                             
 
@@ -46,6 +45,8 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
                                 ["mensagem"] = mensagem,
                                 ["reservaProduto"] = sucessoReservaProduto
                             });
+
+                            _logger.LogInformation("Retorno Reserva dos produtos: {VendaId} - {sucessoReservaProduto}", eventoDesserializado.VendaId, sucessoReservaProduto);
 
                             if (sucessoReservaProduto)
                             {

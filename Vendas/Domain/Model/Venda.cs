@@ -6,14 +6,14 @@ namespace Vendas.Domain.Model
 {
     public class Venda : IAggregateRoot
     {
-        internal string Id { get; private set; } = null!;
-        internal DateTime DataVenda { get; private set; } = DateTime.Now;
-        internal int Desconto { get; private set; }
-        internal Status Status { get; private set; } = Status.PENDENTE;
-        internal FormaPagamento FormaDePagamento { get; private set; } = FormaPagamento.CARTAO_CREDITO;
-        internal ClienteVenda Cliente { get; private set; } = null!;
-        internal IList<ItemVenda> Items { get; private set; }
-        internal string CriadoPor { get; init; } = null!;
+        public string Id { get; private set; } = null!;
+        public DateTime DataVenda { get; private set; } = DateTime.Now;
+        public int Desconto { get; private set; }
+        public Status Status { get; private set; } = Status.PENDENTE;
+        public FormaPagamento FormaDePagamento { get; private set; } = FormaPagamento.CARTAO_CREDITO;
+        public ClienteVenda Cliente { get; private set; } = null!;
+        public IList<ItemVenda> Items { get; private set; }
+        public string CriadoPor { get; init; } = null!;
         internal Venda(string Id, ClienteVenda cliente, DateTime DataVenda, int Desconto, int FormaPagamento, int Status, string CriadoPor) : this(CriadoPor, cliente)
         {
             this.Id = Id;

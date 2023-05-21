@@ -162,7 +162,7 @@ namespace Vendas.Application.Query
             try
             {
                 _unitOfWork.Begin();
-                var cliente = from c in await _repository.BuscarClientePorId(email, token) select MapCliente(c);
+                var cliente = from c in await _repository.BuscarClientePorEmail(email, token) select MapCliente(c);
                 _unitOfWork.CloseConnection();
                 return cliente;
             }
