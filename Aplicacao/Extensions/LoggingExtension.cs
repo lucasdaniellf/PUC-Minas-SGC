@@ -38,8 +38,13 @@ namespace AplicacaoGerenciamentoLoja.Extensions
         public const string GeneralLoggerTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] - CorrelationId: {CorrelationId} - Usuario: {Usuario} - {Message:lj} {NewLine} {Exception}";
         public const string QueueConsumerLoggerTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] - HostedService - {Message:lj} {NewLine} {Exception}";
 
-        //Location
-        public const string FileLogLocation = ".\\Logs\\logs-.json";
-        public const string FileErrorLogLocation = ".\\Logs\\logs-error-.json";
+        //Location Development
+        //public const string FileLogLocation = ".\\Logs\\logs-.json";
+        //public const string FileErrorLogLocation = ".\\Logs\\logs-error-.json";
+
+        //Location Production
+        public const string FileLogLocation = "./Logs/logs-.json";
+        public const string FileErrorLogLocation = "./Logs/logs-error-.json";
+
     }
 }

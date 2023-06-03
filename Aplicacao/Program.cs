@@ -51,8 +51,8 @@ builder.Services.AddSwaggerGen(c =>
         {
             Implicit = new OpenApiOAuthFlow()
             {
-                AuthorizationUrl = new Uri("http://localhost:8080/realms/MySGCApp/protocol/openid-connect/auth"),
-                TokenUrl = new Uri("http://localhost:8080/realms/MySGCApp/protocol/openid-connect/token"),
+                AuthorizationUrl = new Uri("http://auth:8080/realms/MySGCApp/protocol/openid-connect/auth"),
+                TokenUrl = new Uri("http://auth:8080/realms/MySGCApp/protocol/openid-connect/token"),
             }
         }
     });

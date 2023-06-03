@@ -2,6 +2,7 @@
 using AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Logging;
 using System.Security.Claims;
 
 namespace AplicacaoGerenciamentoLoja.Extensions
@@ -26,7 +27,6 @@ namespace AplicacaoGerenciamentoLoja.Extensions
 
             services.AddSingleton<IAuthorizationRequirement, LerVendaAuthorizationRequirement>();
             services.AddSingleton<IAuthorizationHandler, LerVendaAuthorizationRequirementHandler>();
-
 
             services.AddAuthorization(opt =>
             {
