@@ -10,15 +10,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Cliente
         public ClienteAtualizadoConsumer(IServiceProvider provider,
                                          IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger) {
         }
-
-
-        protected override string QueueName
-        {
-            get
-            {
-                return "cliente-*";
-            }
-        }
+        protected override string QueueName => "cliente-*";
         protected async override Task ProcessarMensagens(IEnumerable<string> mensagens, CancellationToken token)
         {
             using (IServiceScope scope = _provider.CreateScope())

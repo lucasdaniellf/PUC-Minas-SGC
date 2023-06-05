@@ -22,7 +22,11 @@ namespace Clientes.Application.Commands
         private readonly IUnitOfWork<Cliente> _unitOfWork;
         private readonly ILogger<ClienteCommandHandler> _logger;
 
-        public ClienteCommandHandler(IClienteRepository repository, IUnitOfWork<Cliente> unitOfWork, IMessageBrokerPublisher publisher, IOptions<ClienteDomainSettings> options, ILogger<ClienteCommandHandler> logger)
+        public ClienteCommandHandler(IClienteRepository repository,
+                                     IUnitOfWork<Cliente> unitOfWork, 
+                                     IMessageBrokerPublisher publisher, 
+                                     IOptions<ClienteDomainSettings> options, 
+                                     ILogger<ClienteCommandHandler> logger)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
@@ -88,9 +92,6 @@ namespace Clientes.Application.Commands
                 {
                     Cliente cliente = clientes.First();
                     cliente.AtualizarDadosCliente(command.Nome, command.Cpf, command.Email, command.Endereco);
-                    
-                    //cliente.AtualizarStatusCliente(command.EstaAtivo) ;
-
                     row = await _repository.AtualizarCliente(cliente, token);
 
                     if (row > 0)
