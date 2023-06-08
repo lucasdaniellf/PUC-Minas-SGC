@@ -17,14 +17,14 @@ namespace Clientes.Infrastructure
 
         public async Task<int> AtualizarCliente(Cliente cliente, CancellationToken token)
         {
-            var query = @"update Cliente set Nome = @Nome, Cpf = @Cpf, EstaAtivo = @EstaAtivo, Email = @Email  where Id = @Id";
+            var query = @"update Cliente set Nome = @Nome, Cpf = @Cpf, Status = @Status, Email = @Email  where Id = @Id";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
                                                                                                  cliente.Nome,
                                                                                                  Cpf = cliente.Cpf.Numero,
-                                                                                                 cliente.EstaAtivo,
-                                                                                                 Email = cliente.Email,
+                                                                                                 cliente.Status,
+                                                                                                 cliente.Email,
                                                                                                  cliente.Id
                                                                                              },
                                                                                              transaction: _context.Transaction,
@@ -138,7 +138,7 @@ namespace Clientes.Infrastructure
 
         public async Task<int> CadastrarCliente(Cliente cliente, CancellationToken token)
         {
-            var query = @"insert into Cliente(Id, Nome, Cpf, Email, EstaAtivo) values (@Id, @Nome, @Cpf, @Email, 1)";
+            var query = @"insert into Cliente(Id, Nome, Cpf, Email, Status) values (@Id, @Nome, @Cpf, @Email, 1)";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
@@ -162,13 +162,13 @@ namespace Clientes.Infrastructure
                                                                                 parameters: new
                                                                                 {
                                                                                     ClienteId = cliente.Id,
-                                                                                    Rua = cliente.Endereco.Rua,
-                                                                                    NumeroCasa = cliente.Endereco.NumeroCasa,
-                                                                                    Complemento = cliente.Endereco.Complemento,
-                                                                                    CEP = cliente.Endereco.CEP,
-                                                                                    Bairro = cliente.Endereco.Bairro,
-                                                                                    Cidade = cliente.Endereco.Cidade,
-                                                                                    Estado = cliente.Endereco.Estado
+                                                                                    cliente.Endereco.Rua,
+                                                                                    cliente.Endereco.NumeroCasa,
+                                                                                    cliente.Endereco.Complemento,
+                                                                                    cliente.Endereco.CEP,
+                                                                                    cliente.Endereco.Bairro,
+                                                                                    cliente.Endereco.Cidade,
+                                                                                    cliente.Endereco.Estado
                                                                                 },
                                                                                 transaction: _context.Transaction,
                                                                                 commandType: System.Data.CommandType.Text,
@@ -190,13 +190,13 @@ namespace Clientes.Infrastructure
                                                                                 parameters: new
                                                                                 {
                                                                                     ClienteId = cliente.Id,
-                                                                                    Rua = cliente.Endereco.Rua,
-                                                                                    NumeroCasa = cliente.Endereco.NumeroCasa,
-                                                                                    Complemento = cliente.Endereco.Complemento,
-                                                                                    CEP = cliente.Endereco.CEP,
-                                                                                    Bairro = cliente.Endereco.Bairro,
-                                                                                    Cidade = cliente.Endereco.Cidade,
-                                                                                    Estado = cliente.Endereco.Estado
+                                                                                    cliente.Endereco.Rua,
+                                                                                    cliente.Endereco.NumeroCasa,
+                                                                                    cliente.Endereco.Complemento,
+                                                                                    cliente.Endereco.CEP,
+                                                                                    cliente.Endereco.Bairro,
+                                                                                    cliente.Endereco.Cidade,
+                                                                                    cliente.Endereco.Estado
                                                                                 },
                                                                                 transaction: _context.Transaction,
                                                                                 commandType: System.Data.CommandType.Text,

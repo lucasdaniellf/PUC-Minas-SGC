@@ -12,9 +12,9 @@ namespace Clientes.Infrastructure
         public ClienteDbContext(string conn)
         {
             //Development
-            //string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\ClientesDb");
+            string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\ClientesDb");
 
-            string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/ClientesDb");
+            //string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/ClientesDb");
 
             conn = conn.Replace("{AppDir}", fileLocation);
 
@@ -45,8 +45,8 @@ namespace Clientes.Infrastructure
                         Cpf varchar(11) not null unique,
                         Nome varchar(100) not null,
                         Email varchar(100) not null unique,
-                        EstaAtivo INTEGER not null,
-                        check(EstaAtivo = 0 OR EstaAtivo = 1)
+                        Status INTEGER not null,
+                        check(Status = 0 OR Status = 1)
                     );
 
                     Create table Endereco(

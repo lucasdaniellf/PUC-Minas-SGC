@@ -1,6 +1,7 @@
 ﻿using Core.Entity;
 using static Vendas.Domain.Model.FormaPagamentoEnum;
 using static Vendas.Domain.Model.StatusVenda;
+using static Vendas.Domain.Model.ClienteVenda;
 
 namespace Vendas.Domain.Model
 {
@@ -31,7 +32,7 @@ namespace Vendas.Domain.Model
         }
         internal static Venda CriarVenda(string criadoPor, ClienteVenda cliente)
         {
-            if (cliente.Status == ClienteVenda.ClienteStatus.INATIVO)
+            if (cliente.Status == ClienteStatus.INATIVO)
             {
                 throw new VendaException("Cliente com status inativo");
             }
@@ -107,7 +108,7 @@ namespace Vendas.Domain.Model
             {
                 throw new VendaException("Venda não pode ser processada sem items");
             }
-            if (Cliente.Status == ClienteVenda.ClienteStatus.INATIVO)
+            if (Cliente.Status == ClienteStatus.INATIVO)
             {
                 throw new VendaException("Venda não pode ser processada para cliente com status inativo. Cliente: " + Cliente.Id);
             }

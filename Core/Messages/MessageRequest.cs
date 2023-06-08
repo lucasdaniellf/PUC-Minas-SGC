@@ -1,4 +1,5 @@
-﻿using Core.MessageBroker;
+﻿using Core.Extensions;
+using Core.MessageBroker;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
@@ -9,7 +10,7 @@ namespace Core.Messages
         public string MessageId { get; } = Guid.NewGuid().ToString();
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(this);
+            return this.SerializedObjectString();
         }
     }
 }

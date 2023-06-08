@@ -104,7 +104,7 @@ namespace Clientes.Application.Query
 
         private ClienteQueryDto MapQueryDto(Cliente cliente)
         {
-            return new ClienteQueryDto(cliente.Id, cliente.Cpf.Numero, cliente.Nome, cliente.Email, cliente.EstaAtivo, cliente.Endereco);
+            return new ClienteQueryDto(cliente.Id, cliente.Cpf.Numero, cliente.Nome, cliente.Email, cliente.Status, cliente.Endereco);
         }
     }
 }

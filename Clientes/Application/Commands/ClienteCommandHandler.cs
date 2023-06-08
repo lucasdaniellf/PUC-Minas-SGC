@@ -62,7 +62,7 @@ namespace Clientes.Application.Commands
                     if (row > 0)
                     {
                         await _repository.CadastrarEnderecoCliente(cliente, token);
-                        EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
+                        EventRequest message = new ClienteAtualizadoEvent(cliente.Id, cliente.Email, cliente.Status);
                        
                         string messageSerialized = message.Serialize();
                         _logger.LogInformation("Queue: {FilaClienteCadastrado} - Enqueue: {message}", _settings.FilaClienteCadastrado, messageSerialized);
@@ -97,7 +97,7 @@ namespace Clientes.Application.Commands
                     if (row > 0)
                     {
                         await _repository.AtualizarEnderecoCliente(cliente, token);
-                        EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
+                        EventRequest message = new ClienteAtualizadoEvent(cliente.Id, cliente.Email, cliente.Status);
 
                         string messageSerialized = message.Serialize();
                         _logger.LogInformation("Queue: {FilaClienteAtualizado} - Enqueue: {message}", _settings.FilaClienteAtualizado, messageSerialized);
@@ -124,12 +124,12 @@ namespace Clientes.Application.Commands
                 if (clientes.Any())
                 {
                     Cliente cliente = clientes.First();
-                    cliente.AtualizarStatusCliente(command.EstaAtivo);
+                    cliente.AtualizarStatusCliente(command.Status);
                     row = await _repository.AtualizarCliente(cliente, token);
 
                     if (row > 0)
                     {
-                        EventRequest message = new ClienteMensagemEvent(cliente.Id, cliente.Email, cliente.EstaAtivo);
+                        EventRequest message = new ClienteAtualizadoEvent(cliente.Id, cliente.Email, cliente.Status);
                         string messageSerialized = message.Serialize();
                         _logger.LogInformation("Queue: {StatusClienteAtualizado} - Enqueue: {message}", _settings.FilaClienteAtualizado, messageSerialized);
 

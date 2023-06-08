@@ -1,6 +1,6 @@
 ﻿using Core.Entity;
 using System.ComponentModel.DataAnnotations;
-using static Clientes.Domain.Model.Status;
+using static Clientes.Domain.Model.ClienteStatus;
 
 namespace Clientes.Domain.Model
 {
@@ -11,13 +11,13 @@ namespace Clientes.Domain.Model
         [EmailAddress]
         public string Email { get; private set; } = null!;
         public CPF Cpf { get; private set; } = null!;
-        public ClienteStatus EstaAtivo { get; private set; } = ClienteStatus.ATIVO;
+        public ClienteStatusEnum Status { get; private set; } = ClienteStatusEnum.ATIVO;
         public Endereco Endereco { get; private set; } = null!;
 
-        internal Cliente(string Id, string Cpf, string Nome, string Email, long EstaAtivo, Endereco endereco) : this(Nome, Cpf, Email, endereco)
+        internal Cliente(string Id, string Cpf, string Nome, string Email, long Status, Endereco endereco) : this(Nome, Cpf, Email, endereco)
         {
             this.Id = Id;
-            this.EstaAtivo = AplicarStatusEmCliente(EstaAtivo);
+            this.Status = AplicarStatusEmCliente(Status);
         }
 
         private Cliente(string nome, string cpf, string Email, Endereco endereco)
@@ -40,7 +40,7 @@ namespace Clientes.Domain.Model
 
         public void AtualizarDadosCliente(string nome, string cpf, string email, Endereco endereco)
         {
-            if(this.EstaAtivo == ClienteStatus.INATIVO)
+            if(this.Status == ClienteStatusEnum.INATIVO)
             {
                 throw new ClienteException("Dados de usuário não podem ser atualizados pois seu status é INATIVO");
             }
@@ -50,13 +50,13 @@ namespace Clientes.Domain.Model
             Endereco = endereco;
         }
 
-        public void AtualizarStatusCliente(ClienteStatus status)
+        public void AtualizarStatusCliente(ClienteStatusEnum status)
         {
-            if(!Enum.IsDefined(typeof(ClienteStatus), status))
+            if(!Enum.IsDefined(typeof(ClienteStatusEnum), status))
             {
                 throw new ClienteException("Status inválido, deve ser 0 (inativo) ou 1 (ativo)");
             }
-            EstaAtivo = status;
+            Status = status;
         }
 
         private void AtualizarNome(string nome)

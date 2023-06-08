@@ -6,7 +6,7 @@ namespace Clientes.Application.Commands
 {
     public class AtualizarClienteCommand : CommandRequest
     {
-        public string Id { get; private set; } = string.Empty;
+        public string Id { get; set; } = null!;
         public string Nome { get; set; } = null!;
 
         [RegularExpression(@"^\d{11}$")]
@@ -14,9 +14,14 @@ namespace Clientes.Application.Commands
         public Endereco Endereco { get; set; } = null!;
         [EmailAddress]
         public string Email { get; set; } = null!;
-        public void AdicionarId(string id)
+
+        public AtualizarClienteCommand(string id, string nome, string cpf, Endereco endereco, string email)
         {
             Id = id;
+            Nome = nome;
+            Cpf = cpf;
+            Endereco = endereco;
+            Email = email;
         }
     }
 }

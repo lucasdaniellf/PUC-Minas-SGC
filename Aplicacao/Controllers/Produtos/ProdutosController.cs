@@ -7,7 +7,7 @@ using Produtos.Application.Query;
 using Produtos.Application.Query.DTO;
 using Produtos.Domain;
 
-namespace AplicacaoGerenciamentoLoja.Controllers
+namespace AplicacaoGerenciamentoLoja.Controllers.Produtos
 {
     [Route("api/produtos")]
     [ApiController]

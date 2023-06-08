@@ -26,7 +26,7 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
@@ -60,7 +60,7 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
@@ -96,7 +96,7 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
@@ -133,7 +133,7 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
@@ -170,7 +170,7 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
@@ -359,9 +359,9 @@ namespace Vendas.Infrastructure
 
         public async Task<int> AtualizarCliente(ClienteVenda cliente, CancellationToken token)
         {
-            var query = @"update Cliente set EstaAtivo = @EstaAtivo, Email = @Email where Id = @Id";
+            var query = @"update Cliente set Status = @Status, Email = @Email where Id = @Id";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                            parameters: new { Id = cliente.Id, Email = cliente.Email, EstaAtivo = cliente.Status },
+                                                                                            parameters: new { Id = cliente.Id, Email = cliente.Email, Status = cliente.Status },
                                                                                             transaction: _context.Transaction,
                                                                                             commandType: System.Data.CommandType.Text,
                                                                                             cancellationToken: token));
@@ -370,13 +370,13 @@ namespace Vendas.Infrastructure
 
         public async Task<int> CadastrarCliente(ClienteVenda cliente, CancellationToken token)
         {
-            var query = @"insert into Cliente(Id, Email, EstaAtivo) values (@Id, @Email, @EstaAtivo)";
+            var query = @"insert into Cliente(Id, Email, Status) values (@Id, @Email, @Status)";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
                                                                                                  Id = cliente.Id.ToString(),
                                                                                                  Email = cliente.Email,
-                                                                                                 EstaAtivo = cliente.Status
+                                                                                                 Status = cliente.Status
 
                                                                                              },
                                                                                              transaction: _context.Transaction,

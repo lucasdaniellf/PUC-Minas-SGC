@@ -1,17 +1,30 @@
-﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
+﻿using AplicacaoGerenciamentoLoja.Controllers.Clientes.Parametros.InternalController;
+using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Clientes.Application.Commands;
+using Clientes.Application.Query;
 using Clientes.Application.Query.DTO;
 using Clientes.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clientes.Domain.Model.Status;
+using static Clientes.Domain.Model.ClienteStatus;
 
 namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 {
-    public partial class ClientesController : ControllerBase
+    [Authorize(Policy = Policies.PoliticaAcessoInterno)]
+    public class ClienteInternalController : ControllerBase
     {
+        private readonly ClienteCommandHandler _handler;
+        private readonly ClienteQueryService _service;
+        private readonly ILogger<ClienteInternalController> _logger;
 
-        [Authorize(Policy = Policies.PoliticaAcessoInterno)]
+        public ClienteInternalController(ClienteCommandHandler handler, ClienteQueryService service, ILogger<ClienteInternalController> logger)
+        {
+            _handler = handler;
+            _service = service;
+            _logger = logger;
+        }
+
+
         [HttpGet("/api/int/clientes")]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientes(string? nome, CancellationToken token)
         {
@@ -29,7 +42,6 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
             return Ok(clientes);
         }
 
-        [Authorize(Policy = Policies.PoliticaAcessoInterno)]
         [HttpGet("/api/int/clientes/email")]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientePorEmail(string email, CancellationToken token)
         {
@@ -37,7 +49,6 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
             return Ok(clientes);
         }
 
-        [Authorize(Policy = Policies.PoliticaAcessoInterno)]
         [HttpGet("/api/int/clientes/cpf")]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientePorCPF(string cpf, CancellationToken token)
         {
@@ -46,7 +57,6 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
             return Ok(clientes);
         }
 
-        [Authorize(Policy = Policies.PoliticaAcessoInterno)]
         [HttpGet("/api/int/clientes/{Id}", Name = "BuscarClientePorId")]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarClientePorId(string Id, CancellationToken token)
         {
@@ -63,12 +73,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
         //=====================================================================================================================================================================//
         [HttpPost("/api/int/clientes")]
         [Authorize(Roles = Roles.GerenteVendas)]
-        public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> CadastrarCliente(CadastrarClienteCommand command, CancellationToken token)
+        public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> CadastrarCliente([FromBody] CadastrarClienteInternalRequest request, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    CadastrarClienteCommand command = new(request.Nome, request.Cpf, request.Endereco, request.Email);
+
                     var success = await _handler.Handle(command, token);
                     if (success)
                     {
@@ -85,13 +97,15 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 
         [HttpPut("/api/int/clientes/{Id}")]
         [Authorize(Roles = Roles.GerenteVendas)]
-        public async Task<ActionResult> AtualizarDadosCliente(string Id, AtualizarClienteCommand command, CancellationToken token)
+        public async Task<ActionResult> AtualizarDadosCliente(string Id, [FromBody] AtualizarClienteInternalRequest request, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    command.AdicionarId(Id);
+                    AtualizarClienteCommand command = new(Id, request.Nome, request.Cpf, request.Endereco, request.Email);
+
+
                     bool success = await _handler.Handle(command, token);
                     if (!success)
                     {
@@ -114,11 +128,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
         {
             try
             {
-                AtualizarStatusClienteCommand command = new ()
-                {
-                    Id = Id,
-                    EstaAtivo = ClienteStatus.ATIVO
-                };
+                AtualizarStatusClienteCommand command = new (Id, ClienteStatusEnum.ATIVO);
 
                 bool success = await _handler.Handle(command, token);
                 if (!success)
@@ -141,11 +151,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
         {
             try
             {
-                AtualizarStatusClienteCommand command = new()
-                {
-                    Id = Id,
-                    EstaAtivo = ClienteStatus.INATIVO
-                };
+                AtualizarStatusClienteCommand command = new(Id, ClienteStatusEnum.INATIVO);
 
                 bool success = await _handler.Handle(command, token);
                 if (!success)

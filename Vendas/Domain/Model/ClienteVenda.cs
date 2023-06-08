@@ -9,11 +9,11 @@ namespace Vendas.Domain.Model
         public ClienteStatus Status { get; private set; }
         public string Email { get; private set; } = null!;
 
-        internal ClienteVenda(string id, string email, long EstaAtivo)
+        internal ClienteVenda(string id, string email, long status)
         {
             Id = id;
             Email = email;
-            AplicarStatusEmCliente(EstaAtivo);
+            AplicarStatusEmCliente(status);
         }
 
         public enum ClienteStatus

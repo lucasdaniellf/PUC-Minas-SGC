@@ -11,8 +11,8 @@ namespace Produtos.Infrastructure
         public ProdutoDbContext(string conn)
         {
             //Development
-            //string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\ProdutosDb");
-            string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/ProdutosDb");
+            string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\ProdutosDb");
+            //string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/ProdutosDb");
             conn = conn.Replace("{AppDir}", fileLocation);
 
             if (!File.Exists(fileLocation))
