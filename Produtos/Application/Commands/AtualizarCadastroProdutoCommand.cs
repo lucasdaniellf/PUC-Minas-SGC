@@ -1,23 +1,23 @@
 ﻿using Core.Messages.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Produtos.Domain.Model.Status;
+using static Produtos.Domain.Model.ProdutoStatus;
 
 namespace Produtos.Application.Commands
 {
     public class AtualizarCadastroProdutoCommand : CommandRequest
     {
         public string Id { get; private set; } = string.Empty;
-        public string Descricao { get; set; } = null!;
-        public decimal Preco { get; set; }
-        public int EstoqueMinimo { get; set; }
-        public ProdutoStatus EstaAtivo { get; set; }
-        public void AdicionarId(string id)
+        public string Descricao { get; private set; } = null!;
+        public decimal Preco { get; private set; }
+        public int EstoqueMinimo { get; private set; }
+        public ProdutoStatusEnum Status { get; set; }
+
+        public AtualizarCadastroProdutoCommand(string id, string descricao, decimal preco, int estoqueMinimo, ProdutoStatusEnum status)
         {
             Id = id;
+            Descricao = descricao;
+            Preco = preco;
+            EstoqueMinimo = estoqueMinimo;
+            Status = status;
         }
     }
 }

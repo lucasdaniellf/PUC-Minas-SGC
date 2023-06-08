@@ -54,7 +54,7 @@ namespace Vendas.Application.Events
         //---------------------------------------------------------------------------------------------------------------------//
         public async Task Handle(ProdutoVendaAtualizadoEvent request, CancellationToken token)
         {
-            var produto = new ProdutoVenda(request.Id, request.Preco, request.QuantidadeEstoque, request.EstaAtivo);
+            var produto = new ProdutoVenda(request.Id, request.Preco, request.QuantidadeEstoque, request.Status);
             try
             {
                 _unitOfWork.Begin();

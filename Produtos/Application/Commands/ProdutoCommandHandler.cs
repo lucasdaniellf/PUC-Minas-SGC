@@ -43,7 +43,7 @@ namespace Produtos.Application.Commands
                 row = await _repository.CadastrarProduto(produto, token);
                 if (row > 0)
                 {
-                    var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo);
+                    var eventRequest = new ProdutoAtualizadoEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.Status);
                     
                     string eventSerialized = eventRequest.Serialize();
                     _logger.LogInformation("Queue: {FilaProdutoCadastrado} - Enqueue: {eventRequest}", _settings.FilaProdutoCadastrado, eventSerialized);
@@ -75,14 +75,14 @@ namespace Produtos.Application.Commands
                     var produto = produtos.First();
                     produto.AtualizarDescricao(command.Descricao);
                     produto.AtualizarPreco(command.Preco);
-                    produto.AtualizarStatusProduto(command.EstaAtivo);
+                    produto.AtualizarStatusProduto(command.Status);
                     produto.Estoque.AtualizarEstoqueMinimo(command.EstoqueMinimo);
 
                     row = await _repository.AtualizarCadastroProduto(produto, token);
                     if (row > 0)
                     {
                         await _repository.AtualizarEstoqueMinimoProduto(produto.Estoque, token);
-                        var eventRequest = new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo);
+                        var eventRequest = new ProdutoAtualizadoEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.Status);
 
                         string eventSerialized = eventRequest.Serialize();
                         _logger.LogInformation("Queue: {FilaProdutoAtualizado} - Enqueue: {eventRequest}", _settings.FilaProdutoAtualizado, eventSerialized);
@@ -106,7 +106,7 @@ namespace Produtos.Application.Commands
             _unitOfWork.Begin();
             _unitOfWork.BeginTransaction();
 
-            var eventRequests = new List<ProdutoMensagemEvent>();
+            var eventRequests = new List<ProdutoAtualizadoEvent>();
             try
             {
                 _logger.LogInformation("CommandId: {MessageId} - Inicio reposição de estoque", command.MessageId);
@@ -126,7 +126,7 @@ namespace Produtos.Application.Commands
                         {
                             _logger.LogInformation("CommandId: {MessageId} - Processo de reposição de estoque: {ProdutoId} - Nova Quantidade: {NovaQuantidade}",command.MessageId, c.ProdutoId, produto.Estoque.Quantidade);
                             await GerarLogEstoque(produto.Estoque, token);
-                            eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo));
+                            eventRequests.Add(new ProdutoAtualizadoEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.Status));
                         }
                     }
                 }
@@ -156,7 +156,7 @@ namespace Produtos.Application.Commands
             _unitOfWork.Begin();
             _unitOfWork.BeginTransaction();
 
-            var eventRequests = new List<ProdutoMensagemEvent>();
+            var eventRequests = new List<ProdutoAtualizadoEvent>();
             try
             {
                 _logger.LogInformation("CommandId: {MessageId} - Inicio baixa de estoque", command.MessageId);
@@ -175,7 +175,7 @@ namespace Produtos.Application.Commands
                             _logger.LogInformation("CommandId: {MessageId} - Processo de baixa de estoque: {ProdutoId} - Nova Quantidade: {NovaQuantidade}", command.MessageId, c.ProdutoId, produto.Estoque.Quantidade);
                             rows += row;
                             await GerarLogEstoque(produto.Estoque, token);
-                            eventRequests.Add(new ProdutoMensagemEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.EstaAtivo));
+                            eventRequests.Add(new ProdutoAtualizadoEvent(produto.Id, produto.Preco, produto.Estoque.Quantidade, produto.Status));
                         }
                     }
                 }

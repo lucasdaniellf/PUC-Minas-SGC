@@ -207,7 +207,7 @@ namespace Vendas.Application.Query
 
         private ProdutoDto MapProduto(ProdutoVenda produto)
         {
-            return new ProdutoDto(produto.Id, produto.Preco, produto.QuantidadeEstoque, (int)produto.EstaAtivo);
+            return new ProdutoDto(produto.Id, produto.Preco, produto.QuantidadeEstoque, (int)produto.Status);
         }
 
         private ClienteDto MapCliente(ClienteVenda cliente)

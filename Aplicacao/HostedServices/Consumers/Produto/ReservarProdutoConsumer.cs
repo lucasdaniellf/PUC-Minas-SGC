@@ -89,18 +89,11 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
             IList<EstoqueProduto> produtos = new List<EstoqueProduto>();
             foreach (var produto in produtosEvento)
             {
-                var p = new EstoqueProduto()
-                {
-                    ProdutoId = produto.ProdutoId,
-                    Quantidade = produto.Quantidade
-                };
+                var p = new EstoqueProduto(produto.ProdutoId, produto.Quantidade);
                 produtos.Add(p);
             }
 
-            return new BaixarEstoqueProdutoCommand()
-            {
-                Produtos = produtos,
-            };
+            return new BaixarEstoqueProdutoCommand(produtos);
         }
 
         protected override Task QueueConsumerFallbackMethod(Context context, CancellationToken token)

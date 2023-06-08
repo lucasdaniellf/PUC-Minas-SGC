@@ -33,7 +33,7 @@ namespace Vendas.Infrastructure
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -67,7 +67,7 @@ namespace Vendas.Infrastructure
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -103,7 +103,7 @@ namespace Vendas.Infrastructure
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -140,7 +140,7 @@ namespace Vendas.Infrastructure
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -177,7 +177,7 @@ namespace Vendas.Infrastructure
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -297,13 +297,13 @@ namespace Vendas.Infrastructure
         }
         public async Task<int> CadastrarProduto(ProdutoVenda produto, CancellationToken token)
         {
-            string sql = @"insert into Produto(Id, Preco, EstaAtivo, QuantidadeEstoque) values (@Id, @Preco, @EstaAtivo, @QuantidadeEstoque);";
+            string sql = @"insert into Produto(Id, Preco, Status, QuantidadeEstoque) values (@Id, @Preco, @Status, @QuantidadeEstoque);";
             var row = await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
                                                                                parameters: new
                                                                                {
                                                                                    produto.Id,
                                                                                    produto.Preco,
-                                                                                   produto.EstaAtivo,
+                                                                                   produto.Status,
                                                                                    produto.QuantidadeEstoque
                                                                                 },
                                                                                transaction: _context.Transaction,
@@ -315,9 +315,9 @@ namespace Vendas.Infrastructure
 
         public async Task<int> AtualizarCadastroProduto(ProdutoVenda produto, CancellationToken token)
         {
-            string sql = @"update Produto set Preco = @Preco, QuantidadeEstoque = @QuantidadeEstoque, EstaAtivo = @EstaAtivo where Id = @Id";
+            string sql = @"update Produto set Preco = @Preco, QuantidadeEstoque = @QuantidadeEstoque, Status = @Status where Id = @Id";
             var row = await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
-                                                                               parameters: new { produto.Id, produto.Preco, produto.QuantidadeEstoque, produto.EstaAtivo },
+                                                                               parameters: new { produto.Id, produto.Preco, produto.QuantidadeEstoque, produto.Status },
                                                                                transaction: _context.Transaction,
                                                                                commandType: System.Data.CommandType.Text,
                                                                                cancellationToken: token));

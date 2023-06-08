@@ -42,8 +42,8 @@ namespace Produtos.Infrastructure
                         Id varchar PRIMARY KEY,
                         Descricao varchar(300) not null unique,
                         Preco real not null,
-                        EstaAtivo INTEGER not null,
-                        check(Preco >= 0 AND (EstaAtivo = 1 OR EstaAtivo = 0))
+                        Status INTEGER not null,
+                        check(Preco >= 0 AND (Status = 1 OR Status = 0))
                     );
 
 

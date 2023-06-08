@@ -60,7 +60,7 @@ namespace Vendas.Infrastructure
                         Id varchar PRIMARY KEY,
                         Preco real not null,
                         QuantidadeEstoque INTEGER not null,
-                        EstaAtivo INTEGER not null
+                        Status INTEGER not null
                     );
 
                     Create table ItemVenda(

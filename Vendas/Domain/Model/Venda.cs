@@ -116,7 +116,7 @@ namespace Vendas.Domain.Model
             {
                 if (!item.ValidarProdutoItemVenda())
                 {
-                    throw new VendaException($"Venda não pode ser processada devido à produto {item.Produto.Id} - Status: {item.Produto.EstaAtivo}; Quantidade: {item.Produto.QuantidadeEstoque}");
+                    throw new VendaException($"Venda não pode ser processada devido à produto {item.Produto.Id} - Status: {item.Produto.Status}; Quantidade: {item.Produto.QuantidadeEstoque}");
                 }
             }
             Status = Status.PROCESSANDO;

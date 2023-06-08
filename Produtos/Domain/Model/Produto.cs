@@ -1,6 +1,6 @@
 ﻿using Core.Entity;
 using Produtos.Infrastructure;
-using static Produtos.Domain.Model.Status;
+using static Produtos.Domain.Model.ProdutoStatus;
 
 namespace Produtos.Domain.Model
 {
@@ -10,15 +10,15 @@ namespace Produtos.Domain.Model
         public string Descricao { get; private set; } = null!;
         public decimal Preco { get; private set; }
         public Estoque Estoque { get; private set; } = null!;
-        public ProdutoStatus EstaAtivo { get; private set; } = ProdutoStatus.ATIVO;
+        public ProdutoStatusEnum Status { get; private set; } = ProdutoStatusEnum.ATIVO;
 
-        public void AtualizarStatusProduto(ProdutoStatus status)
+        public void AtualizarStatusProduto(ProdutoStatusEnum status)
         {
-            if(!Enum.IsDefined(typeof(ProdutoStatus), status))
+            if(!Enum.IsDefined(typeof(ProdutoStatusEnum), status))
             {
                 throw new ProdutoException("Status de produto inválido, deve ser 0 (inativo) ou 1 (ativo)");
             }
-            EstaAtivo = status;
+            Status = status;
         }
 
         public void AtualizarDescricao(string descricao)
@@ -41,13 +41,13 @@ namespace Produtos.Domain.Model
 
         public void BaixarEstoque(int quantidade)
         {
-            if(EstaAtivo == ProdutoStatus.INATIVO)
+            if (Status == ProdutoStatusEnum.INATIVO)
             {
                 throw new ProdutoException("Produto se encontra inativo");
             }
-            this.Estoque.AtualizarEstoque(this.Estoque.Quantidade  - quantidade);
+            this.Estoque.AtualizarEstoque(this.Estoque.Quantidade - quantidade);
         }
-
+        //Caso se realize o cancelamento de uma venda cujo produto foi desativado, se realizássemos a validação do status do produto, a venda seria cancelada mas o estoque não seria reposto.
         public void ReporEstoque(int quantidade)
         {
             this.Estoque.AtualizarEstoque(this.Estoque.Quantidade + quantidade);
@@ -65,11 +65,11 @@ namespace Produtos.Domain.Model
 
 
 
-        internal Produto(string id, string descricao, decimal preco, long estaAtivo, string estoqueId, int quantidade, int estoqueMinimo, DateTime UltimaAlteracao) : this(descricao, preco)
+        internal Produto(string id, string descricao, decimal preco, long status, string estoqueId, int quantidade, int estoqueMinimo, DateTime UltimaAlteracao) : this(descricao, preco)
         {
             Id = id;
             Estoque = new Estoque(estoqueId, quantidade, estoqueMinimo, UltimaAlteracao);
-            EstaAtivo = AplicarStatusEmProduto(estaAtivo);
+            Status = AplicarStatusEmProduto(status);
         }
 
         private Produto(string descricao, decimal preco)
