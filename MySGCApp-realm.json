@@ -384,7 +384,7 @@
   "otpPolicyLookAheadWindow" : 1,
   "otpPolicyPeriod" : 30,
   "otpPolicyCodeReusable" : false,
-  "otpSupportedApplications" : [ "totpAppGoogleName", "totpAppMicrosoftAuthenticatorName", "totpAppFreeOTPName" ],
+  "otpSupportedApplications" : [ "totpAppFreeOTPName", "totpAppGoogleName", "totpAppMicrosoftAuthenticatorName" ],
   "webAuthnPolicyRpEntityName" : "keycloak",
   "webAuthnPolicySignatureAlgorithms" : [ "ES256" ],
   "webAuthnPolicyRpId" : "",
@@ -406,6 +406,32 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister" : false,
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "users" : [ {
+    "id" : "2de32106-b7e3-43e4-aae5-5ae60f1d6da0",
+    "createdTimestamp" : 1682791415984,
+    "username" : "admin-1@sgc.com",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "admin",
+    "lastName" : "sgc",
+    "email" : "admin-1@sgc.com",
+    "credentials" : [ {
+      "id" : "c2c1af24-911c-4353-86f1-dde965c9be17",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1682792287051,
+      "secretData" : "{\"value\":\"eKI6uo8bISP3I6J4uUOttIcVrYpKKzJAAjACr264rXw=\",\"salt\":\"37YhUweB8fqKX4MciZ7vLQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-mysgcapp" ],
+    "clientRoles" : {
+      "my-sgc-app" : [ "Administracao", "GerenteProdutos", "GerenteVendas" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "fad452d0-df00-478a-acab-ca4bbf4eac11",
     "createdTimestamp" : 1682879439242,
     "username" : "cliente-1@sgc.com",
@@ -428,29 +454,51 @@
     "notBefore" : 0,
     "groups" : [ ]
   }, {
-    "id" : "2de32106-b7e3-43e4-aae5-5ae60f1d6da0",
-    "createdTimestamp" : 1682791415984,
-    "username" : "lucas.daniel.lf@gmail.com",
+    "id" : "f0f4d538-e4fa-42bb-a942-5aaa0bece0ff",
+    "createdTimestamp" : 1686414284001,
+    "username" : "funcionario@sgc.com",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : true,
-    "firstName" : "Lucas",
-    "lastName" : "Figueiredo",
-    "email" : "lucas.daniel.lf@gmail.com",
+    "firstName" : "funcionario",
+    "lastName" : "sgc",
+    "email" : "funcionario@sgc.com",
     "credentials" : [ {
-      "id" : "c2c1af24-911c-4353-86f1-dde965c9be17",
+      "id" : "5a2c100e-cae7-4525-a20c-b944259cc44e",
       "type" : "password",
       "userLabel" : "My password",
-      "createdDate" : 1682792287051,
-      "secretData" : "{\"value\":\"eKI6uo8bISP3I6J4uUOttIcVrYpKKzJAAjACr264rXw=\",\"salt\":\"37YhUweB8fqKX4MciZ7vLQ==\",\"additionalParameters\":{}}",
+      "createdDate" : 1686414372744,
+      "secretData" : "{\"value\":\"CMnElnIAlYo2spxiVD1qF+8oBmBL7BeJ3jfTi0sdKfM=\",\"salt\":\"7cmzkOQr4OvN3Kn+q0gLRg==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-mysgcapp" ],
     "clientRoles" : {
-      "my-sgc-app" : [ "Administracao", "GerenteProdutos", "GerenteVendas" ]
+      "my-sgc-app" : [ "GerenteProdutos", "GerenteVendas" ]
     },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "b21d029f-6556-43b0-b279-c4a5becc5105",
+    "createdTimestamp" : 1686413973146,
+    "username" : "test2@sgc.com",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "test-2",
+    "lastName" : "sgc",
+    "email" : "test2@sgc.com",
+    "credentials" : [ {
+      "id" : "e1f32bac-854c-4f0b-a368-8b1881e4803e",
+      "type" : "password",
+      "createdDate" : 1686413973170,
+      "secretData" : "{\"value\":\"9xTwmN+1XYGAa6OEuEAr+f8yWdpfPzd7gVo2QHerJIg=\",\"salt\":\"uSI5dn4NR9kEo+qRWPMh5A==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-mysgcapp" ],
     "notBefore" : 0,
     "groups" : [ ]
   } ],
@@ -1173,7 +1221,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "saml-user-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper", "oidc-full-name-mapper", "saml-user-property-mapper", "oidc-address-mapper" ]
       }
     }, {
       "id" : "ac7f0726-6fd0-4538-9cf9-85bbefe37ad8",
@@ -1208,7 +1256,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "saml-user-attribute-mapper", "oidc-usermodel-property-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "saml-user-attribute-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-property-mapper", "oidc-address-mapper" ]
       }
     }, {
       "id" : "418eeb7b-b7fb-418e-b6e1-39b1bd7dd4a2",

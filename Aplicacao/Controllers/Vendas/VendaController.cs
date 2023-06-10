@@ -93,8 +93,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Vendas
                     
                     if (sucesso)
                     {
-                        vendas = await _service.BuscarVendasPorId(command.VendaId, token);
-                        return Ok(vendas);
+                        return NoContent();
                     }
                     return NotFound();
                 }
