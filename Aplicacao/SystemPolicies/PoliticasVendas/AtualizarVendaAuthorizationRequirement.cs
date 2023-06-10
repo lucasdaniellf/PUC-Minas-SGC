@@ -15,7 +15,7 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AtualizarVendaAuthorizationRequirement requirement, IEnumerable<VendaDto> resource)
         {
             var email = context.User.FindFirstValue(ClaimTypes.Email);
-            var validacao = resource.All(venda => string.Equals(venda.criadoPor, email, StringComparison.OrdinalIgnoreCase));
+            var validacao = resource.All(venda => string.Equals(venda.CriadoPor, email, StringComparison.OrdinalIgnoreCase));
             
             if (context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
             {

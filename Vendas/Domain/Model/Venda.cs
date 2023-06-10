@@ -11,7 +11,7 @@ namespace Vendas.Domain.Model
         public DateTime DataVenda { get; private set; } = DateTime.Now;
         public int Desconto { get; private set; }
         public Status Status { get; private set; } = Status.PENDENTE;
-        public FormaPagamento FormaDePagamento { get; private set; } = FormaPagamento.CARTAO_CREDITO;
+        public FormaPagamento FormaDePagamento { get; private set; }
         public ClienteVenda Cliente { get; private set; } = null!;
         public IList<ItemVenda> Items { get; private set; }
         public string CriadoPor { get; init; } = null!;
@@ -42,6 +42,7 @@ namespace Vendas.Domain.Model
                 Id = Guid.NewGuid().ToString()
             };
 
+            venda.AtualizarFormaDePagamentoVenda(venda.FormaDePagamento);
             return venda;
         }
         internal void AdicionarItemAVenda(ItemVenda item)
@@ -88,7 +89,6 @@ namespace Vendas.Domain.Model
                 else
                 {
                     AplicarDesconto(0);
-
                 }
             }
             else

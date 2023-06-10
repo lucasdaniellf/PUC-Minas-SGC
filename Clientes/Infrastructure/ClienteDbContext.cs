@@ -12,9 +12,9 @@ namespace Clientes.Infrastructure
         public ClienteDbContext(string conn)
         {
             //Development
-            string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\ClientesDb");
+            //string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\ClientesDb");
 
-            //string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/ClientesDb");
+            string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/ClientesDb");
 
             conn = conn.Replace("{AppDir}", fileLocation);
 

@@ -11,9 +11,9 @@ namespace Vendas.Infrastructure
         public VendaDbContext(string conn)
         {
             //Development
-            string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\VendasDb");
+            //string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\VendasDb");
 
-            //string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/VendasDb");
+            string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/VendasDb");
             conn = conn.Replace("{AppDir}", fileLocation);
 
             if (!File.Exists(fileLocation))

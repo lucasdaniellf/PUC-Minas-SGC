@@ -51,7 +51,7 @@ namespace Vendas.Application.Commands.Handlers
                     _logger.LogInformation("CommandId: {MessageId} - Venda reprovada: {vendaId}", command.MessageId, venda.Id);
 
 
-                    var mensagem = GerarMensagemReposicaoProdutod(venda.Items);
+                    var mensagem = GerarMensagemReposicaoProdutod(venda.Id, venda.Items);
                     _logger.LogInformation("Queue: {FilaReporProduto} - Enqueue: {mensagem}", _settings.FilaReporProduto, mensagem);
                     await _publisher.Enqueue(_settings.FilaReporProduto, mensagem);
                 }

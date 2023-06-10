@@ -1,22 +1,18 @@
 ﻿using Core.Messages.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vendas.Domain.Model;
 
 namespace Vendas.Application.Commands
 {
     public class AtualizarItemVendaCommand : CommandRequest
     {
         public string VendaId { get; private set; } = string.Empty;
-        public string ProdutoId { get; set; } = null!;
-        public int Quantidade { get; set; }
+        public string ProdutoId { get; private set; } = string.Empty!;
+        public int Quantidade { get; private set; }
 
-        public void AdicionarVendaId(string vendaId)
+        public AtualizarItemVendaCommand(string vendaId, string produtoId, int quantidade)
         {
             VendaId = vendaId;
+            ProdutoId = produtoId;
+            Quantidade = quantidade;
         }
     }
 }

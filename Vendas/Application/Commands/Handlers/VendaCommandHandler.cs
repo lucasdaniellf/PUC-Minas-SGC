@@ -137,7 +137,7 @@ namespace Vendas.Application.Commands.Handlers
                     if (row > 0)
                     {
                         _logger.LogInformation("CommandId: {MessageId} - Venda cancelada: {venda}", command.MessageId, venda.Id);
-                        var mensagem = GerarMensagemReposicaoProdutod(venda.Items);
+                        var mensagem = GerarMensagemReposicaoProdutod(venda.Id, venda.Items);
 
                         _logger.LogInformation("Queue: {FilaReporProduto} - Enqueue: {mensagem}", _settings.FilaReporProduto, mensagem);
                         await _publisher.Enqueue(_settings.FilaReporProduto, mensagem);
@@ -294,7 +294,7 @@ namespace Vendas.Application.Commands.Handlers
             return row > 0;
         }
 
-        private string GerarMensagemReposicaoProdutod(IList<ItemVenda> itens)
+        private string GerarMensagemReposicaoProdutod(string vendaId, IList<ItemVenda> itens)
         {
             var produtos = new List<ProdutoVendaCommandMessage>();
             foreach (var item in itens)
@@ -302,7 +302,7 @@ namespace Vendas.Application.Commands.Handlers
                 produtos.Add(new ProdutoVendaCommandMessage(item.Produto.Id, item.Quantidade));
             }
 
-            var mensagem = new ReporProdutoCommandMessage(produtos);
+            var mensagem = new ReporProdutoCommandMessage(vendaId, produtos);
             return mensagem.Serialize();
         }
     }

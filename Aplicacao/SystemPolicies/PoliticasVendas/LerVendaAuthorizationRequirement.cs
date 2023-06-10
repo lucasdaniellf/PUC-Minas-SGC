@@ -21,7 +21,7 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
             }
             else if (context.User.IsInRole(Roles.Cliente))
             {
-                if (resource.Any() && resource.All(venda => string.Equals(venda.cliente.Email, email, StringComparison.InvariantCultureIgnoreCase)))
+                if (resource.Any() && resource.All(venda => string.Equals(venda.Cliente.Email, email, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     context.Succeed(requirement);
                 }

@@ -11,6 +11,7 @@ using static Clientes.Domain.Model.ClienteStatus;
 namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 {
     [Authorize(Policy = Policies.PoliticaAcessoInterno)]
+    [ApiController]
     public class ClienteInternalController : ControllerBase
     {
         private readonly ClienteCommandHandler _handler;

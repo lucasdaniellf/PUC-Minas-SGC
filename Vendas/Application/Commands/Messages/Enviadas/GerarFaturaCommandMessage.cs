@@ -14,7 +14,7 @@ namespace Vendas.Application.Commands.Messages.Enviadas
             this.VendaId = VendaId;
         }
 
-        public string VendaId { get; private set; } = null!;
+        public string VendaId { get; private set; } = string.Empty;
 
     }
 }

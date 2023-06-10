@@ -202,17 +202,17 @@ namespace Vendas.Application.Query
 
         private VendaItemDto MapItemVenda(ItemVenda item)
         {
-            return new VendaItemDto(item.Venda.Id, item.Produto.Id, item.ValorPago, item.Quantidade);
+            return new VendaItemDto(item.Produto.Id, item.ValorPago, item.Quantidade);
         }
 
         private ProdutoDto MapProduto(ProdutoVenda produto)
         {
-            return new ProdutoDto(produto.Id, produto.Preco, produto.QuantidadeEstoque, (int)produto.Status);
+            return new ProdutoDto(produto.Id, produto.Preco, produto.QuantidadeEstoque, produto.Status);
         }
 
         private ClienteDto MapCliente(ClienteVenda cliente)
         {
-            return new ClienteDto(cliente.Id, cliente.Email, (int)cliente.Status);
+            return new ClienteDto(cliente.Id, cliente.Email, cliente.Status);
         }
     }
 }

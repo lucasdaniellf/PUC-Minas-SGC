@@ -9,7 +9,7 @@ namespace Vendas.Application.Commands
 {
     public class CancelarVendaCommand : CommandRequest
     {
-        public string Id { get; init; } = null!;
+        public string Id { get; private set; } = null!;
         public CancelarVendaCommand(string id)
         {
             Id = id;

@@ -11,6 +11,7 @@ using System.Security.Claims;
 namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 {
     [Authorize(Policy = Policies.PoliticaAcessoExterno)]
+    [ApiController]
     public class ClientesExternalController : ControllerBase
     {
         private readonly ClienteCommandHandler _handler;

@@ -6,11 +6,12 @@ namespace Vendas.Application.Commands
     public class AtualizarFormaPagamentoVendaCommand : CommandRequest
     {
         public string Id { get; private set; } = string.Empty;
-        public FormaPagamento FormaDePagamento { get; set; }
+        public FormaPagamento FormaDePagamento { get; private set; }
 
-        public void AdicionarId(string id)
+        public AtualizarFormaPagamentoVendaCommand(string id, FormaPagamento formaPagamento)
         {
-            this.Id = id;
+            Id = id;
+            FormaDePagamento = formaPagamento;
         }
     }
 }

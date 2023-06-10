@@ -199,10 +199,16 @@ namespace Vendas.Infrastructure
         public async Task<int> CadastrarVenda(Venda venda, CancellationToken token)
         {
             var query = @"insert into venda(id, clienteId, dataVenda, criadoPor, desconto, status, formaPagamento) values
-                            (@id, @clienteId, @dataVenda, @criadoPor, 0, 0, 0)";
+                            (@id, @clienteId, @dataVenda, @criadoPor, @desconto, @status, @formaPagamento)";
 
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                    parameters: new {id = venda.Id, clienteId = venda.Cliente.Id, dataVenda = venda.DataVenda, criadoPor = venda.CriadoPor},
+                                                                                    parameters: new {id = venda.Id, 
+                                                                                        clienteId = venda.Cliente.Id, 
+                                                                                        dataVenda = venda.DataVenda, 
+                                                                                        criadoPor = venda.CriadoPor, 
+                                                                                        desconto = venda.Desconto,
+                                                                                        status = venda.Status,
+                                                                                        formaPagamento = venda.FormaDePagamento},
                                                                                     transaction: _context.Transaction,
                                                                                     commandType: System.Data.CommandType.Text,
                                                                                     cancellationToken: token));
