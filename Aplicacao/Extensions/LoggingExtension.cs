@@ -21,7 +21,7 @@ namespace AplicacaoGerenciamentoLoja.Extensions
                 .WriteTo.Logger(lg =>
                                     lg.Filter.ByExcluding(isHostedService)
                                       .WriteTo.Console(outputTemplate: LoggerConfigurations.GeneralLoggerTemplate, restrictedToMinimumLevel: LogEventLevel.Information))
-                .WriteTo.File(formatter: new JsonFormatter(), path: LoggerConfigurations.FileLogLocation, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Information)
+                .WriteTo.File(formatter: new JsonFormatter(), path: Path.GetFullPath(".") + LoggerConfigurations.FileLogLocation, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .CreateLogger();
 
@@ -43,8 +43,8 @@ namespace AplicacaoGerenciamentoLoja.Extensions
         //public const string FileErrorLogLocation = ".\\Logs\\logs-error-.json";
 
         //Location Production
-        public const string FileLogLocation = "./Logs/logs-.json";
-        public const string FileErrorLogLocation = "./Logs/logs-error-.json";
+        public const string FileLogLocation = "/Aplicacao/Logs/logs-.json";
+        public const string FileErrorLogLocation = "/Aplicacao/Logs/logs-error-.json";
 
     }
 }
