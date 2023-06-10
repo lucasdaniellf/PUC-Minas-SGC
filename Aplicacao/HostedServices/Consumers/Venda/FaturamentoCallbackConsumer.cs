@@ -1,5 +1,6 @@
 ﻿using Core.MessageBroker;
 using Newtonsoft.Json;
+using Polly;
 using Vendas.Application.Commands.AutomacaoVendaCommands;
 using Vendas.Application.Commands.Handlers;
 using Vendas.Application.Commands.Messages.Recebidas;
@@ -8,7 +9,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Venda
 {
     public class FaturamentoCallbackConsumer : BaseConsumer
     {
-        public FaturamentoCallbackConsumer(IServiceProvider provider, IConfiguration configuration) : base(provider, configuration)
+        public FaturamentoCallbackConsumer(IServiceProvider provider, IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger)
         {
         }
 
@@ -23,19 +24,26 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Venda
 
                 foreach (var mensagem in mensagens)
                 {
-                    Console.WriteLine("FaturarVendaCallback: " + mensagem);
                     var eventoDesserializado = JsonConvert.DeserializeObject<FaturarVendaCallback>(mensagem);
-
                     if (eventoDesserializado != null)
                     {
-                        if (eventoDesserializado.Sucesso)
+                        _logger.LogInformation("Dequeue: {mensagem}", mensagem);
+
+                        await _wrapPolicy.ExecuteAsync(async (context) =>
                         {
-                            await handler.Handle(new AprovarVendaCommand(eventoDesserializado.VendaId), token);
-                        }
-                        else
+                            if (eventoDesserializado.Sucesso)
+                            {
+                                await handler.Handle(new AprovarVendaCommand(eventoDesserializado.VendaId), token);
+                            }
+                            else
+                            {
+                                await handler.Handle(new ReprovarVendaCommand(eventoDesserializado.VendaId), token);
+                            }
+                        }, new Context()
                         {
-                            await handler.Handle(new ReprovarVendaCommand(eventoDesserializado.VendaId), token);
-                        }
+                            ["mensagem"] = mensagem
+                        });
+                        
                     }
                 }
             }

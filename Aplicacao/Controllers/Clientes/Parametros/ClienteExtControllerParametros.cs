@@ -1,20 +1,17 @@
 ﻿using Clientes.Domain.Model;
-using System.ComponentModel.DataAnnotations;
 
-namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
+namespace AplicacaoGerenciamentoLoja.Controllers.Clientes.Parametros.ExternalController
 {
-    public record CriarClienteRequest
+    public record CadastrarClienteExternalRequest
     {
-        public string Nome = null!;
-        [RegularExpression(@"^\d{11}$")]
+        public string Nome { get; set; } = null!;
         public string Cpf { get; set; } = null!;
         public Endereco Endereco { get; set; } = null!;
     }
 
-    public record AtualizarClienteRequest
+    public record AtualizarClienteExternalRequest
     {
         public string Nome { get; set; } = null!;
-        [RegularExpression(@"^\d{11}$")]
         public string Cpf { get; set; } = null!;
         public Endereco Endereco { get; set; } = null!;
     }

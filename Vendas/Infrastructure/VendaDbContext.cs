@@ -11,9 +11,9 @@ namespace Vendas.Infrastructure
         public VendaDbContext(string conn)
         {
             //Development
-            string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\VendasDb");
+            //string fileLocation = string.Concat(Path.GetFullPath("."), "\\db\\VendasDb");
 
-            //string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/VendasDb");
+            string fileLocation = string.Concat(Path.GetFullPath("."), "/Aplicacao/db/VendasDb");
             conn = conn.Replace("{AppDir}", fileLocation);
 
             if (!File.Exists(fileLocation))
@@ -41,7 +41,7 @@ namespace Vendas.Infrastructure
                     Create table Cliente(
                         Id varchar Primary key,
                         Email Varchar(100) unique not null,
-                        EstaAtivo INTEGER not null
+                        Status INTEGER not null
                     );
                     
                     Create table Venda(
@@ -60,7 +60,7 @@ namespace Vendas.Infrastructure
                         Id varchar PRIMARY KEY,
                         Preco real not null,
                         QuantidadeEstoque INTEGER not null,
-                        EstaAtivo INTEGER not null
+                        Status INTEGER not null
                     );
 
                     Create table ItemVenda(

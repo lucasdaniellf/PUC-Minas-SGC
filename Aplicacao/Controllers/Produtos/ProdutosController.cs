@@ -1,4 +1,5 @@
-﻿using AplicacaoGerenciamentoLoja.SystemPolicies;
+﻿using AplicacaoGerenciamentoLoja.Controllers.Produtos.Parametros;
+using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Produtos.Application.Commands;
@@ -7,15 +8,15 @@ using Produtos.Application.Query;
 using Produtos.Application.Query.DTO;
 using Produtos.Domain;
 
-namespace AplicacaoGerenciamentoLoja.Controllers
+namespace AplicacaoGerenciamentoLoja.Controllers.Produtos
 {
+    [Authorize(Roles = Roles.GerenteProdutos)]
     [Route("api/produtos")]
     [ApiController]
     public class ProdutosController : ControllerBase
     {
         private readonly ProdutoCommandHandler _handler;
         private readonly ProdutoQueryService _service;
-
         public ProdutosController(ProdutoQueryService service, ProdutoCommandHandler handler)
         {
             _service = service;
@@ -26,6 +27,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> BuscarProdutos(string? descricao, CancellationToken token)
         {
+
             IEnumerable<ProdutoQueryDto> Produtos;
             if (string.IsNullOrEmpty(descricao))
             {
@@ -42,6 +44,7 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> BuscarProdutoPorId(string Id, CancellationToken token)
         {
+
             IEnumerable<ProdutoQueryDto> Produtos = await _service.BuscarProdutoPorId(Id, token);
             if (Produtos.Any())
             {
@@ -53,13 +56,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers
 
         //Check this
         [HttpPost]
-        [Authorize(Roles = Roles.GerenteProdutos)]
-        public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> CadastrarProduto(CadastrarProdutoCommand command, CancellationToken token)
+        public async Task<ActionResult<IEnumerable<ProdutoQueryDto>>> CadastrarProduto([FromBody] CadastrarProdutoRequest request, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var command = new CadastrarProdutoCommand(request.Descricao, request.Preco);
+
                     var success = await _handler.Handle(command, token);
                     if (success)
                     {
@@ -76,14 +80,14 @@ namespace AplicacaoGerenciamentoLoja.Controllers
         }
 
         [HttpPut("{Id}")]
-        [Authorize(Roles = Roles.GerenteProdutos)]
-        public async Task<ActionResult> AtualizarCadastroProduto(string Id, AtualizarCadastroProdutoCommand command, CancellationToken token)
+        public async Task<ActionResult> AtualizarCadastroProduto(string Id, [FromBody] AtualizarProdutoRequest request, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    command.AdicionarId(Id);
+                    var command = new AtualizarCadastroProdutoCommand(Id, request.Descricao, request.Preco, request.EstoqueMinimo, request.Status);
+
                     bool success = await _handler.Handle(command, token);
                     if (!success)
                     {
@@ -99,13 +103,35 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return BadRequest();
         }
 
-        [HttpPatch("estoque/reposicao")]
-        [Authorize(Roles = Roles.GerenteProdutos)]
-        public async Task<ActionResult> ReporEstoqueProduto(ReporEstoqueProdutoCommand command, CancellationToken token)
+        [HttpPatch("/estoque/alterar")]
+        public async Task<ActionResult> AtualizarEstoqueProduto(string ProdutoId, int Quantidade, CancellationToken token)
         {
             try
             {
-                bool success = await _handler.Handle(command, token);
+                var success = false;
+
+                if(Quantidade > 0)
+                {
+                    IList<EstoqueProduto> produtos = new List<EstoqueProduto>
+                    {
+                        new EstoqueProduto(ProdutoId, Quantidade)
+                    };
+
+                    var command = new ReporEstoqueProdutoCommand(produtos);
+                    success = await _handler.Handle(command, token);
+
+                }
+                else
+                {
+                    IList<EstoqueProduto> produtos = new List<EstoqueProduto>
+                    {
+                        new EstoqueProduto(ProdutoId, Math.Abs(Quantidade))
+                    };
+
+                    var command = new BaixarEstoqueProdutoCommand(produtos);
+                    success = await _handler.Handle(command, token);
+                }
+
                 if (success)
                 {
                     return NoContent();
@@ -118,24 +144,41 @@ namespace AplicacaoGerenciamentoLoja.Controllers
             return NotFound();
         }
 
+        //[HttpPatch("{estoque/reposicao")]
+        //public async Task<ActionResult> ReporEstoqueProduto(ReporEstoqueProdutoCommand command, CancellationToken token)
+        //{
+        //    try
+        //    {
+        //        bool success = await _handler.Handle(command, token);
+        //        if (success)
+        //        {
+        //            return NoContent();
+        //        }
+        //    }
+        //    catch (ProdutoException ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //    return NotFound();
+        //}
 
-        [HttpPatch("estoque/baixa")]
-        [Authorize(Roles = Roles.GerenteProdutos)]
-        public async Task<ActionResult> BaixarEstoqueProduto(BaixarEstoqueProdutoCommand command, CancellationToken token)
-        {
-            try
-            {
-                bool success = await _handler.Handle(command, token);
-                if (success)
-                {
-                    return NoContent();
-                }
-            }
-            catch (ProdutoException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return NotFound();
-        }
+
+        //[HttpPatch("estoque/baixa")]
+        //public async Task<ActionResult> BaixarEstoqueProduto(BaixarEstoqueProdutoCommand command, CancellationToken token)
+        //{
+        //    try
+        //    {
+        //        bool success = await _handler.Handle(command, token);
+        //        if (success)
+        //        {
+        //            return NoContent();
+        //        }
+        //    }
+        //    catch (ProdutoException ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //    return NotFound();
+        //}
     }
 }

@@ -56,7 +56,7 @@ namespace Produtos.Infrastructure
 
         public async Task<int> CadastrarProduto(Produto produto, CancellationToken token)
         {
-            string sql = @"insert into Produto(Id, Descricao, Preco, EstaAtivo) values (@Id, @Descricao, @Preco, 1);
+            string sql = @"insert into Produto(Id, Descricao, Preco, Status) values (@Id, @Descricao, @Preco, 1);
                            insert into Estoque(Id, Quantidade, EstoqueMinimo, UltimaAlteracao, ProdutoId) values (@EstoqueId, @Quantidade, @EstoqueMinimo, @UltimaAlteracao, @ProdutoId);
                           ";
             var row = await _dbContext.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
@@ -82,9 +82,9 @@ namespace Produtos.Infrastructure
 
         public async Task<int> AtualizarCadastroProduto(Produto produto, CancellationToken token)
         {
-            string sql = @"update Produto set Descricao = @Descricao, Preco = @Preco, EstaAtivo = @EstaAtivo where Id = @Id";
+            string sql = @"update Produto set Descricao = @Descricao, Preco = @Preco, Status = @Status where Id = @Id";
             var row = await _dbContext.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
-                                                                               parameters: new { produto.Id, produto.Descricao, produto.Preco, produto.EstaAtivo },
+                                                                               parameters: new { produto.Id, produto.Descricao, produto.Preco, produto.Status },
                                                                                transaction: _dbContext.Transaction,
                                                                                commandType: System.Data.CommandType.Text,
                                                                                cancellationToken: token));
@@ -94,7 +94,7 @@ namespace Produtos.Infrastructure
 
         public Task<int> AdicionarProdutoACatalogo(string id, CancellationToken token)
         {
-            string sql = @"update Produto set EstaAtivo = 1 where Id = @Id";
+            string sql = @"update Produto set Status = 1 where Id = @Id";
             var row = _dbContext.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
                                                                                parameters: new { Id = id },
                                                                                transaction: _dbContext.Transaction,
@@ -104,7 +104,7 @@ namespace Produtos.Infrastructure
         }
         public Task<int> RetirarProdutoDeCatalogo(string id, CancellationToken token)
         {
-            string sql = @"update Produto set EstaAtivo = 0 where Id = @Id";
+            string sql = @"update Produto set Status = 0 where Id = @Id";
             var row = _dbContext.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
                                                                                parameters: new { Id = id },
                                                                                transaction: _dbContext.Transaction,

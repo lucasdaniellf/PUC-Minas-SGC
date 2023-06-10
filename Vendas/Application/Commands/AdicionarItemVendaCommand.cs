@@ -5,12 +5,14 @@ namespace Vendas.Application.Commands
     public class AdicionarItemVendaCommand : CommandRequest
     {
         public string VendaId { get; private set; } = string.Empty;
-        public string ProdutoId { get; set; } = null!;
-        public int Quantidade { get; set; }
+        public string ProdutoId { get; private set; } = string.Empty;
+        public int Quantidade { get; private set; }
 
-        public void AdicionarVendaId(string vendaId)
+        public AdicionarItemVendaCommand(string VendaId, string ProdutoId, int quantidade)
         {
-            VendaId = vendaId;
+            this.VendaId = VendaId;
+            this.ProdutoId = ProdutoId;
+            this.Quantidade = quantidade;
         }
     }
 }

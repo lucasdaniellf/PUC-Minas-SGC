@@ -73,7 +73,7 @@ namespace Produtos.Application.Query
 
         private ProdutoQueryDto MapQueryDto(Produto produto)
         {
-            return new ProdutoQueryDto(produto.Id, produto.Descricao, produto.Preco, MapEstoqueDto(produto.Estoque), produto.EstaAtivo);
+            return new ProdutoQueryDto(produto.Id, produto.Descricao, produto.Preco, MapEstoqueDto(produto.Estoque), produto.Status);
         }
 
         private EstoqueDto MapEstoqueDto(Estoque estoque)

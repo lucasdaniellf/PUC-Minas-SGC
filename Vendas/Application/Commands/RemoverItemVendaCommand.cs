@@ -5,11 +5,12 @@ namespace Vendas.Application.Commands
     public class RemoverItemVendaCommand : CommandRequest
     {
         public string VendaId { get; private set; } = string.Empty;
-        public string ProdutoId { get; set; } = null!;
+        public string ProdutoId { get; private set; } = string.Empty;
 
-        public void AdicionarVendaId(string vendaId)
+        public RemoverItemVendaCommand(string VendaId, string ProdutoId)
         {
-            VendaId = vendaId;
+            this.VendaId = VendaId;
+            this.ProdutoId = ProdutoId;
         }
     }
 }

@@ -5,9 +5,9 @@ namespace Vendas.Domain.Model
     public class ItemVenda : IEntity
     {
         internal Venda Venda { get; private set; } = null!;
-        internal ProdutoVenda Produto { get; private set; } = null!;
-        internal int Quantidade { get; private set; } = 0;
-        internal decimal ValorPago { get; private set; } = 0;
+        public ProdutoVenda Produto { get; private set; } = null!;
+        public int Quantidade { get; private set; } = 0;
+        public decimal ValorPago { get; private set; } = 0;
 
         internal ItemVenda(Venda venda, ProdutoVenda produto, int quantidade, decimal preco)
         {
@@ -22,7 +22,7 @@ namespace Vendas.Domain.Model
             var item = new ItemVenda(venda, produto, quantidade, preco);
             if (!item.ValidarProdutoItemVenda())
             {
-                throw new VendaException($"Produto não pode ser adicionado à venda: Status: {item.Produto.EstaAtivo}; Estoque: {item.Produto.QuantidadeEstoque}");
+                throw new VendaException($"Produto não pode ser adicionado à venda: Status: {item.Produto.Status}; Estoque: {item.Produto.QuantidadeEstoque}");
             }
             return item;
         }
@@ -56,7 +56,7 @@ namespace Vendas.Domain.Model
 
         internal bool ValidarProdutoItemVenda()
         {
-            return this.Produto.EstaAtivo != ProdutoVenda.ProdutoStatus.INATIVO && (this.Quantidade <= this.Produto.QuantidadeEstoque);
+            return this.Produto.Status != ProdutoVenda.ProdutoStatus.INATIVO && (this.Quantidade <= this.Produto.QuantidadeEstoque);
         }
     }
 }

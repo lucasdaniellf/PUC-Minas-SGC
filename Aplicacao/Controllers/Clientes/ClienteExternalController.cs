@@ -1,6 +1,7 @@
-﻿using AplicacaoGerenciamentoLoja.Controllers.Clientes;
+﻿using AplicacaoGerenciamentoLoja.Controllers.Clientes.Parametros.ExternalController;
 using AplicacaoGerenciamentoLoja.SystemPolicies;
 using Clientes.Application.Commands;
+using Clientes.Application.Query;
 using Clientes.Application.Query.DTO;
 using Clientes.Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -9,9 +10,22 @@ using System.Security.Claims;
 
 namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
 {
-    public partial class ClientesController : ControllerBase
+    [Authorize(Policy = Policies.PoliticaAcessoExterno)]
+    [ApiController]
+    public class ClientesExternalController : ControllerBase
     {
-        [Authorize(Policy = Policies.PoliticaAcessoExterno)]
+        private readonly ClienteCommandHandler _handler;
+        private readonly ClienteQueryService _service;
+        private readonly ILogger<ClientesExternalController> _logger;
+
+        public ClientesExternalController(ClienteCommandHandler handler, ClienteQueryService service, ILogger<ClientesExternalController> logger)
+        {
+            _handler = handler;
+            _service = service;
+            _logger = logger;
+        }
+
+
         [HttpGet("/api/ext/cliente", Name = "BuscarCliente")]
         public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> BuscarCliente(CancellationToken token)
         {
@@ -28,27 +42,20 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
             }
         }
         
-        [Authorize(Policy = Policies.PoliticaAcessoExterno)]
         [HttpPost("/api/ext/cliente")]
-        public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> CadastrarCliente(CriarClienteRequest request, CancellationToken token)
+        public async Task<ActionResult<IEnumerable<ClienteQueryDto>>> CadastrarCliente([FromBody] CadastrarClienteExternalRequest request, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
 
-                    CadastrarClienteCommand command = new()
-                    {
-                        Nome = request.Nome,
-                        Cpf = request.Cpf,
-                        Endereco = request.Endereco,
-                        Email = BuscarEmailEmToken()
-                    };
+                    CadastrarClienteCommand command = new(request.Nome, request.Cpf, request.Endereco, BuscarEmailEmToken());
 
                     var success = await _handler.Handle(command, token);
                     if (success)
                     {
-                        return CreatedAtAction(nameof(BuscarCliente), await _service.BuscarClientePorEmail(command.Email, token));
+                        return CreatedAtAction(nameof(BuscarCliente), await _service.BuscarClientePorId(command.Id, token));
                     }
                 }
                 catch (ClienteException ex)
@@ -59,9 +66,8 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
             return BadRequest();
         }
 
-        [Authorize(Policy = Policies.PoliticaAcessoExterno)]
         [HttpPut("/api/ext/cliente")]
-        public async Task<ActionResult> AtualizarCliente(AtualizarClienteRequest request, CancellationToken token)
+        public async Task<ActionResult> AtualizarCliente([FromBody] AtualizarClienteExternalRequest request, CancellationToken token)
         {
             if (ModelState.IsValid)
             {
@@ -75,15 +81,8 @@ namespace AplicacaoGerenciamentoLoja.Controllers.Clientes
                         return BadRequest($"Cliente de email {email} ainda não está cadastrado");
                     }
 
-                    AtualizarClienteCommand command = new()
-                    {
-                        Nome = request.Nome,
-                        Cpf = request.Cpf,
-                        Endereco = request.Endereco,
-                        Email = BuscarEmailEmToken(),
-                    };
+                    AtualizarClienteCommand command = new(clientes.First().Id, request.Nome, request.Cpf, request.Endereco, BuscarEmailEmToken());
 
-                    command.AdicionarId(clientes.First().Id);
                     await _handler.Handle(command, token);
 
                     return NoContent();

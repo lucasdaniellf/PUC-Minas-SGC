@@ -10,7 +10,7 @@ namespace Produtos.Application.Commands.AutomacaoVendaCommands.Messages.Recebida
             this.Produtos = Produtos;
         }
 
-        public string VendaId { get; private set; } = null!;
+        public string VendaId { get; private set; } = string.Empty!;
         public IEnumerable<ProdutoVendaCommandMessage> Produtos { get; private set; } = null!;
     }
 }

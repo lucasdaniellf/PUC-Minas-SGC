@@ -10,7 +10,7 @@ namespace Vendas.Application.Commands.Messages.Enviadas
             this.Quantidade = Quantidade;
         }
 
-        public string ProdutoId { get; private set; } = null!;
+        public string ProdutoId { get; private set; } = string.Empty;
         public int Quantidade { get; private set; }
     }
 }

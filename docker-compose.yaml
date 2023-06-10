@@ -13,8 +13,9 @@ services:
 
   auth:
     image: quay.io/keycloak/keycloak
+    container_name: auth
     ports:
-      - "8080:8080"
+      - 8080:8080
     environment:
       KEYCLOAK_ADMIN: admin 
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -35,7 +36,9 @@ services:
     restart: always
     volumes:
       - database:/app/Aplicacao/db
+      - logs:/app/Aplicacao/Logs
       - ./Aplicacao/db:/app/Aplicacao/db
+      - ./Aplicacao/Logs:/app/Aplicacao/Logs
     ports:
       - 7006:443
       - 5006:80
@@ -50,3 +53,4 @@ networks:
     driver: bridge
 volumes:
   database:
+  logs:

@@ -26,14 +26,14 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -60,14 +60,14 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -96,14 +96,14 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -133,14 +133,14 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -170,14 +170,14 @@ namespace Vendas.Infrastructure
                             v.CriadoPor,
                             c.Id as ClienteId, 
                             c.Email as ClienteEmail,
-                            c.EstaAtivo as ClienteStatus,
+                            c.Status as ClienteStatus,
                             i.VendaId,
                             i.Quantidade,
                             i.ValorPago,
                             p.Id as ProdutoId,
                             p.Preco as PrecoProduto,
                             p.QuantidadeEstoque as QuantidadeEstoque,
-                            p.EstaAtivo as ProdutoStatus
+                            p.Status as ProdutoStatus
                         from Venda v
                         inner join Cliente c on v.ClienteId = c.Id
                         left join ItemVenda i on i.VendaId = v.Id
@@ -199,10 +199,16 @@ namespace Vendas.Infrastructure
         public async Task<int> CadastrarVenda(Venda venda, CancellationToken token)
         {
             var query = @"insert into venda(id, clienteId, dataVenda, criadoPor, desconto, status, formaPagamento) values
-                            (@id, @clienteId, @dataVenda, @criadoPor, 0, 0, 0)";
+                            (@id, @clienteId, @dataVenda, @criadoPor, @desconto, @status, @formaPagamento)";
 
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                    parameters: new {id = venda.Id, clienteId = venda.Cliente.Id, dataVenda = venda.DataVenda, criadoPor = venda.CriadoPor},
+                                                                                    parameters: new {id = venda.Id, 
+                                                                                        clienteId = venda.Cliente.Id, 
+                                                                                        dataVenda = venda.DataVenda, 
+                                                                                        criadoPor = venda.CriadoPor, 
+                                                                                        desconto = venda.Desconto,
+                                                                                        status = venda.Status,
+                                                                                        formaPagamento = venda.FormaDePagamento},
                                                                                     transaction: _context.Transaction,
                                                                                     commandType: System.Data.CommandType.Text,
                                                                                     cancellationToken: token));
@@ -297,13 +303,13 @@ namespace Vendas.Infrastructure
         }
         public async Task<int> CadastrarProduto(ProdutoVenda produto, CancellationToken token)
         {
-            string sql = @"insert into Produto(Id, Preco, EstaAtivo, QuantidadeEstoque) values (@Id, @Preco, @EstaAtivo, @QuantidadeEstoque);";
+            string sql = @"insert into Produto(Id, Preco, Status, QuantidadeEstoque) values (@Id, @Preco, @Status, @QuantidadeEstoque);";
             var row = await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
                                                                                parameters: new
                                                                                {
                                                                                    produto.Id,
                                                                                    produto.Preco,
-                                                                                   produto.EstaAtivo,
+                                                                                   produto.Status,
                                                                                    produto.QuantidadeEstoque
                                                                                 },
                                                                                transaction: _context.Transaction,
@@ -315,9 +321,9 @@ namespace Vendas.Infrastructure
 
         public async Task<int> AtualizarCadastroProduto(ProdutoVenda produto, CancellationToken token)
         {
-            string sql = @"update Produto set Preco = @Preco, QuantidadeEstoque = @QuantidadeEstoque, EstaAtivo = @EstaAtivo where Id = @Id";
+            string sql = @"update Produto set Preco = @Preco, QuantidadeEstoque = @QuantidadeEstoque, Status = @Status where Id = @Id";
             var row = await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: sql,
-                                                                               parameters: new { produto.Id, produto.Preco, produto.QuantidadeEstoque, produto.EstaAtivo },
+                                                                               parameters: new { produto.Id, produto.Preco, produto.QuantidadeEstoque, produto.Status },
                                                                                transaction: _context.Transaction,
                                                                                commandType: System.Data.CommandType.Text,
                                                                                cancellationToken: token));
@@ -359,9 +365,9 @@ namespace Vendas.Infrastructure
 
         public async Task<int> AtualizarCliente(ClienteVenda cliente, CancellationToken token)
         {
-            var query = @"update Cliente set EstaAtivo = @EstaAtivo, Email = @Email where Id = @Id";
+            var query = @"update Cliente set Status = @Status, Email = @Email where Id = @Id";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
-                                                                                            parameters: new { Id = cliente.Id, Email = cliente.Email, EstaAtivo = cliente.Status },
+                                                                                            parameters: new { Id = cliente.Id, Email = cliente.Email, Status = cliente.Status },
                                                                                             transaction: _context.Transaction,
                                                                                             commandType: System.Data.CommandType.Text,
                                                                                             cancellationToken: token));
@@ -370,13 +376,13 @@ namespace Vendas.Infrastructure
 
         public async Task<int> CadastrarCliente(ClienteVenda cliente, CancellationToken token)
         {
-            var query = @"insert into Cliente(Id, Email, EstaAtivo) values (@Id, @Email, @EstaAtivo)";
+            var query = @"insert into Cliente(Id, Email, Status) values (@Id, @Email, @Status)";
             return await _context.Connection.ExecuteAsync(new CommandDefinition(commandText: query,
                                                                                              parameters: new
                                                                                              {
                                                                                                  Id = cliente.Id.ToString(),
                                                                                                  Email = cliente.Email,
-                                                                                                 EstaAtivo = cliente.Status
+                                                                                                 Status = cliente.Status
 
                                                                                              },
                                                                                              transaction: _context.Transaction,

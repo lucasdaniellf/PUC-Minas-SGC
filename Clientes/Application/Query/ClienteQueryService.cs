@@ -2,6 +2,8 @@
 using Clientes.Domain.Model;
 using Clientes.Domain.Repository;
 using Core.Infrastructure;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.EventSource;
 
 namespace Clientes.Application.Query
 {
@@ -20,8 +22,7 @@ namespace Clientes.Application.Query
             try
             {
                 _unitOfWork.Begin();
-                var clientes = from c in await _repository.BuscarClientes(token) select MapQueryDto(c);
-
+                var clientes = from c in await _repository.BuscarClientes(token) select MapQueryDto(c);            
                 _unitOfWork.CloseConnection();
                 return clientes;
             }
@@ -103,7 +104,7 @@ namespace Clientes.Application.Query
 
         private ClienteQueryDto MapQueryDto(Cliente cliente)
         {
-            return new ClienteQueryDto(cliente.Id, cliente.Cpf.Numero, cliente.Nome, cliente.Email, cliente.EstaAtivo, cliente.Endereco);
+            return new ClienteQueryDto(cliente.Id, cliente.Cpf.Numero, cliente.Nome, cliente.Email, cliente.Status, cliente.Endereco);
         }
     }
 }

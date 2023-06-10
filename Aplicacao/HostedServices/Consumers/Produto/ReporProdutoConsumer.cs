@@ -3,12 +3,13 @@ using Core.MessageBroker;
 using Produtos.Application.Commands.ProdutoEstoque;
 using Produtos.Application.Commands;
 using Produtos.Application.Commands.AutomacaoVendaCommands.Messages.Recebidas;
+using Polly;
 
 namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
 {
     public class ReporProdutoConsumer : BaseConsumer
     {
-        public ReporProdutoConsumer(IServiceProvider provider, IConfiguration configuration) : base(provider, configuration)
+        public ReporProdutoConsumer(IServiceProvider provider, IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger)
         {
         }
 
@@ -23,14 +24,19 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
 
                 foreach (var mensagem in mensagens)
                 {
-                    Console.WriteLine("ReporProdutoVenda: " + mensagem);
-                    var eventoDesserializado = JsonConvert.DeserializeObject<ReporProdutoCommandMessage>(mensagem);
-
-                    if (eventoDesserializado != null)
+                    await _wrapPolicy.ExecuteAsync(async (context) =>
                     {
-                        var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
-                        await handler.Handle(comando, token);
-                    }
+                        var eventoDesserializado = JsonConvert.DeserializeObject<ReporProdutoCommandMessage>(mensagem);
+                        if (eventoDesserializado != null)
+                        {
+                            _logger.LogInformation("Dequeue: {mensagem}", eventoDesserializado.Serialize());
+                            var comando = MapearEventoParaComando(eventoDesserializado.Produtos);
+                            await handler.Handle(comando, token);
+                        }
+                    }, new Context()
+                    {
+                        ["mensagem"] = mensagem
+                    });
                 }
             }
         }
@@ -41,18 +47,11 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
             IList<EstoqueProduto> produtos = new List<EstoqueProduto>();
             foreach (var produto in produtosEvento)
             {
-                var p = new EstoqueProduto()
-                {
-                    ProdutoId = produto.ProdutoId,
-                    Quantidade = produto.Quantidade
-                };
+                var p = new EstoqueProduto(produto.ProdutoId, produto.Quantidade);
                 produtos.Add(p);
             }
 
-            return new ReporEstoqueProdutoCommand()
-            {
-                Produtos = produtos,
-            };
+            return new ReporEstoqueProdutoCommand(produtos);
         }
     }
 }

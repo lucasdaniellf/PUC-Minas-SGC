@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Polly;
 using Vendas.Application.Events;
 using Vendas.Application.Events.Produto;
 
@@ -8,7 +9,7 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
     {
 
         public ProdutoAtualizadoConsumer(IServiceProvider provider,
-                                        IConfiguration configuration) : base(provider, configuration) { }
+                                        IConfiguration configuration, ILogger<BaseConsumer> logger) : base(provider, configuration, logger) { }
 
         protected override string QueueName => "produto-*";
 
@@ -19,12 +20,18 @@ namespace AplicacaoGerenciamentoLoja.HostedServices.Consumers.Produto
                 VendaEventHandler handler = scope.ServiceProvider.GetRequiredService<VendaEventHandler>();
                 foreach (var mensagem in mensagens)
                 {
-                    Console.WriteLine("EventoProdutoAtualizado: " + mensagem);
-                    var deserialized = JsonConvert.DeserializeObject<ProdutoVendaAtualizadoEvent>(mensagem);
-                    if (deserialized != null)
+                    await _wrapPolicy.ExecuteAsync(async (context) =>
                     {
-                        await handler.Handle(deserialized, token);
-                    }
+                        var deserialized = JsonConvert.DeserializeObject<ProdutoVendaAtualizadoEvent>(mensagem);
+                        if (deserialized != null)
+                        {
+                            _logger.LogInformation("Dequeue: {mensagem}", deserialized.Serialize());
+                            await handler.Handle(deserialized, token);
+                        }
+                    }, new Context()
+                    {
+                        ["mensagem"] = mensagem
+                    });
                 }
             }
         }

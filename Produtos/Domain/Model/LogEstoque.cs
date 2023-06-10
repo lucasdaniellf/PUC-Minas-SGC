@@ -4,11 +4,18 @@ namespace Produtos.Domain.Model
 {
     public class LogEstoque : IEntity
     {
-        public int Id { get; internal set; }
-        public string EstoqueId { get; internal set; } = null!;
-        public DateTime HorarioAtualizacao { get; internal set; }
-        public int Quantidade { get; internal set; }
+        public int Id { get; private set; }
+        public string EstoqueId { get; private set; } = null!;
+        public DateTime HorarioAtualizacao { get; private set; }
+        public int Quantidade { get; private set; }
 
-        internal LogEstoque() { }
+        internal LogEstoque(string EstoqueId, DateTime HorarioAtualizacao, int Quantidade) 
+        {
+            this.EstoqueId = EstoqueId;
+            this.HorarioAtualizacao = HorarioAtualizacao;
+            this.Quantidade = Quantidade;
+        }
+
+        private LogEstoque() { }
     }
 }

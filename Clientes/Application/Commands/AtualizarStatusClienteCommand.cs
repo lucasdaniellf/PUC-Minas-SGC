@@ -1,16 +1,17 @@
 ﻿using Core.Messages.Commands;
-using static Clientes.Domain.Model.Status;
+using static Clientes.Domain.Model.ClienteStatus;
 
 namespace Clientes.Application.Commands
 {
     public class AtualizarStatusClienteCommand : CommandRequest
     {
-        public string Id { get; private set; } = string.Empty;
-        public ClienteStatus EstaAtivo { get; set; }
+        public string Id { get; set; } = null!;
+        public ClienteStatusEnum Status { get; set; }
 
-        public void AdicionarId(string id)
+        public AtualizarStatusClienteCommand(string id, ClienteStatusEnum status)
         {
             Id = id;
+            Status = status;
         }
     }
 }

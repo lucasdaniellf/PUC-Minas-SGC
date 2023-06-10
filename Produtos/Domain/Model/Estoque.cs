@@ -1,5 +1,4 @@
 ﻿using Core.Entity;
-using static Produtos.Domain.Model.LogEstoque;
 
 namespace Produtos.Domain.Model
 {
@@ -62,13 +61,7 @@ namespace Produtos.Domain.Model
 
         public LogEstoque GerarLog()
         {
-
-            return new LogEstoque()
-            {
-                EstoqueId = this.Id,
-                HorarioAtualizacao = this.UltimaAlteracao,
-                Quantidade = this.Quantidade,
-            };
+            return new LogEstoque(this.Id, this.UltimaAlteracao, this.Quantidade);
         }
 
     }

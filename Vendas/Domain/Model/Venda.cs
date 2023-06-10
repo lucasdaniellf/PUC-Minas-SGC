@@ -1,19 +1,20 @@
 ﻿using Core.Entity;
 using static Vendas.Domain.Model.FormaPagamentoEnum;
 using static Vendas.Domain.Model.StatusVenda;
+using static Vendas.Domain.Model.ClienteVenda;
 
 namespace Vendas.Domain.Model
 {
     public class Venda : IAggregateRoot
     {
-        internal string Id { get; private set; } = null!;
-        internal DateTime DataVenda { get; private set; } = DateTime.Now;
-        internal int Desconto { get; private set; }
-        internal Status Status { get; private set; } = Status.PENDENTE;
-        internal FormaPagamento FormaDePagamento { get; private set; } = FormaPagamento.CARTAO_CREDITO;
-        internal ClienteVenda Cliente { get; private set; } = null!;
-        internal IList<ItemVenda> Items { get; private set; }
-        internal string CriadoPor { get; init; } = null!;
+        public string Id { get; private set; } = null!;
+        public DateTime DataVenda { get; private set; } = DateTime.Now;
+        public int Desconto { get; private set; }
+        public Status Status { get; private set; } = Status.PENDENTE;
+        public FormaPagamento FormaDePagamento { get; private set; }
+        public ClienteVenda Cliente { get; private set; } = null!;
+        public IList<ItemVenda> Items { get; private set; }
+        public string CriadoPor { get; init; } = null!;
         internal Venda(string Id, ClienteVenda cliente, DateTime DataVenda, int Desconto, int FormaPagamento, int Status, string CriadoPor) : this(CriadoPor, cliente)
         {
             this.Id = Id;
@@ -31,7 +32,7 @@ namespace Vendas.Domain.Model
         }
         internal static Venda CriarVenda(string criadoPor, ClienteVenda cliente)
         {
-            if (cliente.Status == ClienteVenda.ClienteStatus.INATIVO)
+            if (cliente.Status == ClienteStatus.INATIVO)
             {
                 throw new VendaException("Cliente com status inativo");
             }
@@ -41,6 +42,7 @@ namespace Vendas.Domain.Model
                 Id = Guid.NewGuid().ToString()
             };
 
+            venda.AtualizarFormaDePagamentoVenda(venda.FormaDePagamento);
             return venda;
         }
         internal void AdicionarItemAVenda(ItemVenda item)
@@ -87,7 +89,6 @@ namespace Vendas.Domain.Model
                 else
                 {
                     AplicarDesconto(0);
-
                 }
             }
             else
@@ -98,23 +99,24 @@ namespace Vendas.Domain.Model
 
         internal void ProcessarVenda()
         {
+
             if (Status != Status.PENDENTE && Status != Status.REPROVADO)
             {
                 throw new VendaException("Venda não pode ser processada. Status: " + Status);
             }
-            if (!Items.Any()) 
+            if (!Items.Any())
             {
                 throw new VendaException("Venda não pode ser processada sem items");
             }
-            if (Cliente.Status == ClienteVenda.ClienteStatus.INATIVO)
+            if (Cliente.Status == ClienteStatus.INATIVO)
             {
-                throw new VendaException("Venda não pode ser processada para cliente com status inativo. Cliente: "+ Cliente.Id);
+                throw new VendaException("Venda não pode ser processada para cliente com status inativo. Cliente: " + Cliente.Id);
             }
-            foreach(var item in Items)
+            foreach (var item in Items)
             {
                 if (!item.ValidarProdutoItemVenda())
                 {
-                    throw new VendaException($"Venda não pode ser processada devido à produto {item.Produto.Id} - Status: {item.Produto.EstaAtivo}; Quantidade: {item.Produto.QuantidadeEstoque}");
+                    throw new VendaException($"Venda não pode ser processada devido à produto {item.Produto.Id} - Status: {item.Produto.Status}; Quantidade: {item.Produto.QuantidadeEstoque}");
                 }
             }
             Status = Status.PROCESSANDO;
@@ -127,8 +129,6 @@ namespace Vendas.Domain.Model
             //    throw new VendaException("Venda não pode ser cancelada. Status: " + Status);
             //}
             //Status = Status.CANCELADO;
-
-
             if (Status == Status.PROCESSANDO || Status == Status.CANCELADO)
             {
                 throw new VendaException("Venda não pode ser cancelada. Status: " + Status);
@@ -138,6 +138,7 @@ namespace Vendas.Domain.Model
                 throw new VendaException($"Venda não pode ser cancelada, prazo para cancelamento extrapolado: {(DataVenda - DateTime.Now).Days}");
             }
             Status = Status.CANCELADO;
+
         }
         internal void FinalizarVenda()
         {

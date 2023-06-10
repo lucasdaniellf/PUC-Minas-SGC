@@ -14,13 +14,14 @@ namespace AplicacaoGerenciamentoLoja.SystemPolicies.PoliticasVendas
         {
             var email = context.User.FindFirstValue(ClaimTypes.Email);
 
-            if (context.User.Claims.Where(c => c.Value == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
+
+            if (context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value != Roles.Cliente))
             {
                 context.Succeed(requirement);
             }
             else if (context.User.IsInRole(Roles.Cliente))
             {
-                if (resource.Any() && resource.All(venda => string.Equals(venda.cliente.Email, email, StringComparison.InvariantCultureIgnoreCase)))
+                if (resource.Any() && resource.All(venda => string.Equals(venda.Cliente.Email, email, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     context.Succeed(requirement);
                 }

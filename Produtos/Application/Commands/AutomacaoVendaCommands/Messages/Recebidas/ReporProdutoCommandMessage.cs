@@ -4,11 +4,12 @@ namespace Produtos.Application.Commands.AutomacaoVendaCommands.Messages.Recebida
 {
     public class ReporProdutoCommandMessage : MessageRequest
     {
-        public ReporProdutoCommandMessage(IEnumerable<ProdutoVendaCommandMessage> Produtos)
+        public ReporProdutoCommandMessage(string vendaId, IEnumerable<ProdutoVendaCommandMessage> Produtos)
         {
+            this.VendaId = vendaId;
             this.Produtos = Produtos;
         }
-
+        public string VendaId { get; private set; } = string.Empty!;
         public IEnumerable<ProdutoVendaCommandMessage> Produtos { get; private set; }
     }
 }

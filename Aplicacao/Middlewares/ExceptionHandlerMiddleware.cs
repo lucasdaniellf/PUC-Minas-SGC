@@ -5,12 +5,13 @@ namespace AplicacaoGerenciamentoLoja.Middlewares
 {
     public class ExceptionHandlerMiddleware
     {
-
+        private readonly ILogger<ExceptionHandlerMiddleware> _logger;
         private readonly RequestDelegate _next;
 
-        public ExceptionHandlerMiddleware(RequestDelegate next)
+        public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -21,8 +22,7 @@ namespace AplicacaoGerenciamentoLoja.Middlewares
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception Log from Middleware");
-                Console.WriteLine(string.Concat(ex.Message, " - ", ex.StackTrace));
+                _logger.LogError(ex, "Exception Log from Middleware: ");
 
                 var result = JsonConvert.SerializeObject(new { erro = "Houve um erro inesperado. Comunique o suporte." });
                 context.Response.ContentType = "application/json";
