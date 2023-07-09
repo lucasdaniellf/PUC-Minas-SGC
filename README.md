@@ -119,25 +119,44 @@ git clone https://github.com/lucasdaniellf/SistemaDeGerenciamentoComercial
 ![image](https://user-images.githubusercontent.com/70923700/215342966-4fc0d0c0-2acb-4a79-b4a5-6c5d552fc2ae.png)
 
 ### Executando via docker
-1. Clonar repositório localmente e rodá-lo utilizando VisualStudio 2022
+1. Clonar repositório localmente:
 ```
 git clone https://github.com/lucasdaniellf/SistemaDeGerenciamentoComercial
 ```
-2. Na pasta raiz do projeto, onde está localizado o arquivo docker-compose.yaml, rodar o seguinte comando via cmd:
+2. Devido à utilização do Keycloak como Serviço de Gerenciamento de Usuários, é necessário adicionar o "127.17.0.1 auth" ao arquivo hosts.ics no caminho "C:\Windows\System32\drivers\etc\hosts.ics" conforme imagem abaixo para que haja o correto direcionamento da URL do Authority (se encontra no Appsettings.json) utilizado na autenticação do usuário.
+
+![dns-config](https://github.com/lucasdaniellf/PUC-Minas-SGC/assets/70923700/991e887a-ed7d-4bfc-8be1-c4fe116e9878)
+
+3. Na pasta raiz do projeto, onde está localizado o arquivo docker-compose.yaml, rodar o seguinte comando via cmd:
 
 ```
 docker compose up
 ```
-3. Acessar a API utilizando a interface do swagger em:
+
+Obs.: Na definição dos volumes, dentro da seção SGC, há 4 referências de volumes: 2 para o diretório onde se encontram os arquivos de banco de dados e 2 para o diretório onde se encontram os arquivos de logs.
+Se desejar mapear os arquivos do container nos arquivos de banco de dados e logs que já existem neste repositório, utilizar as linhas que fazem o mapeamento via "Absolute Path". Caso deseje iniciar com arquivos novos, utilizar as linhas que fazem o mapeamento via "Named Volume". 
+
+4. Acessar a API utilizando a interface do swagger em:
 ```
 http://localhost:5006/swagger/index.html 
 ```
+![Swagger Authentication](https://github.com/lucasdaniellf/PUC-Minas-SGC/assets/70923700/b088f4d2-8ab4-403c-ac03-62fbdbb4f63b)
 
-![image](https://user-images.githubusercontent.com/70923700/215369226-aaabedd7-ad96-41e4-8e52-d852de4baad4.png)
+![API](https://github.com/lucasdaniellf/PUC-Minas-SGC/assets/70923700/a7be7c64-cf9c-4f03-8eb5-323379183ce8)
+
+Há alguns usuários pré-cadastrados para teste no Realm MySGCApp:
+
+![Users](https://github.com/lucasdaniellf/PUC-Minas-SGC/assets/70923700/ca3f882e-ccbc-4ea9-a3c1-b6067c880c6b)
 
 
+As credenciais destes usuários são:
+ - admin-1@sgc.com ----- admin
+ - cliente-1@sgc.com ----- 123
+ - funcionario@sgc.com  -- 12345
+ - test2@sgc.com --------- 12345
 
-
+A senha para acesso como administrador no REALM:
+ - login: admin ---------- senha: admin
 
 
 
